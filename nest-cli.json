@@ -1,0 +1,22 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/base-api/src",
+  "projects": {
+    "base": {
+      "type": "application",
+      "root": "apps/base",
+      "entryFile": "main",
+      "sourceRoot": "apps/base/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/base/tsconfig.app.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/readme/tsconfig.app.json",
+    "resolveJsonModule": true
+  },
+  "monorepo": true,
+  "root": "apps/readme"
+}

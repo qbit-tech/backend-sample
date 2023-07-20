@@ -1,0 +1,3 @@
+[submodule "libs/libs-notification"]
+	path = libs/libs-notification
+	url = https://github.com/qbit-tech/libs-notification.git
