@@ -1,6 +1,8 @@
 #!/bin/bash
 echo "==== START - Install ===="
 
+git submodule update --init --recursive
+
 echo "> INSTALL ROOT"
 yarn install
 
