@@ -8,7 +8,6 @@ import { SessionService } from 'libs/session/src';
 import * as jwt from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
 import { v4 as uuidv4 } from 'uuid';
-import { SendInBlueEmailService } from 'submodule/dist/sendinblue';
 import * as cryptoRandomString from 'crypto-random-string';
 import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
 import { ESessionAction, ValidationSessionResponse } from 'libs/authv3/src/email/email-authenticator.contract';

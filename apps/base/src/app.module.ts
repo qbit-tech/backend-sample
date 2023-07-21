@@ -7,7 +7,6 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 // import { AuthModule } from './modules/auth/auth.module';
 // import { Authv2Module } from './modules/authv2/authv2.module';
 import { AppController } from './app.controller';
-// import { NotificationModule } from 'submodule';
 // import { UserModule } from './modules/user/user.module';
 // import { AppVersionModule } from 'libs/appVersion/src/app-version/app-version.module';
 // import { AppConfigModule } from './modules/appConfig/appConfig.module';
