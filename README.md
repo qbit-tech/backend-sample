@@ -4,7 +4,7 @@ Please use `yarn`
 - Run command `./install.sh`
 
 ## Preparation
-- Copy file `.env.example` to `.env.local`. Then fill the value.
+- Copy file `.env.example` to `.env`. Then fill the value.
 
 ## How to Run Migration
 - Run command `./run_migration.sh`
