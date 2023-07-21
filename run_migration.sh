@@ -1,8 +1,23 @@
 #!/bin/bash
-echo -n "Project: "
-read PROJECT
-echo -n "Mode (local | development | staging | production): "
-read MODE
+
+if [ -z "$1" ]
+then
+  echo -n "Project: "
+  read PROJECT
+else
+  echo "Project: $1"
+  PROJECT="$1"
+fi
+
+if [ -z "$2" ]
+then
+  echo -n "Mode (local | development | staging | production): "
+  read MODE
+else
+  echo "Mode: $2"
+  MODE="$2"
+fi
+
 
 if [ -z "$PROJECT" ]
 then

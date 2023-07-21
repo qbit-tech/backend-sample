@@ -13,6 +13,6 @@ yarn install
 cd ../..
 
 echo "> RUN MIGRATION"
-./run_migration.sh
+./run_migration.sh base local
 
 echo "==== Install End Successfully ===="
