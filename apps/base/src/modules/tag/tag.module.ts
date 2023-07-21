@@ -21,7 +21,7 @@ import { TagController } from './tag.controller';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.ENV_PATH,
-    })
+    }),
   ],
   providers: [
     TagService,

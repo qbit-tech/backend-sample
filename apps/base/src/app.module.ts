@@ -16,6 +16,7 @@ import { AppController } from './app.controller';
 import { TagModule } from './modules/tag/tag.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
 import { AuthenticationModule } from 'libs/authv3/src';
+import { TestNotifModule } from './modules/notification/notification.module';
 // import { TicketModule } from './modules/ticket/ticket.module';
 // import { TicketClassModule } from './modules/ticketClass/ticketClass.module';
 // import { TalentModule } from './modules/talent/talent.module';
@@ -161,45 +162,7 @@ export const rootImportedModules = [
   ]),
 ];
 @Module({
-  imports: [
-    ...rootImportedModules,
-    // InitDataModule,
-    // AuthModule,
-    // Authv2Module,
-    // UserModule,
-    // SnapModule,
-    // PaymentModule,
-    // TransactionModule,
-    // TransactionItemModule,
-    // CartModule,
-    // PermissionModule,
-    // FixedVAModule,
-    // RoleModule,
-    // ImportTransactionModule,
-    // EventModule,
-    // UserRelativeModule,
-    // EventReviewModule,
-    // VenueModule,
-    // EventVariantModule,
-    // EventFavouriteModule,
-    TagModule,
-    Authv3Module,
-    // TalentModule,
-    // EventLogModule,
-    // TicketModule,
-    // TicketClassModule,
-    // VoucherModule,
-    // LiveStreamingModule,
-    // EventRerunModule,
-    // MasterIconLauncherModule,
-    // IconLauncherScheduleModule,
-    // PaymentMethodModule,
-    // TemplateModule,
-    // AppConfigModule,
-    // ExportTransactionModule,
-    // NotificationsModule,
-    // AppVersionModule,
-  ],
+  imports: [...rootImportedModules, TagModule, Authv3Module, TestNotifModule],
   controllers: [AppController],
 })
 export class AppModule {}

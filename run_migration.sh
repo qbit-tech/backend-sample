@@ -54,6 +54,10 @@ cd ./libs/authv3
 ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../..
 
+cd ./libs/libs-notification
+ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../..
+
 # echo "===== Migrate DB Lib/Uploader ====="
 # cd libs/uploader
 # ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
