@@ -1,3 +1,16 @@
+Please use `yarn`
+
+## Preparation
+- Copy file `.env.example` to `.env.local`. Then fill the value.
+
+## How to Run Migration
+- Run command `./run_migration.sh`
+
+## How to Run API
+- Run command `yarn start:vines`
+
+## ABOUT NEST
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
