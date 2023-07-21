@@ -1,5 +1,7 @@
 import {
 	Injectable,
+  HttpStatus,
+  HttpException,
 	Logger
 } from '@nestjs/common';
 import { SessionService } from 'libs/session/src';
@@ -154,5 +156,79 @@ export class Authv3Service {
         } else {
           return {isValid: false};
         }
+      }
+
+      async forgotPasswordByLink(params: {
+        email: string;
+      }): Promise<{
+        sessionId: string;
+        // name: string;
+      }> {
+        Logger.log('--ENTER FORGOT PASSWORD BY LINK, AUTH SERVICE--');
+    
+        const user = await this.emailAuthService.findOneByEmail(params.email);
+        
+        if (!user) {
+          return Promise.reject({
+            code: 'err_not_found',
+            message: 'User not registered.',
+          });
+        }
+        const sessionData: ValidationSessionResponse = {
+          action: ESessionAction.VERIFIED_LINK_EMAIL,
+          email: params.email,
+          userId: user.userId,
+        };
+        const sessionId = await this.sessionService.saveSession(sessionData, 600);
+    
+        Logger.log(
+          'auth forgotPasswordByLink: ' + JSON.stringify(user),
+          'auth.service',
+        );
+    
+        return {
+          sessionId,
+          // name: user.name,
+        };
+      }
+
+      async changePasswordUsingSession(params: {
+        sessionId: string;
+        newPassword: string;
+      }): Promise<{ isSuccess: boolean }> {
+        const sessionData = (await this.sessionService.getSession(
+          params.sessionId,
+        )) as {
+          action: string;
+          userId: string;
+          email: string;
+        };
+    
+        const isValidSession =
+          sessionData !== null 
+          // &&
+          // (sessionData.action === 'admin_forgot_login' ||
+          //   sessionData.action === 'changePassword');
+        if (!isValidSession) {
+          throw new HttpException(
+            {
+              code: 'err_unauthorized',
+              message: 'Invalid session',
+              payload: {},
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
+        }
+    
+        await this.emailAuthService.changePasswordByEmail(
+          sessionData.email,
+          params.newPassword,
+        );
+    
+        await this.sessionService.removeSession(params.sessionId);
+    
+        return {
+          isSuccess: true,
+        };
       }
 }

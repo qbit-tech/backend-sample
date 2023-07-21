@@ -24,7 +24,7 @@ async function bootstrap() {
     SwaggerModule.setup('docs', app, document);
   }
 
-  // app.useGlobalInterceptors(new OutputInterceptor());
+  app.useGlobalInterceptors(new OutputInterceptor());
   app.useGlobalFilters(new OutputExceptionFilter());
   app.enableCors({ origin: true, exposedHeaders: ['*'] });
   app.use(bodyParser.json({ limit: '100mb' }));

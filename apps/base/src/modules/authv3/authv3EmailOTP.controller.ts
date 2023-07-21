@@ -78,7 +78,7 @@ export class Authv3EmailOTPController {
           HttpStatus.UNAUTHORIZED,
         );
       }
-
+      
       return {
         token : signInResult.token,
         isVerified: authenticateLogin.isVerified,

@@ -3,6 +3,7 @@ import { Authv3Service } from './authv3.service';
 import { AuthenticationModule } from 'libs/authv3/src';
 import { SessionModule } from 'libs/session/src';
 import { NotificationModule } from 'submodule';
+import { Authv3Controller } from './authv3.controller';
 import { Authv3EmailOTPController } from './authv3EmailOTP.controller';
 // import { Authv2PhoneService } from './service/authv2Phone.service';
 // import { Authv2PhoneController } from './authv2Phone.controller';
@@ -38,6 +39,7 @@ import { Authv3EmailOTPController } from './authv3EmailOTP.controller';
   ],
   controllers: [
     Authv3EmailOTPController,
+    Authv3Controller,
     // Authv2PhoneOTPController,
     // Authv2Controller,
     // Authv2PhoneController,

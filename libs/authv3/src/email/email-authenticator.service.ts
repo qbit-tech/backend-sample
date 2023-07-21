@@ -94,7 +94,7 @@ export class EmailAuthenticatorService {
         },
         {
           where: {
-            email,
+            username: email,
           },
         },
       );
