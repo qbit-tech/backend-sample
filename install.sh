@@ -12,4 +12,7 @@ cd ./libs/libs-notification
 yarn install
 cd ../..
 
+echo "> RUN MIGRATION"
+./run_migration.sh
+
 echo "==== Install End Successfully ===="
