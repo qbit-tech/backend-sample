@@ -35,7 +35,7 @@ echo "----- Migration: Started -----"
 # fi
 
 echo "===== Migrate DB Lib/Authv3 ====="
-cd libs/authv3
+cd ./libs/authv3
 ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../..
 

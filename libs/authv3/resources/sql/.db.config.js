@@ -3,6 +3,23 @@ require('dotenv').config({
 });
 
 module.exports = {
+  local: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    dialect: 'postgres',
+
+    dialectOptions: {
+      pool: {
+        min: 0,
+        max: 10,
+        acquire: 10,
+        idle: 5,
+      },
+    },
+  },
   test: {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
