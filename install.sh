@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "==== START - Install ===="
 
+echo "> PULL SUBMODULES"
 git submodule update --init --recursive
 
 echo "> INSTALL ROOT"
