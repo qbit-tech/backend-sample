@@ -12,7 +12,7 @@ Please use `yarn`
 ## How to get / pull submodule
 - Run command `git submodule update --init --recursive`
 
-## How to Run API
+## How to Run Backend Service
 - Run command `yarn start:dev [folder-name-in-apps]`
 
 ===
