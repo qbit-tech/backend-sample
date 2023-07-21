@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { NotificationController } from './notification.controller';
-import { NotificationModule } from 'libs/libs-notification/src';
 
 @Module({
   imports: [
@@ -9,7 +8,6 @@ import { NotificationModule } from 'libs/libs-notification/src';
       isGlobal: true,
       envFilePath: process.env.ENV_PATH,
     }),
-    NotificationModule,
   ],
   providers: [],
   controllers: [NotificationController],

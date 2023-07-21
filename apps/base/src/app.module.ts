@@ -17,6 +17,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
 import { AuthenticationModule } from 'libs/authv3/src';
 import { TestNotifModule } from './modules/notification/notification.module';
+import { NotificationModule } from 'libs/libs-notification/src';
 // import { TicketModule } from './modules/ticket/ticket.module';
 // import { TicketClassModule } from './modules/ticketClass/ticketClass.module';
 // import { TalentModule } from './modules/talent/talent.module';
@@ -72,30 +73,18 @@ export const rootImportedModules = [
     logging: false,
     synchronize: false,
   }),
-  // NotificationModule.forRoot([
-  //   {
-  //     name: 'sendgrid',
-  //     setting: {
-  //       apiKey: process.env.SENDINBLUE_API_KEY,
-  //       from: {
-  //         email: process.env.SENDINBLUE_EMAIL_FROM,
-  //         name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
-  //       },
-  //     },
-  //   },
-  // ]),
-  // SendInBlueModule.forRoot([
-  //   {
-  //     name: 'sendinblue',
-  //     setting: {
-  //       apiKey: process.env.SENDINBLUE_API_KEY,
-  //       from: {
-  //         email: process.env.SENDINBLUE_EMAIL_FROM,
-  //         name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
-  //       },
-  //     },
-  //   },
-  // ]),
+  NotificationModule.forRoot([
+    {
+      name: 'sendinblue',
+      setting: {
+        apiKey: process.env.SENDINBLUE_API_KEY || '-',
+        from: {
+          email: process.env.SENDINBLUE_EMAIL_FROM,
+          name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
+        },
+      },
+    },
+  ]),
   // MidtransModule.forRoot([
   //   {
   //     name: 'midtrans',
