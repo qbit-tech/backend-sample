@@ -9,6 +9,9 @@ Please use `yarn`
 ## How to Run Migration
 - Run command `./run_migration.sh`
 
+## How to get / pull submodule
+- Run command `git submodule update --init --recursive`
+
 ## How to Run API
 - Run command `yarn start:[folder-name-in-apps]`
 
