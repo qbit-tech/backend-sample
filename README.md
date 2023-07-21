@@ -1,5 +1,8 @@
 Please use `yarn`
 
+## How to Install
+- Run command `./install.sh`
+
 ## Preparation
 - Copy file `.env.example` to `.env.local`. Then fill the value.
 
@@ -7,7 +10,9 @@ Please use `yarn`
 - Run command `./run_migration.sh`
 
 ## How to Run API
-- Run command `yarn start:vines`
+- Run command `yarn start:[folder-name-in-apps]`
+
+===
 
 ## ABOUT NEST
 
