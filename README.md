@@ -13,7 +13,7 @@ Please use `yarn`
 - Run command `git submodule update --init --recursive`
 
 ## How to Run Backend Service
-- Run command `yarn start:dev [folder-name-in-apps]`
+- Run command `yarn start:[folder-name-in-apps]`
 
 ===
 
