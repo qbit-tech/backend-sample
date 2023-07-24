@@ -27,7 +27,12 @@ import {
 // import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { TagService } from './tag.service';
 import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 // import { SimpleResponse } from '@comika/appContract/app.contract';
 
 @ApiTags('Tags')
@@ -35,15 +40,15 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swa
 export class TagController implements TagApiContract {
   constructor(
     private readonly tagService: TagService,
-    // private readonly eventLogService: EventLogService,
-    ) {}
+  ) // private readonly eventLogService: EventLogService,
+  {}
 
-  @ApiOperation({summary: 'Find all event tags'})
+  @ApiOperation({ summary: 'Find all event tags' })
   @Get()
-  @ApiOkResponse({type: TagFindAllResponse})
+  @ApiOkResponse({ type: TagFindAllResponse })
   async findAll(
     @Query() params: TagFindAllRequest,
-  // ): Promise<TagFindAllResponse> {
+    // ): Promise<TagFindAllResponse> {
   ): Promise<any> {
     try {
       Logger.log('--ENTER FIND ALL TAG CONTROLLER--');
@@ -55,14 +60,14 @@ export class TagController implements TagApiContract {
     }
   }
 
-  @ApiOperation({summary: 'Find one event tag'})
+  @ApiOperation({ summary: 'Find one event tag' })
   @Get(':tagId')
-  @ApiOkResponse({type: TagFindOneResponse})
+  @ApiOkResponse({ type: TagFindOneResponse })
   async findOne(@Param('tagId') tagId: string): Promise<TagFindOneResponse> {
     try {
       Logger.log('--ENTER FIND ONE TAG CONTROLLER--');
       Logger.log('tag : ' + JSON.stringify(tagId), 'tag.controller');
-      const result = await this.tagService.findOne(tagId)
+      const result = await this.tagService.findOne(tagId);
       return result.tagName;
     } catch (error) {
       Logger.log('find one tag error: ' + JSON.stringify(error));
@@ -78,52 +83,54 @@ export class TagController implements TagApiContract {
     }
   }
 
-  @ApiOperation({summary: 'Create new event tag'})
+  @ApiOperation({ summary: 'Create new event tag' })
   // @ApiBearerAuth()
   @Post()
   // @UseGuards(AuthPermissionGuard())
-  @ApiOkResponse({type: TagFindOneResponse})
+  @ApiOkResponse({ type: TagFindOneResponse })
   async create(
     // @Req() req: AppRequest,
-    @Body() params: TagCreateRequest): Promise<TagFindOneResponse> {
+    @Body() params: TagCreateRequest,
+  ): Promise<TagFindOneResponse> {
     // try {
-      Logger.log('--ENTER CREATE TAG CONTROLLER--');
-      Logger.log('tag : ' + JSON.stringify(params), 'tag.controller');
+    Logger.log('--ENTER CREATE TAG CONTROLLER--');
+    Logger.log('tag : ' + JSON.stringify(params), 'tag.controller');
 
-      const res = await this.tagService.create(
-        // req, 
-        params)
+    const res = await this.tagService.create(
+      // req,
+      params,
+    );
 
-      // await this.eventLogService.create({
-      //   userId: req.user.userId,
-      //   dataId: res.tagId,
-      //   action: ELogAction.CREATE_TAG,
-      //   metaUser: req.user,
-      //   dataAfter: res,
-      //   note: `${req.user.name} create tag ${res.tagName}`
-      // })
+    // await this.eventLogService.create({
+    //   userId: req.user.userId,
+    //   dataId: res.tagId,
+    //   action: ELogAction.CREATE_TAG,
+    //   metaUser: req.user,
+    //   dataAfter: res,
+    //   note: `${req.user.name} create tag ${res.tagName}`
+    // })
 
-      return res;
+    return res;
     // } catch (error) {
     //   Logger.error(error);
-      // throw new HttpException(
-      //   {
-      //     code: 'failed_create_tag',
-      //     message: error,
-      //   },
-      //   422,
-      // );
-      // throw new HttpException(error, getErrorStatusCode(error));
-      // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-      // return Promise.reject(error.message);
+    // throw new HttpException(
+    //   {
+    //     code: 'failed_create_tag',
+    //     message: error,
+    //   },
+    //   422,
+    // );
+    // throw new HttpException(error, getErrorStatusCode(error));
+    // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    // return Promise.reject(error.message);
     // }
   }
 
-  @ApiOperation({summary: 'Update event tag'})
+  @ApiOperation({ summary: 'Update event tag' })
   // @ApiBearerAuth()
   @Patch(':tagId')
   // @UseGuards(AuthPermissionGuard())
-  @ApiOkResponse({type: TagFindOneResponse})
+  @ApiOkResponse({ type: TagFindOneResponse })
   async update(
     // @Req() req: AppRequest,
     @Param('tagId') tagId: string,
@@ -133,13 +140,13 @@ export class TagController implements TagApiContract {
       Logger.log('--ENTER UPDATE TAG CONTROLLER--');
       Logger.log('tag : ' + JSON.stringify(tagId), 'tag.controller');
 
-      const findDataBefore = await this.tagService.findOne(tagId)
+      const findDataBefore = await this.tagService.findOne(tagId);
 
       const res = await this.tagService.update({
         ...params,
         tagId,
       });
-      
+
       // await this.eventLogService.create({
       //   userId: req.user.userId,
       //   dataId: tagId,
@@ -160,19 +167,20 @@ export class TagController implements TagApiContract {
     }
   }
 
-  @ApiOperation({summary: 'Delete single tag'})
+  @ApiOperation({ summary: 'Delete single tag' })
   // @ApiBearerAuth()
   @Delete(':tagId')
   // @UseGuards(AuthPermissionGuard())
   // @ApiOkResponse({type: SimpleResponse})
   async delete(
     // @Req() req: AppRequest,
-    @Param('tagId') tagId: string): Promise<any> {
+    @Param('tagId') tagId: string,
+  ): Promise<any> {
     try {
       Logger.log('--ENTER DELETE TAG CONTROLLER--');
       Logger.log('tag : ' + JSON.stringify(tagId), 'tag.controller');
-      
-      const findDataBefore = await this.tagService.findOne(tagId)
+
+      const findDataBefore = await this.tagService.findOne(tagId);
 
       // await this.eventLogService.create({
       //   userId: req.user.userId,
@@ -182,7 +190,7 @@ export class TagController implements TagApiContract {
       //   dataBefore: findDataBefore,
       //   note: `${req.user.name} delete tag ${findDataBefore.tagName}`
       // })
-      
+
       return await this.tagService.delete(tagId);
     } catch (error) {
       // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -190,7 +198,6 @@ export class TagController implements TagApiContract {
     }
   }
 
-  
   @ApiOperation({ summary: 'Soft Delete tag by tagId' })
   @ApiBearerAuth()
   @Delete(':tagId/request')
@@ -198,18 +205,16 @@ export class TagController implements TagApiContract {
   // @ApiOkResponse({ type: SimpleResponse })
   async requestDelete(
     // @Req() req: AppRequest,
-    @Param('tagId') tagId: string): Promise<{ isSuccess }> {
+    @Param('tagId') tagId: string,
+  ): Promise<{ isSuccess }> {
     // const isSuccess = await this.tagService.delete(tagId)
-    try{
+    try {
+      const findDataBefore = await this.tagService.findOne(tagId);
 
-      const findDataBefore = await this.tagService.findOne(tagId)
-
-      const isSuccess = await this.tagService.update(
-        {
-          ...findDataBefore,
-          status: 'deleted',
-        },
-      );
+      const isSuccess = await this.tagService.update({
+        ...findDataBefore,
+        status: 'deleted',
+      });
 
       // await this.eventLogService.create({
       //   userId: req.user.userId,
@@ -224,9 +229,9 @@ export class TagController implements TagApiContract {
       if (isSuccess) {
         return {
           isSuccess: true,
-        }; 
-      } 
-    } catch(error){
+        };
+      }
+    } catch (error) {
       Logger.error(error);
       // throw new HttpException(
       //   {
