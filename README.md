@@ -15,6 +15,9 @@ Please use `yarn`
 ## How to Run Backend Service
 - Run command `yarn start-[folder-name-in-apps]`
 
+## How to Add Submodule
+- Run command `git submodule add <remote_url> <destination_folder>`
+
 ===
 
 ## ABOUT NEST
