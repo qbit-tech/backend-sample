@@ -26,7 +26,7 @@ import {
 // import { AppRequest } from '@comika/appContract/app.contract';
 // import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { TagService } from './tag.service';
-import { getErrorStatusCode } from 'libs/utils/error';
+import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 // import { SimpleResponse } from '@comika/appContract/app.contract';
 

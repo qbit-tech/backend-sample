@@ -15,8 +15,8 @@ import {
     ApiTags,
     ApiOkResponse
 } from '@nestjs/swagger';
-import { SessionService } from 'libs/session/src';
-import { getErrorStatusCode } from 'libs/utils/error';
+import { SessionService } from 'libs/authv3/src/session/src';
+import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
 import { v4 as uuidv4 } from 'uuid';
 import { ERRORS } from '../../core/error.constant';
 import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';

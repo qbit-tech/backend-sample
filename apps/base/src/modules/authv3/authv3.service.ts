@@ -4,11 +4,12 @@ import {
   HttpException,
 	Logger
 } from '@nestjs/common';
-import { SessionService } from 'libs/session/src';
+import { SessionService } from 'libs/authv3/src/session/src';
 import * as jwt from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
 import { v4 as uuidv4 } from 'uuid';
 import * as cryptoRandomString from 'crypto-random-string';
+import { NotificationService } from 'libs/libs-notification/src/notification.service';
 import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
 import { ESessionAction, ValidationSessionResponse } from 'libs/authv3/src/email/email-authenticator.contract';
 
@@ -20,6 +21,7 @@ export class Authv3Service {
     constructor(
         private readonly sessionService: SessionService,
         private readonly emailAuthService: EmailAuthenticatorService,
+        private readonly notifService: NotificationService,
         // private readonly sibService: SendInBlueEmailService,
       ) {}
 
@@ -28,6 +30,7 @@ export class Authv3Service {
       ): Promise<{ token: string }> {
         this.logger.log('Generate login token for userid: ' + userId);
 
+        this.notifService.addToQueue
         const id = uuidv4()
         const sessionData = {
           uid: id,

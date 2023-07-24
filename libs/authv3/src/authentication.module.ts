@@ -3,6 +3,7 @@ import { FBAuthenticatorService } from './fb/fb-authenticator.service';
 import { GoogleAuthenticatorService } from './google/google-authenticator.service';
 import { EmailAuthenticatorService } from './email/email-authenticator.service';
 import { getAuthSettingToken, AuthOption} from './authentication.helper';
+import { SessionService } from './session/src';
 // import { PhoneAuthenticatorService } from './phone/phone-authenticator.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { HttpModule } from '@nestjs/axios';
@@ -40,10 +41,12 @@ export class AuthenticationModule {
       ],
       providers: [
         ...optionsProviders,
+        SessionService,
         ...providers,
       ],
       exports: [
         ...providers,
+        SessionService
       ],
     };
   }
