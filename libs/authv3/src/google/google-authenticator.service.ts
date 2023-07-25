@@ -1,6 +1,9 @@
-import { Injectable, Inject, Logger } from "@nestjs/common";
-import { GoogleAuthenticationResponse, GoogleOption } from "./google-authenticator.contract";
-import { OAuth2Client } from 'google-auth-library'
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import {
+  GoogleAuthenticationResponse,
+  GoogleOption,
+} from './google-authenticator.contract';
+import { OAuth2Client } from 'google-auth-library';
 import { getAuthSettingToken } from '../authentication.helper';
 
 @Injectable()
@@ -16,13 +19,13 @@ export class GoogleAuthenticatorService {
   }
 
   async authenticate(params: {
-    token: string
+    token: string;
   }): Promise<GoogleAuthenticationResponse> {
-    this.logger.log('Validate google token: '+params.token);
+    this.logger.log('Validate google token: ' + params.token);
 
     const result = await this.client.verifyIdToken({
       idToken: params.token,
-      audience: this.authOption.appId
+      audience: this.authOption.appId,
     });
     const payload = result.getPayload();
 
