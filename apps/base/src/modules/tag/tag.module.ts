@@ -7,12 +7,12 @@ import { TagService } from './tag.service';
 // import { EventTagModel } from '../event/eventTag.entity';
 // import { EventTagService } from '../event/eventTag.service';
 import { TagController } from './tag.controller';
-// import { AuthSessionModule } from '../authUser/authUser.module';
+import { AuthSessionModule } from '../authUser/authUser.module';
 
 
 @Module({
   imports: [
-    // AuthSessionModule,
+    AuthSessionModule,
     // EventLogModule,
     SequelizeModule.forFeature([
       TagModel,

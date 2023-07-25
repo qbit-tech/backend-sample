@@ -33,6 +33,8 @@ import {
   ApiOperation,
   ApiOkResponse,
 } from '@nestjs/swagger';
+import { AuthPermissionGuard } from '../../core/authPermission.guard';
+import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
 // import { SimpleResponse } from '@comika/appContract/app.contract';
 
 @ApiTags('Tags')
@@ -45,6 +47,12 @@ export class TagController implements TagApiContract {
 
   @ApiOperation({ summary: 'Find all event tags' })
   @Get()
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.LIST.__type,
+    ),
+  )
   @ApiOkResponse({ type: TagFindAllResponse })
   async findAll(
     @Query() params: TagFindAllRequest,
@@ -62,6 +70,12 @@ export class TagController implements TagApiContract {
 
   @ApiOperation({ summary: 'Find one event tag' })
   @Get(':tagId')
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.DETAIL.__type,
+    ),
+  )
   @ApiOkResponse({ type: TagFindOneResponse })
   async findOne(@Param('tagId') tagId: string): Promise<TagFindOneResponse> {
     try {
@@ -86,6 +100,12 @@ export class TagController implements TagApiContract {
   @ApiOperation({ summary: 'Create new event tag' })
   // @ApiBearerAuth()
   @Post()
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.CREATE.__type,
+    ),
+  )
   // @UseGuards(AuthPermissionGuard())
   @ApiOkResponse({ type: TagFindOneResponse })
   async create(
@@ -129,6 +149,12 @@ export class TagController implements TagApiContract {
   @ApiOperation({ summary: 'Update event tag' })
   // @ApiBearerAuth()
   @Patch(':tagId')
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.UPDATE.__type,
+    ),
+  )
   // @UseGuards(AuthPermissionGuard())
   @ApiOkResponse({ type: TagFindOneResponse })
   async update(
@@ -170,6 +196,12 @@ export class TagController implements TagApiContract {
   @ApiOperation({ summary: 'Delete single tag' })
   // @ApiBearerAuth()
   @Delete(':tagId')
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.DELETE.__type,
+    ),
+  )
   // @UseGuards(AuthPermissionGuard())
   // @ApiOkResponse({type: SimpleResponse})
   async delete(
@@ -180,7 +212,7 @@ export class TagController implements TagApiContract {
       Logger.log('--ENTER DELETE TAG CONTROLLER--');
       Logger.log('tag : ' + JSON.stringify(tagId), 'tag.controller');
 
-      const findDataBefore = await this.tagService.findOne(tagId);
+      // const findDataBefore = await this.tagService.findOne(tagId);
 
       // await this.eventLogService.create({
       //   userId: req.user.userId,
@@ -194,52 +226,6 @@ export class TagController implements TagApiContract {
       return await this.tagService.delete(tagId);
     } catch (error) {
       // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-      throw new HttpException(error, getErrorStatusCode(error));
-    }
-  }
-
-  @ApiOperation({ summary: 'Soft Delete tag by tagId' })
-  @ApiBearerAuth()
-  @Delete(':tagId/request')
-  // @UseGuards(AuthPermissionGuard())
-  // @ApiOkResponse({ type: SimpleResponse })
-  async requestDelete(
-    // @Req() req: AppRequest,
-    @Param('tagId') tagId: string,
-  ): Promise<{ isSuccess }> {
-    // const isSuccess = await this.tagService.delete(tagId)
-    try {
-      const findDataBefore = await this.tagService.findOne(tagId);
-
-      const isSuccess = await this.tagService.update({
-        ...findDataBefore,
-        status: 'deleted',
-      });
-
-      // await this.eventLogService.create({
-      //   userId: req.user.userId,
-      //   dataId: tagId,
-      //   action: ELogAction.SOFT_DELETE_TAG,
-      //   metaUser: req.user,
-      //   dataBefore: findDataBefore,
-      //   dataAfter: isSuccess,
-      //   note: `${req.user.name} soft delete tag ${findDataBefore.tagName}`
-      // })
-
-      if (isSuccess) {
-        return {
-          isSuccess: true,
-        };
-      }
-    } catch (error) {
-      Logger.error(error);
-      // throw new HttpException(
-      //   {
-      //     code: 'failed_delete_tag',
-      //     message: error.errors[0].message,
-      //   },
-      //   422,
-      // );
       throw new HttpException(error, getErrorStatusCode(error));
     }
   }

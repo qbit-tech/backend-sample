@@ -18,6 +18,10 @@ import { Authv3Module } from './modules/authv3/authv3.module';
 import { AuthenticationModule } from 'libs/authv3/src';
 import { TestNotifModule } from './modules/notification/notification.module';
 import { NotificationModule } from 'libs/libs-notification/src';
+import { UserModule } from './modules/user/user.module';
+import { AuthSessionModule } from './modules/authUser/authUser.module';
+import { PermissionModule } from './modules/permission/permission.module';
+import { RoleModule } from 'libs/role/src/role.module';
 // import { TicketModule } from './modules/ticket/ticket.module';
 // import { TicketClassModule } from './modules/ticketClass/ticketClass.module';
 // import { TalentModule } from './modules/talent/talent.module';
@@ -151,7 +155,16 @@ export const rootImportedModules = [
   ]),
 ];
 @Module({
-  imports: [...rootImportedModules, TagModule, Authv3Module, TestNotifModule],
+  imports: [
+    ...rootImportedModules, 
+    TagModule, 
+    Authv3Module, 
+    TestNotifModule,
+    UserModule,
+    PermissionModule,
+    RoleModule
+    // AuthSessionModule
+  ],
   controllers: [AppController],
 })
 export class AppModule {}
