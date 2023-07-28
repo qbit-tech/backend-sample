@@ -11,19 +11,10 @@ Please use `yarn`
 1. Enter the folder apps/[project]
 2. Copy file `.env.example` to `.env.local`. Then fill the value.
 3. Back to root project folder
-4. Run command `git submodule update --init --recursive`
-5. Install all packages
-- Run `yarn install` in root project folder
-- Enter folder `libs` and install all library there
-6. Run all migrations manually
+4. Run `yarn install`
+5. Run all migrations manually
 - ??
-7. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
-
-## How to get / pull submodule
-- Run command `git submodule update --init --recursive`
-
-## How to Add Submodule
-- Run command `git submodule add <remote_url> <destination_folder>`
+6. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
 ===
 
