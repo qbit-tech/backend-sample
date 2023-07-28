@@ -54,21 +54,12 @@ cd ./libs/authv3
 ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../..
 
-# cd ./libs/libs-notification
-# ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-# cd ../..
+echo "===== Migrate DB @qbit-tech/libs-notification ====="
+cd ./node_modules/@qbit-tech/libs-notification/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
 
-# echo "===== Migrate DB Lib/Uploader ====="
-# cd libs/uploader
-# ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-# cd ../..
-
-# echo "===== Migrate DB Lib/AppVersion ====="
-# cd libs/appVersion
-# ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-# cd ../..
-
-echo "===== Migrate DB Lib/Utils (appConfig, appVersion) ====="
+echo "===== Migrate DB @qbit-tech/libs-utils (appConfig, appVersion) ====="
 cd ./node_modules/@qbit-tech/libs-utils/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
