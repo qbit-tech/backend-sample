@@ -12,9 +12,6 @@
     "incremental": true,
     "resolveJsonModule": true,
     "paths": {
-      "qbit-tech/libs-*": [
-        "libs/libs-*"
-      ],
       "@qbit-tech/authv3": [
         "libs/authv3/src"
       ],

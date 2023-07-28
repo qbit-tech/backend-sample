@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "==== START - Install ===="
 
-echo "> PULL SUBMODULES"
-git submodule update --init --recursive
+# echo "> PULL SUBMODULES"
+# git submodule update --init --recursive
 
 echo "> INSTALL ROOT"
 yarn install
@@ -12,10 +12,10 @@ cd ./libs/authv3
 yarn install
 cd ../..
 
-echo "> INSTALL LIBS NOTIFICATION"
-cd ./libs/libs-notification
-yarn install
-cd ../..
+# echo "> INSTALL LIBS NOTIFICATION"
+# cd ./libs/libs-notification
+# yarn install
+# cd ../..
 
 echo "> INSTALL LIBS UTILS"
 cd ./libs/libs-utils
