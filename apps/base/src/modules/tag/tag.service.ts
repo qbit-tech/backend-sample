@@ -4,13 +4,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { TagModel, TagProperties } from './tag.entity';
 // import { v4 as uuidv4 } from 'uuid';
 // import uuid from 'uuid';
-import * as uuid from 'uuid'
+import * as uuid from 'uuid';
 // import { EventModel } from '../event/event.entity';
 // import { EventTagService } from '../event/eventTag.service';
 // import { EventLogService } from '../eventLog/eventLog.service';
 // import { ELogAction } from '../eventLog/eventLog.entity';
 import { Op } from 'sequelize';
 import { ERRORS } from '../../core/error.constant';
+import { generateResultPagination } from '@qbit-tech/libs-utils';
 
 @Injectable()
 export class TagService {
@@ -68,7 +69,7 @@ export class TagService {
       Logger.log('file found: ' + JSON.stringify(results), 'tag.service');
 
       return {
-        // ...generateResultPagination(count, params),
+        ...generateResultPagination(count, params),
         results: results.map(row => row.get()),
       };
     } catch (error) {
