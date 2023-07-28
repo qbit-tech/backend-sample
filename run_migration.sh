@@ -54,6 +54,11 @@ cd ./node_modules/@qbit-tech/libs-authv3/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
+echo "===== Migrate DB @qbit-tech/libs-role ====="
+cd ./node_modules/@qbit-tech/libs-role/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
+
 echo "===== Migrate DB @qbit-tech/libs-notification ====="
 cd ./node_modules/@qbit-tech/libs-notification/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE

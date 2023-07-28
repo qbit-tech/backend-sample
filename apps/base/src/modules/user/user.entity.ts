@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { generateFullName } from 'libs/libs-utils/src/utils';
+import { generateFullName } from '@qbit-tech/libs-utils';
 import {
   Table,
   Column,
@@ -11,11 +11,8 @@ import {
   AllowNull,
   BeforeCreate,
   BeforeUpdate,
-  HasMany,
-  BelongsToMany
 } from 'sequelize-typescript';
-import { UserRoleModel } from './userRole.entity';
-import { RoleModel, RoleProperties } from 'libs/role/src/role.entity';
+import { RoleProperties } from '@qbit-tech/libs-role';
 
 export enum Gender {
   MALE = 'male',
@@ -149,12 +146,6 @@ export class UserModel extends Model {
   @AllowNull
   @Column
   nickName?: string;
-
-  @BelongsToMany(
-    () => RoleModel,
-    () => UserRoleModel,
-  )
-  roles: RoleModel[];
 
   @BeforeUpdate
   @BeforeCreate
