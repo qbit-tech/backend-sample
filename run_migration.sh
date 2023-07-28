@@ -27,7 +27,7 @@ fi
 
 if [ -z "$MODE" ]
 then
-  MODE="staging"
+  MODE="local"
 fi
 
 echo "----- Migration: Started -----"
@@ -54,9 +54,9 @@ cd ./libs/authv3
 ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../..
 
-cd ./libs/libs-notification
-ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-cd ../..
+# cd ./libs/libs-notification
+# ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+# cd ../..
 
 # echo "===== Migrate DB Lib/Uploader ====="
 # cd libs/uploader
@@ -68,13 +68,8 @@ cd ../..
 # ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 # cd ../..
 
-echo "===== Migrate DB Lib/appConfig ====="
-cd ./libs/libs-utils/src/appConfig
-ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-cd ../../../..
-
-echo "===== Migrate DB Lib/appVersion ====="
-cd ./libs/libs-utils/src/appVersion
+echo "===== Migrate DB Lib/Utils (appConfig, appVersion) ====="
+cd ./node_modules/@qbit-tech/libs-utils/dist
 ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
