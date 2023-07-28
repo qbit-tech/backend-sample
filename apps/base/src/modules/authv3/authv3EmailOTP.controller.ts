@@ -1,29 +1,27 @@
 import {
-    Body,
-    Controller,
-    HttpException,
-    HttpStatus,
-    Post,
-    Request,
-    UseGuards,
-    Logger,
-    Req,
-  } from '@nestjs/common';
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+  Logger,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiTags,
-    ApiOkResponse
-} from '@nestjs/swagger';
-// import { SessionService } from 'libs/authv3/src/session/src';
-// import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
-import { SessionService } from '@qbit-tech/authv3/session/src';
-import { getErrorStatusCode } from 'qbit-tech/libs-utils/src/utils';
-// import { v4 as uuidv4 } from 'uuid';
-import { ERRORS } from '../../core/error.constant';
-import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
-// import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
-import { CheckEmailExistRequest, CheckEmailExistResponse, ESessionAction, RegisterRequest, RegisterResponse, SendEmailOTPResponse, SendOTPEmail, SignInRequest, ValidationSessionResponse, VerifyOTPEmailRequest, VerifyOTPEmailResponse } from 'libs/authv3/src/email/email-authenticator.contract';
+  SessionService,
+  EmailAuthenticatorService,
+  CheckEmailExistRequest,
+  CheckEmailExistResponse,
+  ESessionAction,
+  RegisterRequest,
+  SendEmailOTPResponse,
+  SendOTPEmail,
+  SignInRequest,
+  ValidationSessionResponse,
+  VerifyOTPEmailRequest,
+  VerifyOTPEmailResponse,
+} from '@qbit-tech/libs-authv3';
+import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { Authv3Service } from './authv3.service';
 import { EMAIL_OTP_LENGTH } from '../../data/config';
 import { ulid } from 'ulid';
@@ -39,27 +37,25 @@ export class Authv3EmailOTPController {
     private readonly sessionService: SessionService,
   ) {}
 
-  
   @ApiOperation({ summary: 'Register using email auth' })
   @Post('register')
   // @ApiOkResponse({ type: RegisterResponse })
   async register(@Body() body: RegisterRequest): Promise<any> {
     try {
       const userId = ulid();
-  
+
       const result = await this.emailAuthService.register({
         userId,
         email: body.email,
-        password: body.password
+        password: body.password,
       });
-      return result
+      return result;
     } catch (err) {
       console.log('auth.controller: ', err);
       throw new HttpException(err, getErrorStatusCode(err));
     }
   }
 
-  
   @ApiOperation({ summary: 'Sign In using email auth' })
   @Post('signin')
   // @ApiOkResponse({ type: SignInResponse })
@@ -70,7 +66,9 @@ export class Authv3EmailOTPController {
         password: req.password,
       });
 
-      const signInResult = await this.authEmailOTPService.generateLoginToken(authenticateLogin.userId)
+      const signInResult = await this.authEmailOTPService.generateLoginToken(
+        authenticateLogin.userId,
+      );
 
       if (signInResult.token === null) {
         throw new HttpException(
@@ -81,15 +79,15 @@ export class Authv3EmailOTPController {
           HttpStatus.UNAUTHORIZED,
         );
       }
-      
+
       return {
-        token : signInResult.token,
+        token: signInResult.token,
         isVerified: authenticateLogin.isVerified,
         isPasswordExpired: authenticateLogin.isPasswordExpired,
         passwordExpiredAt: authenticateLogin.passwordExpiredAt,
         isBlocked: authenticateLogin.isBlocked,
         blockedAt: authenticateLogin.blockedAt,
-      }
+      };
     } catch (err) {
       throw new HttpException(err, getErrorStatusCode(err));
     }
@@ -102,30 +100,30 @@ export class Authv3EmailOTPController {
     @Body() body: CheckEmailExistRequest,
   ): Promise<CheckEmailExistResponse> {
     try {
-      const result = await this.emailAuthService.findOneByEmail(body.email)
-  
+      const result = await this.emailAuthService.findOneByEmail(body.email);
+
       if (result) {
         return {
-          isExist: true
-        }
-      } 
+          isExist: true,
+        };
+      }
     } catch {
       return {
-        isExist: false
-      }
+        isExist: false,
+      };
     }
   }
 
   @ApiOperation({ summary: 'Send OTP to email' })
   @Post('send-otp')
   // @ApiOkResponse({ type: SendEmailOTPRequest })
-  async sendOTP(
-    @Body() body: SendOTPEmail,
-  ): Promise<SendEmailOTPResponse> {
-    const bypassEmail = (process.env.NODE_ENV === 'development' || process.env.RETURN_OTP_EMAIL_IN_RESPONSE === 'TRUE');
+  async sendOTP(@Body() body: SendOTPEmail): Promise<SendEmailOTPResponse> {
+    const bypassEmail =
+      process.env.NODE_ENV === 'development' ||
+      process.env.RETURN_OTP_EMAIL_IN_RESPONSE === 'TRUE';
     // const bypassEmail = false;
     console.info('byPassEmail', bypassEmail);
-    
+
     const result = await this.authEmailOTPService.generateSessionAndOTP(
       ESessionAction.REQUEST_OTP_EMAIL,
       body.email,
@@ -151,22 +149,27 @@ export class Authv3EmailOTPController {
 
     if (sessionDetail) {
       if (sessionDetail.otp === body.otp) {
-        const findUserByEmail = await this.emailAuthService.findOneByEmail(sessionDetail.email);
+        const findUserByEmail = await this.emailAuthService.findOneByEmail(
+          sessionDetail.email,
+        );
 
         if (findUserByEmail) {
           // generate new verified session
-          const sessionId = await this.authEmailOTPService.generateVerifiedSession(
-            {...sessionDetail, userId: findUserByEmail.userId},
-          );
+          const sessionId =
+            await this.authEmailOTPService.generateVerifiedSession({
+              ...sessionDetail,
+              userId: findUserByEmail.userId,
+            });
 
           return {
             sessionId,
           };
         } else {
-          const sessionId = await this.authEmailOTPService.generateVerifiedSession(
-            sessionDetail,
-          );
-          
+          const sessionId =
+            await this.authEmailOTPService.generateVerifiedSession(
+              sessionDetail,
+            );
+
           return {
             sessionId,
           };
@@ -190,5 +193,4 @@ export class Authv3EmailOTPController {
       );
     }
   }
-
 }

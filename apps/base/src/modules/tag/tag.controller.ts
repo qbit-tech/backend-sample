@@ -4,13 +4,11 @@ import {
   Query,
   Param,
   Logger,
-  Req,
   Post,
   Patch,
   Body,
   Delete,
   HttpException,
-  HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -21,29 +19,18 @@ import {
   TagCreateRequest,
   TagUpdateRequest,
 } from './tag.contract';
-// import { ELogAction } from '../eventLog/eventLog.entity';
-// import { EventLogService } from '../eventLog/eventLog.service';
-// import { AppRequest } from '@comika/appContract/app.contract';
-// import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { TagService } from './tag.service';
-import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+import { getErrorStatusCode } from '@qbit-tech/libs-utils';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
-// import { SimpleResponse } from '@comika/appContract/app.contract';
 
 @ApiTags('Tags')
 @Controller('tags')
 export class TagController implements TagApiContract {
   constructor(
-    private readonly tagService: TagService,
-  ) // private readonly eventLogService: EventLogService,
-  {}
+    private readonly tagService: TagService, // private readonly eventLogService: EventLogService,
+  ) {}
 
   @ApiOperation({ summary: 'Find all event tags' })
   @Get()

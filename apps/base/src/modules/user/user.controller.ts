@@ -3,8 +3,6 @@ import {
   Controller,
   Put,
   UseInterceptors,
-  Header,
-  Res,
   UploadedFile,
   Req,
   UseGuards,
@@ -17,12 +15,10 @@ import {
   Post,
   HttpException,
 } from '@nestjs/common';
-import { Response } from 'express'
 import { UserService } from './user.service';
 import {
   UpdateRequest,
   UserApiContract,
-  UpdatePhotoRequest,
   UpdatePhotoResponse,
   CheckUserRequest,
   UserFindAllRequest,
@@ -32,7 +28,7 @@ import {
 } from './contract/user.contract';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthPermissionGuard } from '../../core/authPermission.guard';
-import { AppRequest, SimpleResponse } from 'libs/libs-utils/src/appContract/app.contract';
+import { AppRequest, SimpleResponse } from '@qbit-tech/libs-utils';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -44,12 +40,10 @@ import {
 import { UserProperties } from './user.entity';
 // import { AuthService } from '../auth/auth.service';
 import { async as crypt } from 'crypto-random-string';
-import { EPlatform } from '../../core/constants';
-import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
-import { cleanPhoneNumber, getErrorStatusCode } from 'libs/libs-utils/src/utils';
+import { EmailAuthenticatorService } from '@qbit-tech/libs-authv3';
+import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
-import { NotificationService } from 'qbit-tech/libs-notification/src/notification.service';
-import { UploaderService } from '@qbit-tech/uploader';
+import { NotificationService } from '@qbit-tech/libs-notification';
 
 @ApiTags('Users')
 @Controller('users')
@@ -58,12 +52,8 @@ export class UserController implements UserApiContract {
 
   constructor(
     private userService: UserService,
-    // private authService: AuthService,
     private emailAuthenticatorService: EmailAuthenticatorService,
     private notificationService: NotificationService,
-    // private uploaderService: UploaderService,
-    // private phoneAuthenticatorService: PhoneAuthenticatorService,
-    // private sibService: SendInBlueEmailService,
   ) {}
 
   @ApiOperation({ summary: 'New admin using email authenticator' })
@@ -128,7 +118,7 @@ export class UserController implements UserApiContract {
       // return Promise.reject(error.message);
     }
   }
-  
+
   @Post('/check')
   // @ApiBearerAuth()
   async checkUser(@Body() body: CheckUserRequest): Promise<{

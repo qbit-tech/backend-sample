@@ -5,8 +5,6 @@ import { UserModel } from './user.entity';
 import { UserController } from './user.controller';
 // import { RoleModel } from '../role/role.entity';
 import { RoleModel, RoleService } from '@qbit-tech/libs-role';
-import { UserRoleService } from '../user/userRole.service';
-import { UserRoleModel } from '../user/userRole.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthSessionModule } from '../authUser/authUser.module';
 import { MulterModule } from '@nestjs/platform-express';
@@ -16,7 +14,7 @@ import path = require('path');
 @Module({
   imports: [
     AuthSessionModule,
-    SequelizeModule.forFeature([UserModel, RoleModel, UserRoleModel]),
+    SequelizeModule.forFeature([UserModel, RoleModel]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.ENV_PATH,
@@ -38,8 +36,8 @@ import path = require('path');
       }),
     }),
   ],
-  providers: [UserService, UserRoleService, RoleService],
+  providers: [UserService, RoleService],
   controllers: [UserController],
-  exports: [UserService, UserRoleService, RoleService],
+  exports: [UserService, RoleService],
 })
 export class UserModule {}

@@ -1,10 +1,11 @@
 import { Controller, Logger, Post, Body, HttpException } from '@nestjs/common';
 import { TestNotificationEmailRequest } from './notification.contract';
-import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
+import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { ApiTags } from '@nestjs/swagger';
-import { NotificationService } from 'libs/libs-notification/src/notification.service';
-import { ENotificationPlatform } from 'libs/libs-notification/src/notification.service';
-// import { ENotificationPlatform } from 'libs/libs-notification/src/notification.entity';
+import {
+  NotificationService,
+  ENotificationPlatform,
+} from '@qbit-tech/libs-notification';
 
 @ApiTags('Notification')
 @Controller('notifications')

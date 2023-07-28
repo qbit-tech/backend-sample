@@ -1,33 +1,23 @@
 import {
-    Body,
-    Controller,
-    HttpException,
-    HttpStatus,
-    Res,
-    Query,
-    Param,
-    Post,
-    Get,
-    Request,
-    UseGuards,
-    Logger,
-    Req,
-  } from '@nestjs/common';
-import {
-    ApiBearerAuth,
-    ApiOperation,
-    ApiTags,
-    ApiOkResponse
-} from '@nestjs/swagger';
-import { SessionService } from '@qbit-tech/authv3/session/src';
-import { getErrorStatusCode } from 'qbit-tech/libs-utils/src/utils';
-import { ERRORS } from '../../core/error.constant';
-import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
-import { CheckEmailExistRequest } from '@qbit-tech/authv3/email/email-authenticator.contract';
+  Body,
+  Controller,
+  HttpException,
+  Res,
+  Query,
+  Param,
+  Post,
+  Get,
+  Logger,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { SessionService } from '@qbit-tech/libs-authv3';
+import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { Authv3Service } from './authv3.service';
-import { EMAIL_OTP_LENGTH } from '../../data/config';
-import { ulid } from 'ulid';
-import { ChangePasswordUsingSessionRequest, ChangePasswordUsingSessionResponse, ForgotPasswordByLinkRequest, ForgotPasswordByLinkResponse } from './authv3.contract';
+import {
+  ChangePasswordUsingSessionRequest,
+  ChangePasswordUsingSessionResponse,
+  ForgotPasswordByLinkRequest,
+} from './authv3.contract';
 
 @ApiTags('Auth v3')
 @Controller('auth/v3')
@@ -36,7 +26,6 @@ export class Authv3Controller {
 
   constructor(
     private readonly authv3Service: Authv3Service,
-    private readonly emailAuthService: EmailAuthenticatorService,
     private readonly sessionService: SessionService,
   ) {}
 
@@ -46,18 +35,17 @@ export class Authv3Controller {
     @Body() params: ForgotPasswordByLinkRequest,
   ): Promise<any> {
     try {
-        Logger.log('--ENTER FORGOT PASSWORD BY LINK, AUTH CONTROLLER--');
-        Logger.log('auth : ' + JSON.stringify(params), 'auth.controller');
-        const { sessionId } = await this.authv3Service.forgotPasswordByLink({
-          email: params.email,
-        });
+      Logger.log('--ENTER FORGOT PASSWORD BY LINK, AUTH CONTROLLER--');
+      Logger.log('auth : ' + JSON.stringify(params), 'auth.controller');
+      const { sessionId } = await this.authv3Service.forgotPasswordByLink({
+        email: params.email,
+      });
 
-    return {
-        link: process.env.BASE_URL_CMS + '/reset-password' + '/' + sessionId
-    }
-
+      return {
+        link: process.env.BASE_URL_CMS + '/reset-password' + '/' + sessionId,
+      };
     } catch (err) {
-        throw new HttpException(err, getErrorStatusCode(err));
+      throw new HttpException(err, getErrorStatusCode(err));
     }
   }
 
@@ -76,9 +64,10 @@ export class Authv3Controller {
       'pageResetPassword::: getSession() => ' + JSON.stringify(result),
       'auth.controller',
     );
-    if (result 
-        // && result.action && result.action.includes('reset_password')
-        ) {
+    if (
+      result
+      // && result.action && result.action.includes('reset_password')
+    ) {
       Logger.log('pageResetPassword::: before redirect()', 'auth.controller');
       if (query && query.page_url) {
         res.redirect(query.page_url + '/' + sessionId);
@@ -102,7 +91,7 @@ export class Authv3Controller {
     summary: 'User can reset password after got reset password link via email',
   })
   @Post('change-password/session')
-//   @ApiOkResponse({ type: ChangePasswordUsingSessionResponse })
+  //   @ApiOkResponse({ type: ChangePasswordUsingSessionResponse })
   async changePasswordUsingSession(
     @Body() params: ChangePasswordUsingSessionRequest,
   ): Promise<ChangePasswordUsingSessionResponse> {

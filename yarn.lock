@@ -1098,7 +1098,7 @@
 
 "@qbit-tech/libs-notification@qbit-tech/libs-notification":
   version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#11f302a07ff133a0eb0b0e8eba95b8ed2fbb0dbb"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#27d974ef2ff4eeea2d3054b708283138de77b869"
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/sequelize" "^10.0.0"

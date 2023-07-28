@@ -3,8 +3,7 @@ import { UserModel, UserProperties } from './user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ulid } from 'ulid';
-import { UserRoleService } from './userRole.service';
-import { RoleModel, RoleProperties } from 'libs/role/src/role.entity';
+import { RoleModel, RoleProperties } from '@qbit-tech/libs-role';
 import {
   generateResultPagination,
   cleanPhoneNumber,
@@ -16,7 +15,6 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   constructor(
-    private readonly userRoleService: UserRoleService,
     @InjectModel(UserModel)
     private readonly userRepositories: typeof UserModel,
   ) {}
@@ -365,7 +363,7 @@ export class UserService {
         .map((spec) => spec.roleId);
       this.logger.verbose('Params: ' + JSON.stringify(roleIds));
 
-      await this.userRoleService.create(user.userId, roleIds);
+      // await this.userRoleService.create(user.userId, roleIds);
 
       return {
         ...result.get(),
@@ -385,12 +383,6 @@ export class UserService {
         where: {
           email,
         },
-        // include: [
-        //   {
-        //     model: RoleModel,
-        //     as: 'roles',
-        //   },
-        // ],
       });
 
       return result ? result.get() : null;
@@ -409,36 +401,6 @@ export class UserService {
         where: {
           username,
         },
-        // include: [
-        //   {
-        //     model: RoleModel,
-        //     as: 'roles',
-        //   },
-        //   {
-        //     model: EventModel,
-        //     as: 'events',
-        //   },
-        //   {
-        //     model: UserRelativeModel,
-        //     as: 'relatives',
-        //   },
-        //   {
-        //     model: EventReviewModel,
-        //     as: 'reviews',
-        //   },
-        //   {
-        //     model: VoucherModel,
-        //     as: 'vouchers',
-        //   },
-        //   {
-        //     model: TicketModel,
-        //     as: 'tickets',
-        //   },
-        //   {
-        //     model: EventFavouriteModel,
-        //     as: 'favourites',
-        //   },
-        // ],
       });
 
       return result ? result.get() : null;
@@ -452,42 +414,6 @@ export class UserService {
   async findOneByUserId(userId: string): Promise<UserProperties> {
     const result = await this.userRepositories.findOne({
       where: { userId },
-      include: [
-        {
-          model: RoleModel,
-          as: 'roles',
-        },
-        // {
-        //   model: EventModel,
-        //   as: 'events',
-        // },
-        // {
-        //   model: UserRelativeModel,
-        //   as: 'relatives',
-        // },
-        // {
-        //   model: EventReviewModel,
-        //   as: 'reviews',
-        // },
-        // {
-        //   model: VoucherModel,
-        //   as: 'vouchers',
-        // },
-        // {
-        //   model: TicketModel,
-        //   as: 'tickets',
-        //   include: [
-        //     {
-        //       model: TransactionItemModel,
-        //       as: 'transactionItem'
-        //     }
-        //   ]
-        // },
-        // {
-        //   model: EventFavouriteModel,
-        //   as: 'favourites',
-        // },
-      ],
     });
 
     return result ? result.get() : null;
@@ -575,7 +501,7 @@ export class UserService {
         .map((spec) => spec.roleId);
       this.logger.verbose('Params: ' + JSON.stringify(roleIds));
 
-      await this.userRoleService.update(user.userId, roleIds);
+      // await this.userRoleService.update(user.userId, roleIds);
 
       return numberOfAffectedRows ? updatedUser.get() : null;
     } catch (error) {
@@ -724,11 +650,11 @@ export class UserService {
     this.logger.log('Delete user: ' + userId);
 
     try {
-      const userResult = await this.findOneByUserId(userId);
+      // const userResult = await this.findOneByUserId(userId);
 
-      if (userResult.roles.length > 0) {
-        await this.userRoleService.deleteByUserId(userId);
-      }
+      // if (userResult.roles.length > 0) {
+      //   await this.userRoleService.deleteByUserId(userId);
+      // }
 
       const result = await this.userRepositories.destroy({
         where: { userId },

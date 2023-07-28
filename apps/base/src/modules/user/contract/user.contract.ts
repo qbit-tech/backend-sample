@@ -1,13 +1,13 @@
 import { IsNotEmpty, IsEnum, IsArray } from 'class-validator';
-import { 
+import {
   AppRequest,
   DefaultFindAllRequest,
   PaginationResponse,
-} from 'libs/libs-utils/src/appContract/app.contract';
+} from '@qbit-tech/libs-utils';
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { ERoles } from '../../../core/roles';
 import { UserProperties, Gender, UserModel } from '../user.entity';
-import { RoleProperties } from 'libs/role/src/role.entity';
+import { RoleProperties } from '@qbit-tech/libs-role';
 
 export abstract class UserApiContract {
   abstract createUser(
@@ -21,12 +21,16 @@ export abstract class UserApiContract {
   abstract update(request: UpdateRequest): Promise<UserProperties>;
 
   abstract checkUser(body: CheckUserRequest): Promise<{
-    isEmailExist: boolean,
-    isPhoneExist: boolean}>;
+    isEmailExist: boolean;
+    isPhoneExist: boolean;
+  }>;
 
   abstract getProfile(userId: string): Promise<UserProperties>;
 
-  abstract delete(req: AppRequest, userId: string): Promise<{ isSuccess: boolean }>;
+  abstract delete(
+    req: AppRequest,
+    userId: string,
+  ): Promise<{ isSuccess: boolean }>;
 }
 
 export class UserFindAllRequest extends DefaultFindAllRequest {
@@ -34,7 +38,7 @@ export class UserFindAllRequest extends DefaultFindAllRequest {
   filterStatus?: string;
 
   @ApiPropertyOptional()
-  filterCustomerCode?: string
+  filterCustomerCode?: string;
 }
 
 export class UserFindAllResponse extends PaginationResponse {
@@ -46,7 +50,7 @@ export class UpdatePhotoRequest {
   @IsNotEmpty()
   @ApiProperty()
   readonly userId: string;
-  
+
   @IsNotEmpty()
   @ApiProperty()
   readonly file: Express.Multer.File;
@@ -86,7 +90,7 @@ export class CreateUserRequest {
     message: 'gender must be either male or female',
   })
   readonly gender: Gender;
-  
+
   @ApiPropertyOptional()
   readonly isSubscribed?: boolean;
 
