@@ -45,8 +45,11 @@ import { UserProperties } from './user.entity';
 // import { AuthService } from '../auth/auth.service';
 import { async as crypt } from 'crypto-random-string';
 import { EPlatform } from '../../core/constants';
+import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
 import { cleanPhoneNumber, getErrorStatusCode } from 'libs/libs-utils/src/utils';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
+import { NotificationService } from 'qbit-tech/libs-notification/src/notification.service';
+import { UploaderService } from '@qbit-tech/uploader';
 
 @ApiTags('Users')
 @Controller('users')
@@ -56,7 +59,9 @@ export class UserController implements UserApiContract {
   constructor(
     private userService: UserService,
     // private authService: AuthService,
-    // private emailAuthenticatorService: EmailAuthenticatorService,
+    private emailAuthenticatorService: EmailAuthenticatorService,
+    private notificationService: NotificationService,
+    // private uploaderService: UploaderService,
     // private phoneAuthenticatorService: PhoneAuthenticatorService,
     // private sibService: SendInBlueEmailService,
   ) {}
@@ -65,7 +70,7 @@ export class UserController implements UserApiContract {
   @ApiBearerAuth()
   @Post()
   @UseGuards(AuthPermissionGuard())
-  // @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('image'))
   async createUser(
     @Req() req: AppRequest,
     @Body() body: CreateUserRequest,
@@ -87,12 +92,11 @@ export class UserController implements UserApiContract {
 
       if (body.email) {
         console.info('email registered');
-        // const res = await this.emailAuthenticatorService.register({
-        //   userId: userData.userId,
-        //   email: body.email,
-        //   password: body.password ? body.password : randomPassword,
-        //   isConfirmed: false,
-        // });
+        const res = await this.emailAuthenticatorService.register({
+          userId: userData.userId,
+          email: body.email,
+          password: body.password ? body.password : randomPassword,
+        });
         // if (res) {
         //   await this.sibService.sendTemplate({
         //     to: [
@@ -245,8 +249,6 @@ export class UserController implements UserApiContract {
         }
       }
   
-      const findDataBefore = await this.userService.findOneByUserId(uid)
-  
       const res = await this.update({
         ...body,
         userId: uid,
@@ -293,6 +295,89 @@ export class UserController implements UserApiContract {
     Logger.log('uid', uid);
     return this.getProfile(uid);
   }
+
+  @ApiOperation({
+    summary:
+      'Change user photo by userId, set userId to "me" to change current login user data',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @Put('photo')
+  // @UseGuards(AuthPermissionGuard())
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiOkResponse({ type: UpdatePhotoResponse })
+  async updateMyProfilePic(
+    // @Param('userId') userId: string,
+    @UploadedFile() file,
+    @Req() req: AppRequest,
+  ): Promise<UpdatePhotoResponse> {
+    try {
+      // this.logger.log('Update user: ' + userId);
+      // let uid = userId;
+      // if (userId === 'me') {
+      //   uid = req.user.userId;
+      // }
+      // const updateUserImage = await this.uploaderService.updateImage(
+      //   'users',
+      //   uid,
+      //   file,
+      // );
+
+      // const res = await this.userService.updateUserImage({
+      //   userId: uid,
+      //   imageLink: updateUserImage.payload.fileLinkCache,
+      // });
+
+      return file.path
+    } catch (err) {
+      console.info('error: ', err);
+    }
+  }
+
+  // async updatePhoto(request: UpdatePhotoRequest): Promise<any> {
+  //   try {
+  //     const fileSearchResult = await this.uploaderService.fileSearchByTable(
+  //       'users',
+  //       [request.userId],
+  //     );
+
+  //     const uploadResult = await this.uploaderService.fileUploaded({
+  //       tableName: 'users',
+  //       tableId: request.userId,
+  //       filePath: request.file['key'],
+  //       metadata: {},
+  //     });
+
+  //     if (fileSearchResult.has(request.userId)) {
+  //       await this.uploaderService.deleteFileById(
+  //         fileSearchResult.get(request.userId)[0].fileId,
+  //       );
+  //     }
+
+  //     await this.userService.update(
+  //       {
+  //         profilePic: uploadResult.fileLinkCache,
+  //       },
+  //       request.userId,
+  //     );
+
+  //     return { isSuccess: true };
+  //   } catch (err) {
+  //     console.info('gagal update: controller ');
+  //     return err;
+  //   }
+  // }
 
   async getProfile(userId: string): Promise<UserProperties> {
     const userData = await this.userService.findOneByUserId(userId);

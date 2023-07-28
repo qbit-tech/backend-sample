@@ -19,11 +19,11 @@ import {
     ApiTags,
     ApiOkResponse
 } from '@nestjs/swagger';
-import { SessionService } from 'libs/authv3/src/session/src';
-import { getErrorStatusCode } from 'libs/libs-utils/src/utils';
+import { SessionService } from '@qbit-tech/authv3/session/src';
+import { getErrorStatusCode } from 'qbit-tech/libs-utils/src/utils';
 import { ERRORS } from '../../core/error.constant';
-import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
-import { CheckEmailExistRequest, CheckEmailExistResponse, ESessionAction, RegisterRequest, RegisterResponse, SendEmailOTPResponse, SendOTPEmail, SignInRequest, ValidationSessionResponse, VerifyOTPEmailRequest, VerifyOTPEmailResponse } from 'libs/authv3/src/email/email-authenticator.contract';
+import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
+import { CheckEmailExistRequest } from '@qbit-tech/authv3/email/email-authenticator.contract';
 import { Authv3Service } from './authv3.service';
 import { EMAIL_OTP_LENGTH } from '../../data/config';
 import { ulid } from 'ulid';

@@ -10,6 +10,9 @@ import { UserRoleService } from '../user/userRole.service';
 import { UserRoleModel } from '../user/userRole.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthSessionModule } from '../authUser/authUser.module';
+import { MulterModule } from '@nestjs/platform-express';
+import multer = require('multer');
+import path = require('path');
 // import { RoleService } from '../role/role.service';
 // import { AuthModule } from '../auth/auth.module';
 
@@ -24,6 +27,18 @@ import { AuthSessionModule } from '../authUser/authUser.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.ENV_PATH,
+    }),
+    MulterModule.register({
+      limits: {
+        files: 1,
+        fileSize: 10*1024*1024,
+        fieldSize: 10*1024*1024,
+      },
+      storage:multer.diskStorage({
+        destination:"images",
+        filename: function (req, file, cb) {cb(null, file.fieldname+'_'+Date.now()+ path.extname(file.originalname) );},
+        
+      })
     }),
     // forwardRef(() => AuthModule),
     SequelizeModule.forFeature([UserModel, RoleModel, UserRoleModel]),

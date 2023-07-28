@@ -15,7 +15,7 @@ import { AppController } from './app.controller';
 // import { RoleModule } from './modules/role/role.module';
 import { TagModule } from './modules/tag/tag.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
-import { AuthenticationModule } from 'libs/authv3/src';
+import { AuthenticationModule } from '@qbit-tech/authv3';
 import { TestNotifModule } from './modules/notification/notification.module';
 import { NotificationModule } from 'libs/libs-notification/src';
 import { UserModule } from './modules/user/user.module';

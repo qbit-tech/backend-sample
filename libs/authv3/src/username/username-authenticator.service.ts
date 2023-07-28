@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from '@nestjs/sequelize';
 import { AuthModel, AuthProperties } from '../authv3.entity';
 import { ERRORS } from 'apps/base/src/core/error.constant';
