@@ -1110,6 +1110,26 @@
     sequelize "^6.32.1"
     sequelize-typescript "^2.1.5"
 
+"@qbit-tech/libs-role@qbit-tech/libs-role":
+  version "1.0.0"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-role.git#b855db41e01e3511c59f057f05909f6090369d10"
+  dependencies:
+    "@nestjs-modules/ioredis" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/config" "^3.0.0"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.4"
+    "@qbit-tech/libs-utils" qbit-tech/libs-utils
+    "@sendgrid/mail" "^7.7.0"
+    "@sendinblue/client" "^3.3.1"
+    base-64 "^1.0.0"
+    bcrypt "^5.1.0"
+    class-validator "^0.14.0"
+    firebase-admin "^11.9.0"
+    postmark "^3.0.18"
+    sequelize "^6.32.1"
+    sequelize-typescript "^2.1.5"
+
 "@qbit-tech/libs-utils@qbit-tech/libs-utils":
   version "1.0.0"
   resolved "git+ssh://git@github.com/qbit-tech/libs-utils.git#94a9acc23b7819341a62d300cf25089ddff0645f"

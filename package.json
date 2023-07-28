@@ -33,6 +33,7 @@
     "@nestjs/swagger": "^7.1.1",
     "@qbit-tech/libs-authv3": "qbit-tech/libs-authv3",
     "@qbit-tech/libs-notification": "qbit-tech/libs-notification",
+    "@qbit-tech/libs-role": "qbit-tech/libs-role",
     "@qbit-tech/libs-utils": "qbit-tech/libs-utils",
     "@types/multer": "^1.4.7",
     "aws-sdk": "2.868.0",

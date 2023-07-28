@@ -1,13 +1,7 @@
-import { Injectable, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { TagModel, TagProperties } from './tag.entity';
-// import { v4 as uuidv4 } from 'uuid';
-// import uuid from 'uuid';
 import * as uuid from 'uuid';
-// import { EventModel } from '../event/event.entity';
-// import { EventTagService } from '../event/eventTag.service';
-// import { EventLogService } from '../eventLog/eventLog.service';
-// import { ELogAction } from '../eventLog/eventLog.entity';
 import { Op } from 'sequelize';
 import { ERRORS } from '../../core/error.constant';
 import { generateResultPagination } from '@qbit-tech/libs-utils';
@@ -15,9 +9,6 @@ import { generateResultPagination } from '@qbit-tech/libs-utils';
 @Injectable()
 export class TagService {
   constructor(
-    // private menuTagService: MenuTagService,
-    // private readonly eventTagService: EventTagService,
-    // private readonly eventLogService: EventLogService,
     @InjectModel(TagModel)
     private readonly tagRepositories: typeof TagModel,
   ) {}
@@ -27,9 +18,9 @@ export class TagService {
     offset?: number;
     limit?: number;
   }): Promise<{
-    // count: number;
-    // prev: string;
-    // next: string;
+    count: number;
+    prev: string;
+    next: string;
     results: TagProperties[];
   }> {
     try {
@@ -69,7 +60,7 @@ export class TagService {
 
       return {
         ...generateResultPagination(count, params),
-        results: results.map(row => row.get()),
+        results: results.map((row) => row.get()),
       };
     } catch (error) {
       Logger.error(
@@ -96,12 +87,12 @@ export class TagService {
 
       Logger.log('file found: ' + JSON.stringify(result), 'tag.service');
 
-      if(!result) {
+      if (!result) {
         return Promise.reject({
           statusCode: ERRORS.tag.tag_not_found.statusCode,
           code: ERRORS.tag.tag_not_found.code,
           message: ERRORS.tag.tag_not_found.message,
-        })
+        });
       }
       // const name = result.tagName
 
@@ -197,9 +188,7 @@ export class TagService {
     }
   }
 
-  async delete(
-    tagId: string,
-  ): Promise<{
+  async delete(tagId: string): Promise<{
     isSuccess: boolean;
   }> {
     try {
