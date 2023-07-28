@@ -70,7 +70,7 @@ cd ../..
 
 echo "===== Migrate DB Lib/Utils (appConfig, appVersion) ====="
 cd ./node_modules/@qbit-tech/libs-utils/dist
-ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
 echo "===== Migrate DB Project ====="
