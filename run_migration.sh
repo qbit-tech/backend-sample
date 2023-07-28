@@ -68,10 +68,15 @@ cd ../..
 # ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 # cd ../..
 
-# echo "===== Migrate DB Lib/appConfig ====="
-# cd libs/appConfig
-# ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-# cd ../..
+echo "===== Migrate DB Lib/appConfig ====="
+cd ./libs/libs-utils/src/appConfig
+ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
+
+echo "===== Migrate DB Lib/appVersion ====="
+cd ./libs/libs-utils/src/appVersion
+ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
 
 echo "===== Migrate DB Project ====="
 cd apps/$PROJECT
