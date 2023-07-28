@@ -2663,6 +2663,11 @@ crypto-random-string@3.3.1:
   dependencies:
     type-fest "^0.8.1"
 
+cryptr@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-6.2.0.tgz#30dd4754447f9f5d18d5ea8a8dfbae08f00e5cbb"
+  integrity sha512-jYi8SxvOFebTT7EYOABiPpHKY6lwWaP9IVcvT/aIVJUVoFdzTgi0ySPCL78q1ig8w2kwfXFCZACXoCXaye57aw==
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"

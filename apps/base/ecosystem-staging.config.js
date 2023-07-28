@@ -2,7 +2,7 @@
 module.exports = {
   apps: [
     {
-      name: 'project-scheduler-development',
+      name: 'project-api-staging',
       script: './main.js',
       watch: true,
       exp_backoff_restart_delay: 100,
