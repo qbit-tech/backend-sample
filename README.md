@@ -1,19 +1,26 @@
 Please use `yarn`
 
-## How to Install
-- Run command `./install.sh`
+## Step By Step, How to Install & Start (LINUX / MACOS / Windows WSL)
+1. Enter the folder apps/[project]
+2. Copy file `.env.example` to `.env.local`. Then fill the value.
+3. Back to root project folder
+4. Run command `./install.sh`
+5. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
-## Preparation
-- Copy file `.env.example` to `.env.local`. Then fill the value.
-
-## How to Run Migration
-- Run command `./run_migration.sh`
+## Step By Step, How to Install & Start (WINDOWS without WSL)
+1. Enter the folder apps/[project]
+2. Copy file `.env.example` to `.env.local`. Then fill the value.
+3. Back to root project folder
+4. Run command `git submodule update --init --recursive`
+5. Install all packages
+- Run `yarn install` in root project folder
+- Enter folder `libs` and install all library there
+6. Run all migrations manually
+- ??
+7. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
 ## How to get / pull submodule
 - Run command `git submodule update --init --recursive`
-
-## How to Run Backend Service
-- Run command `yarn start-[folder-name-in-apps]`
 
 ## How to Add Submodule
 - Run command `git submodule add <remote_url> <destination_folder>`
