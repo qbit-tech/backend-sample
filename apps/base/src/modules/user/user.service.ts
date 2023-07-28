@@ -5,10 +5,11 @@ import { Op } from 'sequelize';
 import { ulid } from 'ulid';
 import { UserRoleService } from './userRole.service';
 import { RoleModel, RoleProperties } from 'libs/role/src/role.entity';
-import { 
-  generateResultPagination, 
-  cleanPhoneNumber, 
-  generateFullName } from 'libs/libs-utils/src/utils';
+import {
+  generateResultPagination,
+  cleanPhoneNumber,
+  generateFullName,
+} from '@qbit-tech/libs-utils';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,7 @@ export class UserService {
     search?: string;
     filterStatus?: string;
     filterGender?: string;
-    filterCustomerCode?: string
+    filterCustomerCode?: string;
     startDate?: Date;
     endDate?: Date;
   }): Promise<{
@@ -44,12 +45,12 @@ export class UserService {
       if (params.startDate && params.endDate) {
         where = {
           ...where,
-            createdAt: {
-              [Op.and]: {
-                [Op.gte]: params.startDate,
-                [Op.lte]: params.endDate,
-              },
+          createdAt: {
+            [Op.and]: {
+              [Op.gte]: params.startDate,
+              [Op.lte]: params.endDate,
             },
+          },
         };
       }
 
@@ -60,7 +61,7 @@ export class UserService {
             { name: { [Op.iLike]: `%${params.search}%` } },
             { email: { [Op.iLike]: `%${params.search}%` } },
             { phone: { [Op.iLike]: `%${params.search}%` } },
-            { username: params.search},
+            { username: params.search },
           ],
         });
 
@@ -83,7 +84,7 @@ export class UserService {
           // status: {
           //   [Op.iLike]: `%${params.filterStatus}%`,
           // },
-          status: params.filterStatus
+          status: params.filterStatus,
         };
       }
 
@@ -116,30 +117,30 @@ export class UserService {
             model: RoleModel,
             as: 'roles',
           },
-        //   {
-        //     model: EventModel,
-        //     as: 'events',
-        //   },
-        //   {
-        //     model: UserRelativeModel,
-        //     as: 'relatives',
-        //   },
-        //   {
-        //     model: EventReviewModel,
-        //     as: 'reviews',
-        //   },
-        //   {
-        //     model: VoucherModel,
-        //     as: 'vouchers',
-        //   },
-        //   {
-        //     model: TicketModel,
-        //     as: 'tickets',
-        //   },
-        //   {
-        //     model: EventFavouriteModel,
-        //     as: 'favourites',
-        //   },
+          //   {
+          //     model: EventModel,
+          //     as: 'events',
+          //   },
+          //   {
+          //     model: UserRelativeModel,
+          //     as: 'relatives',
+          //   },
+          //   {
+          //     model: EventReviewModel,
+          //     as: 'reviews',
+          //   },
+          //   {
+          //     model: VoucherModel,
+          //     as: 'vouchers',
+          //   },
+          //   {
+          //     model: TicketModel,
+          //     as: 'tickets',
+          //   },
+          //   {
+          //     model: EventFavouriteModel,
+          //     as: 'favourites',
+          //   },
         ],
         distinct: true,
         col: 'userId',
@@ -156,7 +157,7 @@ export class UserService {
 
       return {
         ...generateResultPagination(count, params),
-        results: results.map(row => row.get()),
+        results: results.map((row) => row.get()),
       };
     } catch (error) {
       Logger.error(
@@ -174,7 +175,7 @@ export class UserService {
     search?: string;
     filterStatus?: string;
     filterGender?: string;
-    filterCustomerCode?: string
+    filterCustomerCode?: string;
     startDate?: Date;
     endDate?: Date;
   }): Promise<{
@@ -192,12 +193,12 @@ export class UserService {
       if (params.startDate && params.endDate) {
         where = {
           ...where,
-            createdAt: {
-              [Op.and]: {
-                [Op.gte]: params.startDate,
-                [Op.lte]: params.endDate,
-              },
+          createdAt: {
+            [Op.and]: {
+              [Op.gte]: params.startDate,
+              [Op.lte]: params.endDate,
             },
+          },
         };
       }
 
@@ -278,7 +279,7 @@ export class UserService {
 
       return {
         ...generateResultPagination(count, params),
-        results: results.map(row => row.get()),
+        results: results.map((row) => row.get()),
       };
     } catch (error) {
       Logger.error(
@@ -326,28 +327,26 @@ export class UserService {
     this.logger.verbose('Params: ' + JSON.stringify(user.roles));
 
     try {
-      if(user.email) {
-        const findUserByEmail = await this.findOneByEmail(user.email)
+      if (user.email) {
+        const findUserByEmail = await this.findOneByEmail(user.email);
 
-        if(findUserByEmail) {
+        if (findUserByEmail) {
           return Promise.reject({
             statusCode: 400,
-            code:
-              'failed_to_create',
+            code: 'failed_to_create',
             message: 'Email already exist',
           });
         }
       }
 
-      if(user.phone) {
-        const cleanPhone = cleanPhoneNumber(user.phone)
-        const findUserByPhone = await this.findOneByPhone(cleanPhone)
+      if (user.phone) {
+        const cleanPhone = cleanPhoneNumber(user.phone);
+        const findUserByPhone = await this.findOneByPhone(cleanPhone);
 
-        if(findUserByPhone) {
+        if (findUserByPhone) {
           return Promise.reject({
             statusCode: 400,
-            code:
-              'failed_to_create',
+            code: 'failed_to_create',
             message: 'Phone Number already exist',
           });
         }
@@ -362,14 +361,11 @@ export class UserService {
       const roles = user.roles ? [...user.roles] : [];
 
       const roleIds = roles
-        .filter(item => item.roleId !== '')
-        .map(spec => spec.roleId);
+        .filter((item) => item.roleId !== '')
+        .map((spec) => spec.roleId);
       this.logger.verbose('Params: ' + JSON.stringify(roleIds));
 
-      await this.userRoleService.create(
-        user.userId,
-        roleIds,
-      );
+      await this.userRoleService.create(user.userId, roleIds);
 
       return {
         ...result.get(),
@@ -507,83 +503,76 @@ export class UserService {
     try {
       const findUser = await this.findOneByUserId(userId);
 
-      if(user.email) {
-        if(findUser.email && findUser.email !== user.email) {
-          const findUserByEmail = await this.findOneByEmail(user.email)
-  
-          if(findUserByEmail) {
+      if (user.email) {
+        if (findUser.email && findUser.email !== user.email) {
+          const findUserByEmail = await this.findOneByEmail(user.email);
+
+          if (findUserByEmail) {
             return Promise.reject({
               statusCode: 400,
-              code:
-                'failed_to_create',
+              code: 'failed_to_create',
               message: 'Email already exist',
             });
           }
-        } else if(!findUser.email) {
-          const findUserByEmail = await this.findOneByEmail(user.email)
-  
-          if(findUserByEmail) {
+        } else if (!findUser.email) {
+          const findUserByEmail = await this.findOneByEmail(user.email);
+
+          if (findUserByEmail) {
             return Promise.reject({
               statusCode: 400,
-              code:
-                'failed_to_create',
+              code: 'failed_to_create',
               message: 'Email already exist',
             });
           }
         }
       }
 
-      if(user.phone) {
-        const cleanPhoneUser = cleanPhoneNumber(user.phone)
-        if(findUser.phone) {
-          const cleanPhoneFoundUser = cleanPhoneNumber(findUser.phone)
+      if (user.phone) {
+        const cleanPhoneUser = cleanPhoneNumber(user.phone);
+        if (findUser.phone) {
+          const cleanPhoneFoundUser = cleanPhoneNumber(findUser.phone);
 
-          if(cleanPhoneFoundUser !== cleanPhoneUser) {
-            const findUserByPhone = await this.findOneByPhone(cleanPhoneUser)
+          if (cleanPhoneFoundUser !== cleanPhoneUser) {
+            const findUserByPhone = await this.findOneByPhone(cleanPhoneUser);
 
-            if(findUserByPhone) {
+            if (findUserByPhone) {
               return Promise.reject({
                 statusCode: 400,
-                code:
-                  'failed_to_create',
+                code: 'failed_to_create',
                 message: 'Phone Number already exist',
               });
             }
-            
           }
-        } else if(!findUser.phone) {
-          const findUserByPhone = await this.findOneByPhone(cleanPhoneUser)
-  
-          if(findUserByPhone) {
+        } else if (!findUser.phone) {
+          const findUserByPhone = await this.findOneByPhone(cleanPhoneUser);
+
+          if (findUserByPhone) {
             return Promise.reject({
               statusCode: 400,
-              code:
-                'failed_to_create',
+              code: 'failed_to_create',
               message: 'Phone Number already exist',
             });
           }
         }
       }
 
-      const [
-        numberOfAffectedRows,
-        [updatedUser],
-      ] = await this.userRepositories.update(
-        {
-          ...user,
-        },
-        {
-          where: {
-            userId,
+      const [numberOfAffectedRows, [updatedUser]] =
+        await this.userRepositories.update(
+          {
+            ...user,
           },
-          returning: true,
-        },
-      );
+          {
+            where: {
+              userId,
+            },
+            returning: true,
+          },
+        );
       const roles = user.roles ? [...user.roles] : [];
 
       const roleIds = roles
-        .filter(item => item.roleId !== '')
-        .map(spec => spec.roleId);
+        .filter((item) => item.roleId !== '')
+        .map((spec) => spec.roleId);
       this.logger.verbose('Params: ' + JSON.stringify(roleIds));
 
       await this.userRoleService.update(user.userId, roleIds);
@@ -632,7 +621,11 @@ export class UserService {
     return this.findOneByUserId(userId);
   }
 
-  async updatePhone(userId: string, newPhone: string, phoneCountryCode: string) {
+  async updatePhone(
+    userId: string,
+    newPhone: string,
+    phoneCountryCode: string,
+  ) {
     // check existing email
     const userData = await this.findOneByUserId(userId);
     if (!userData) {
@@ -657,7 +650,7 @@ export class UserService {
     await this.userRepositories.update(
       {
         phone: newPhone,
-        phoneCountryCode: phoneCountryCode
+        phoneCountryCode: phoneCountryCode,
       },
       {
         where: {
@@ -752,9 +745,7 @@ export class UserService {
     }
   }
 
-  async getUserMetadata(
-    userId: string,
-  ): Promise<{
+  async getUserMetadata(userId: string): Promise<{
     userId: string;
     name: string;
   }> {
@@ -765,5 +756,4 @@ export class UserService {
     };
     return metadata;
   }
-    
 }

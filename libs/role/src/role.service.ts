@@ -3,9 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 // import { generateResultPagination } from 'libs/utils/generateResultPagination';
 // import { v4 as uuidv4 } from 'uuid';
 // import uuid from 'uuid';
-import * as uuid from 'uuid'
-import { generateResultPagination } from 'libs/libs-utils/src/utils';
-import { AppRequest } from 'libs/libs-utils/src/appContract/app.contract';
+import * as uuid from 'uuid';
+import { generateResultPagination } from '@qbit-tech/libs-utils';
 import { RoleCreateRequest } from './role.contract';
 import { RoleModel, RoleProperties } from './role.entity';
 import { UserModel } from 'apps/base/src/modules/user/user.entity';
@@ -22,56 +21,49 @@ export class RoleService {
     private readonly roleRepositories: typeof RoleModel,
   ) {}
 
-  async findAll(params: {
-    offset?: number;
-    limit?: number;
-  }): Promise<{
+  async findAll(params: { offset?: number; limit?: number }): Promise<{
     count: number;
     prev: string;
     next: string;
     results: RoleProperties[];
   }> {
-    try{
-        Logger.log('--ENTER FIND ALL, ROLE SERVICE--');
-        console.info('params', params);
+    try {
+      Logger.log('--ENTER FIND ALL, ROLE SERVICE--');
+      console.info('params', params);
 
-        const options: any = {
-          include: [
-            {
-              model: UserModel,
-              as: 'users',
-            }
-          ],
-          distinct: true,
-          col: 'roleId',
-        };
+      const options: any = {
+        include: [
+          {
+            model: UserModel,
+            as: 'users',
+          },
+        ],
+        distinct: true,
+        col: 'roleId',
+      };
 
-        const count = await this.roleRepositories.count({ ...options });
-        const results = await this.roleRepositories.findAll({
-          ...options,
-           limit: params.limit,
-           offset: params.offset,
-           order: [['createdAt', 'DESC']],
-        });
+      const count = await this.roleRepositories.count({ ...options });
+      const results = await this.roleRepositories.findAll({
+        ...options,
+        limit: params.limit,
+        offset: params.offset,
+        order: [['createdAt', 'DESC']],
+      });
 
-        Logger.log(
-            'file found: ' + JSON.stringify(results),
-            'role.service',
-        );
+      Logger.log('file found: ' + JSON.stringify(results), 'role.service');
 
-        return {
-            ...generateResultPagination(count, params),
-            results: results.map(row => row.get()),
-        };
+      return {
+        ...generateResultPagination(count, params),
+        results: results.map((row) => row.get()),
+      };
+    } catch (error) {
+      Logger.error(
+        'findAll role::: error: ' + JSON.stringify(error),
+        'role.service',
+        'role.service',
+      );
+      return Promise.reject(error);
     }
-    catch (error) {
-        Logger.error(
-          'findAll role::: error: ' + JSON.stringify(error),
-          'role.service',
-          'role.service',
-        );
-        return Promise.reject(error);
-      }
   }
 
   async findOne(roleId: string): Promise<RoleProperties> {
@@ -83,14 +75,11 @@ export class RoleService {
           {
             model: UserModel,
             as: 'users',
-          }
-        ]
+          },
+        ],
       });
 
-      Logger.log(
-        'file found: ' + JSON.stringify(result),
-        'role.service',
-      );
+      Logger.log('file found: ' + JSON.stringify(result), 'role.service');
 
       return result.get();
     } catch (error) {
@@ -106,20 +95,17 @@ export class RoleService {
   async create(params: RoleCreateRequest): Promise<RoleProperties> {
     try {
       Logger.log('--ENTER CREATE, ROLE SERVICE--');
-      
+
       const result = await this.roleRepositories.create({
         // roleId: uuidv4(),
         roleId: uuid.v4(),
         roleName: params.roleName,
         roleDescription: params.roleDescription,
         status: params.status,
-        permissions: params.permissions
+        permissions: params.permissions,
       });
 
-      Logger.log(
-        'file created: ' + JSON.stringify(result),
-        'role.service',
-      );
+      Logger.log('file created: ' + JSON.stringify(result), 'role.service');
 
       return this.findOne(result.roleId);
     } catch (error) {
@@ -134,15 +120,15 @@ export class RoleService {
 
   async update(
     params: Omit<RoleProperties, 'createdAt' | 'updatedAt'>,
-    ): Promise<RoleProperties> {
+  ): Promise<RoleProperties> {
     try {
       Logger.log('--ENTER UPDATE, ROLE SERVICE--');
       const data: any = {
         roleName: params.roleName,
         roleDescription: params.roleDescription,
         status: params.status,
-        permissions: params.permissions
-      }
+        permissions: params.permissions,
+      };
       const result = await this.roleRepositories.update(data, {
         where: {
           roleId: params.roleId,
@@ -156,11 +142,9 @@ export class RoleService {
       );
 
       const roleResult = await this.findOne(params.roleId);
-      
-      return await this.findOne(roleResult.roleId);
-      }
 
-     catch (error) {
+      return await this.findOne(roleResult.roleId);
+    } catch (error) {
       Logger.error(
         'update role::: error: ' + JSON.stringify(error),
         'role.service',
@@ -183,10 +167,7 @@ export class RoleService {
         where: { roleId },
       });
 
-      Logger.log(
-        'file deleted: ' + JSON.stringify(result),
-        'role.service',
-      );
+      Logger.log('file deleted: ' + JSON.stringify(result), 'role.service');
 
       return { isSuccess: true };
     } catch (error) {
@@ -197,6 +178,5 @@ export class RoleService {
       );
       return Promise.reject(error);
     }
-  }  
+  }
 }
-

@@ -1,6 +1,5 @@
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-// import { generateResultPagination } from 'libs/utils/generateResultPagination';
 import { TagModel, TagProperties } from './tag.entity';
 // import { v4 as uuidv4 } from 'uuid';
 // import uuid from 'uuid';
