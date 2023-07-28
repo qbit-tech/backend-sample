@@ -49,10 +49,10 @@ echo "----- Migration: Started -----"
 #   echo "$INCLUDE_LIBS"
 # fi
 
-echo "===== Migrate DB Lib/Authv3 ====="
-cd ./libs/authv3
-ENV_PATH=../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
-cd ../..
+echo "===== Migrate DB @qbit-tech/libs-authv3 ====="
+cd ./node_modules/@qbit-tech/libs-authv3/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
 
 echo "===== Migrate DB @qbit-tech/libs-notification ====="
 cd ./node_modules/@qbit-tech/libs-notification/dist
