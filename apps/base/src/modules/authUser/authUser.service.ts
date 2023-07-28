@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { RoleModel } from 'libs/role/src/role.entity';
 import { UserModel, UserProperties } from '../user/user.entity';
 import { verify } from 'jsonwebtoken';
-import { SessionService } from 'libs/authv3/src/session/src';
+import { SessionService } from '@qbit-tech/authv3/session/src';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
 import { EPlatform } from 'apps/base/src/core/constants';
 

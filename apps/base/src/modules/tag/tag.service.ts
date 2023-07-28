@@ -2,7 +2,9 @@ import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 // import { generateResultPagination } from 'libs/utils/generateResultPagination';
 import { TagModel, TagProperties } from './tag.entity';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+// import uuid from 'uuid';
+import * as uuid from 'uuid'
 // import { EventModel } from '../event/event.entity';
 // import { EventTagService } from '../event/eventTag.service';
 // import { EventLogService } from '../eventLog/eventLog.service';
@@ -144,7 +146,8 @@ export class TagService {
   ): Promise<TagProperties> {
     try {
       Logger.log('--ENTER CREATE TAG SERVICE--');
-      const tagId = params.tagId ? params.tagId : uuidv4();
+      // const tagId = params.tagId ? params.tagId : uuidv4();
+      const tagId = params.tagId ? params.tagId : uuid.v4();
       const result = await this.tagRepositories.create({
         tagId: tagId,
         tagName: params.tagName,

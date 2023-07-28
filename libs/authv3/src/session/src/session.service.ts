@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRedis, Redis } from "@nestjs-modules/ioredis"
 import * as Crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid';
+// import uuid from 'uuid';
+import * as uuid from 'uuid'
 
 @Injectable()
 export class SessionService {
@@ -28,7 +30,8 @@ export class SessionService {
       'sha256',
       process.env.RANDOM_SESSION_KEY || '2r8u32niejf',
     )
-      .update(`${Date.now}-${uuidv4()}`)
+      // .update(`${Date.now}-${uuidv4()}`)
+      .update(`${Date.now}-${uuid.v4()}`)
       .digest('hex');
     return this.saveSessionWithId(sessionId, sessionObject, timeoutInSec);
   }

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { generateResultPagination } from 'libs/libs-utils/src/utils';
 import { UserRoleModel, UserRoleProperties } from './userRole.entity';
 

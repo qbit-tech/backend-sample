@@ -46,6 +46,10 @@ export class UpdatePhotoRequest {
   @IsNotEmpty()
   @ApiProperty()
   readonly userId: string;
+  
+  @IsNotEmpty()
+  @ApiProperty()
+  readonly file: Express.Multer.File;
 }
 
 export class UpdatePhotoResponse {

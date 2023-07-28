@@ -4,14 +4,20 @@ import {
   HttpException,
 	Logger
 } from '@nestjs/common';
-import { SessionService } from 'libs/authv3/src/session/src';
+// import { SessionService } from 'libs/authv3/src/session/src';
+import { SessionService } from '@qbit-tech/authv3/session/src';
+import { EmailAuthenticatorService } from '@qbit-tech/authv3/email/email-authenticator.service';
+import { ESessionAction, ValidationSessionResponse } from '@qbit-tech/authv3/email/email-authenticator.contract';
 import * as jwt from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+// import uuid from 'uuid';
+import * as uuid from 'uuid'
 import * as cryptoRandomString from 'crypto-random-string';
-import { NotificationService } from 'libs/libs-notification/src/notification.service';
-import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
-import { ESessionAction, ValidationSessionResponse } from 'libs/authv3/src/email/email-authenticator.contract';
+// import { NotificationService } from 'libs/libs-notification/src/notification.service';
+import { NotificationService } from 'qbit-tech/libs-notification/src/notification.service';
+// import { EmailAuthenticatorService } from 'libs/authv3/src/email/email-authenticator.service';
+// import { ESessionAction, ValidationSessionResponse } from 'libs/authv3/src/email/email-authenticator.contract';
 
 
 @Injectable()
@@ -31,7 +37,8 @@ export class Authv3Service {
         this.logger.log('Generate login token for userid: ' + userId);
 
         this.notifService.addToQueue
-        const id = uuidv4()
+        // const id = uuidv4()
+        const id = uuid.v4()
         const sessionData = {
           uid: id,
         };

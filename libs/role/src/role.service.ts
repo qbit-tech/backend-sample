@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 // import { generateResultPagination } from 'libs/utils/generateResultPagination';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+// import uuid from 'uuid';
+import * as uuid from 'uuid'
 import { generateResultPagination } from 'libs/libs-utils/src/utils';
 import { AppRequest } from 'libs/libs-utils/src/appContract/app.contract';
 import { RoleCreateRequest } from './role.contract';
@@ -106,7 +108,8 @@ export class RoleService {
       Logger.log('--ENTER CREATE, ROLE SERVICE--');
       
       const result = await this.roleRepositories.create({
-        roleId: uuidv4(),
+        // roleId: uuidv4(),
+        roleId: uuid.v4(),
         roleName: params.roleName,
         roleDescription: params.roleDescription,
         status: params.status,

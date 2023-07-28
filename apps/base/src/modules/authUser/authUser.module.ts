@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { SessionModule, SessionService } from 'libs/authv3/src/session/src';
+import { SessionModule, SessionService } from '@qbit-tech/authv3/session/src';
 import { UserModel } from '../user/user.entity';
 import { AuthSessionService } from './authUser.service';
 
