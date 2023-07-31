@@ -7,6 +7,11 @@ echo "==== START - Install ===="
 echo "> INSTALL ROOT"
 yarn install
 
+yarn add qbit-tech/libs-authv3
+yarn add qbit-tech/libs-notification
+yarn add qbit-tech/libs-role
+yarn add qbit-tech/libs-utils
+
 # echo "> INSTALL LIBS AUTHV3"
 # cd ./libs/authv3
 # yarn install
