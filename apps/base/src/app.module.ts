@@ -12,6 +12,19 @@ import { UserModule } from './modules/user/user.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { RoleModule } from '@qbit-tech/libs-role';
 
+const notificationOptions = [
+  {
+    name: 'sendinblue' as any,
+    setting: {
+      apiKey: process.env.SENDINBLUE_API_KEY || '-',
+      from: {
+        email: process.env.SENDINBLUE_EMAIL_FROM,
+        name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
+      },
+    },
+  },
+];
+
 export const rootImportedModules = [
   ConfigModule.forRoot({
     isGlobal: true,
@@ -36,49 +49,41 @@ export const rootImportedModules = [
     logging: false,
     synchronize: false,
   }),
-  NotificationModule.forRoot([
-    {
-      name: 'sendinblue',
-      setting: {
-        apiKey: process.env.SENDINBLUE_API_KEY || '-',
-        from: {
-          email: process.env.SENDINBLUE_EMAIL_FROM,
-          name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
+  NotificationModule.forRoot(notificationOptions),
+  AuthenticationModule.forRoot(
+    [
+      {
+        name: 'email',
+        setting: {},
+      },
+      {
+        name: 'apple',
+        setting: {
+          clientId: process.env.APPLE_CLIENT_ID,
         },
       },
-    },
-  ]),
-  AuthenticationModule.forRoot([
-    {
-      name: 'email',
-      setting: {},
-    },
-    {
-      name: 'apple',
-      setting: {
-        clientId: process.env.APPLE_CLIENT_ID,
+      {
+        name: 'google',
+        setting: {
+          appId: process.env.GOOGLE_CLIENT_ID.split(','),
+          appSecret: process.env.GOOGLE_CLIENT_SECRET,
+        },
       },
-    },
-    {
-      name: 'google',
-      setting: {
-        appId: process.env.GOOGLE_CLIENT_ID.split(','),
-        appSecret: process.env.GOOGLE_CLIENT_SECRET,
+      {
+        name: 'fb',
+        setting: {
+          appId: process.env.FACEBOOK_CLIENT_ID,
+          appSecret: process.env.FACEBOOK_CLIENT_SECRET,
+          baseUrl: process.env.FACEBOOK_BASE_URL,
+        },
       },
-    },
-    {
-      name: 'fb',
-      setting: {
-        appId: process.env.FACEBOOK_CLIENT_ID,
-        appSecret: process.env.FACEBOOK_CLIENT_SECRET,
-        baseUrl: process.env.FACEBOOK_BASE_URL,
+      {
+        name: 'phone',
+        setting: {},
       },
-    },
-    {
-      name: 'phone',
-      setting: {},
-    },
-  ]),
+    ],
+    notificationOptions,
+  ),
   // FirebaseModule.forRoot({
   //   credential: process.env.FIREBASE_CERT
   //     ? FirebaseAdmin.credential.cert(process.env.FIREBASE_CERT)
