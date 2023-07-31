@@ -1,5 +1,5 @@
 import { Controller, Logger, Post, Body, HttpException } from '@nestjs/common';
-import { TestNotificationEmailRequest } from './notification.contract';
+import { TestNotificationEmailRequest } from './testNotif.contract';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -7,12 +7,12 @@ import {
   ENotificationPlatform,
 } from '@qbit-tech/libs-notification';
 
-@ApiTags('Notification')
-@Controller('notifications')
-export class NotificationController {
+@ApiTags('Test Notif')
+@Controller('test-notif')
+export class TestNotifController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @Post('test-email')
+  @Post('email')
   async testSendNotifEmail(
     @Body() body: TestNotificationEmailRequest,
   ): Promise<any> {
