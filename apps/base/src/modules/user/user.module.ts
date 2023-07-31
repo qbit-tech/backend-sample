@@ -3,7 +3,6 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { UserService } from './user.service';
 import { UserModel } from './user.entity';
 import { UserController } from './user.controller';
-// import { RoleModel } from '../role/role.entity';
 import { RoleModel, RoleService } from '@qbit-tech/libs-role';
 import { ConfigModule } from '@nestjs/config';
 import { AuthSessionModule } from '../authUser/authUser.module';

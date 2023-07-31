@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { RoleModel } from 'libs/role/src/role.entity';
+import { RoleModel } from '@qbit-tech/libs-role';
 import { UserModel, UserProperties } from '../user/user.entity';
 import { verify } from 'jsonwebtoken';
-import { SessionService } from '@qbit-tech/authv3/session/src';
+import { SessionService } from '@qbit-tech/libs-authv3';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
 import { EPlatform } from 'apps/base/src/core/constants';
 
@@ -61,7 +61,7 @@ export class AuthSessionService {
         '(userFromSession as any).platform',
         (userFromSession as any).platform,
       );
-      
+
       let latestSessionId;
       if ((userFromSession as any).platform === EPlatform.CMS) {
         // latestSessionId = await this.sessionService.getLatestSessionIdByKey(
@@ -70,9 +70,11 @@ export class AuthSessionService {
         //     '_' +
         //     (userFromSession as any).userId,
         // );
-        
+
         // console.info('latestSessionId', latestSessionId);
-        const user = await this.findOneByUserId((userFromSession as any).userId);
+        const user = await this.findOneByUserId(
+          (userFromSession as any).userId,
+        );
 
         return { decodedToken, userFromSession, user };
       } else {
@@ -93,13 +95,11 @@ export class AuthSessionService {
       }
       // end check
 
-      const user = await this.findOneByUserId(
-        (userFromSession as any).userId,
-      );
+      const user = await this.findOneByUserId((userFromSession as any).userId);
 
       return { decodedToken, userFromSession, user };
     } else {
-			return null;
-		}
+      return null;
+    }
   }
 }
