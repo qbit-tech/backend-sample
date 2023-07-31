@@ -30,7 +30,7 @@ export class TestNotifController {
           name: 'User',
         },
         requestData: {
-          templateId: process.env.SENDINBLUE_TEMPLATE_TEST_NOTIF,
+          templateId: process.env.SENDINBLUE_TEMPLATE_ID_TEST_NOTIF,
           from: {
             email: process.env.SENDINBLUE_EMAIL_FROM,
             name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
