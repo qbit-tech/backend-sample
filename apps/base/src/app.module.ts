@@ -3,14 +3,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { AppController } from './app.controller';
-import { TagModule } from './modules/tag/tag.module';
-import { Authv3Module } from './modules/authv3/authv3.module';
-import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
-import { UserModule } from './modules/user/user.module';
-import { PermissionModule } from './modules/permission/permission.module';
-import { RoleModule } from '@qbit-tech/libs-role';
 
 const notificationOptions = [
   {
@@ -50,67 +44,55 @@ export const rootImportedModules = [
     synchronize: false,
   }),
   NotificationModule.forRoot(notificationOptions),
-  AuthenticationModule.forRoot(
-    [
-      {
-        name: 'email',
-        setting: {},
-      },
-      {
-        name: 'apple',
-        setting: {
-          clientId: process.env.APPLE_CLIENT_ID,
-        },
-      },
-      {
-        name: 'google',
-        setting: {
-          appId: process.env.GOOGLE_CLIENT_ID.split(','),
-          appSecret: process.env.GOOGLE_CLIENT_SECRET,
-        },
-      },
-      {
-        name: 'fb',
-        setting: {
-          appId: process.env.FACEBOOK_CLIENT_ID,
-          appSecret: process.env.FACEBOOK_CLIENT_SECRET,
-          baseUrl: process.env.FACEBOOK_BASE_URL,
-        },
-      },
-      {
-        name: 'phone',
-        setting: {},
-      },
-    ],
-    notificationOptions,
-  ),
+  // AuthenticationModule.forRoot(
+  //   [
+  //     {
+  //       name: 'email',
+  //       setting: {},
+  //     },
+  //     {
+  //       name: 'apple',
+  //       setting: {
+  //         clientId: process.env.APPLE_CLIENT_ID,
+  //       },
+  //     },
+  //     {
+  //       name: 'google',
+  //       setting: {
+  //         appId: process.env.GOOGLE_CLIENT_ID.split(','),
+  //         appSecret: process.env.GOOGLE_CLIENT_SECRET,
+  //       },
+  //     },
+  //     {
+  //       name: 'fb',
+  //       setting: {
+  //         appId: process.env.FACEBOOK_CLIENT_ID,
+  //         appSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  //         baseUrl: process.env.FACEBOOK_BASE_URL,
+  //       },
+  //     },
+  //     {
+  //       name: 'phone',
+  //       setting: {},
+  //     },
+  //   ],
+  //   notificationOptions,
+  // ),
   // FirebaseModule.forRoot({
   //   credential: process.env.FIREBASE_CERT
   //     ? FirebaseAdmin.credential.cert(process.env.FIREBASE_CERT)
   //     : FirebaseAdmin.credential.applicationDefault(),
   // }),
-  NotificationModule.forRoot([
-    {
-      name: 'sendinblue',
-      setting: {
-        apiKey: process.env.SENDINBLUE_API_KEY,
-        from: {
-          email: process.env.SENDINBLUE_EMAIL_FROM,
-          name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
-        },
-      },
-    },
-  ]),
 ];
 @Module({
   imports: [
     ...rootImportedModules,
-    TagModule,
-    Authv3Module,
+    // TagModule,
+    // Authv3Module,
     TestNotifModule,
-    UserModule,
-    PermissionModule,
-    RoleModule,
+    // UserModule,
+    // PermissionModule,
+    // RoleModule,
     // AuthSessionModule
   ],
   controllers: [AppController],

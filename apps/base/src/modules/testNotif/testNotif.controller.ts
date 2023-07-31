@@ -24,10 +24,23 @@ export class TestNotifController {
         platform: ENotificationPlatform.SENDINBLUE,
         senderUserId: 'SYSTEM-TEST',
         receiverUserId: 'system-test-receiver-user-id',
-        title: 'Test',
-        message: 'Test',
-        body: {},
-        requestData: {},
+        title: 'Test Title',
+        message: 'Test Message',
+        body: {
+          name: 'User',
+        },
+        requestData: {
+          templateId: process.env.SENDINBLUE_TEMPLATE_TEST_NOTIF,
+          from: {
+            email: process.env.SENDINBLUE_EMAIL_FROM,
+            name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
+          },
+          to: {
+            email: body.email,
+            name: 'User',
+          },
+        },
+        createdByUserId: 'SYSTEM',
       });
     } catch (error) {
       throw new HttpException(error, getErrorStatusCode(error));
