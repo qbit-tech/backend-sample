@@ -30,7 +30,7 @@
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
-    "@nestjs/sequelize": "0.2.0",
+    "@nestjs/sequelize": "^10.0.0",
     "@nestjs/swagger": "^7.1.1",
     "@qbit-tech/libs-authv3": "qbit-tech/libs-authv3",
     "@qbit-tech/libs-notification": "qbit-tech/libs-notification",

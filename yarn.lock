@@ -971,13 +971,6 @@
     jsonc-parser "3.2.0"
     pluralize "8.0.0"
 
-"@nestjs/sequelize@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-0.2.0.tgz#11751eb348ecfbe2383360795c53c6d810c7e9ce"
-  integrity sha512-uS8mf+ReIE03Vzda2+/Ner0IGLYITLUml061CprADntgua4K3TnLVLt717HgqtdwYyrAPQNu/LxUBhCINEBxnQ==
-  dependencies:
-    uuid "8.3.2"
-
 "@nestjs/sequelize@^10.0.0":
   version "10.0.0"
   resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-10.0.0.tgz#d2942fe5e61fd5c55dd7284dc4dc5182f2e3e155"
@@ -1106,7 +1099,7 @@
 
 "@qbit-tech/libs-notification@qbit-tech/libs-notification":
   version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#662bc676f5d2275b2f3508324f50c3aec8fdf906"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#4f951f43bebe6716cec2c8e201dc132d9b2d9032"
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/schedule" "^3.0.1"
@@ -1141,7 +1134,7 @@
 
 "@qbit-tech/libs-utils@qbit-tech/libs-utils":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-utils.git#94a9acc23b7819341a62d300cf25089ddff0645f"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-utils.git#41ba3d0e995e3c5b9aa34bd956ea7d49402dc90c"
   dependencies:
     "@nestjs/common" "^10.1.2"
     "@nestjs/sequelize" "^10.0.0"
@@ -6843,11 +6836,6 @@ uuid@3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
-uuid@8.3.2, uuid@^8.0.0, uuid@^8.1.0, uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
 uuid@9.0.0, uuid@^9.0.0:
   version "9.0.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
@@ -6857,6 +6845,11 @@ uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+uuid@^8.0.0, uuid@^8.1.0, uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"
