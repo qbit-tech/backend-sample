@@ -1099,7 +1099,7 @@
 
 "@qbit-tech/libs-notification@qbit-tech/libs-notification":
   version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#49ab9de1942372ddf7c607a26c82a21e31c57d43"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#7a069975ea2c026ba274370e430d9540b181db1b"
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/config" "^3.0.0"
