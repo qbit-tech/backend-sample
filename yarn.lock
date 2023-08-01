@@ -1081,19 +1081,22 @@
 
 "@qbit-tech/libs-authv3@qbit-tech/libs-authv3":
   version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-authv3.git#9a4c3adcf2d1d5cbfde1896e55f44d501c542874"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-authv3.git#76a59246d0f419a10dcf26e417879909e239c4ad"
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.4"
     "@qbit-tech/libs-notification" qbit-tech/libs-notification
+    "@qbit-tech/libs-utils" qbit-tech/libs-utils
     "@sendgrid/mail" "^7.7.0"
     "@sendinblue/client" "^3.3.1"
     base-64 "^1.0.0"
     bcrypt "^5.1.0"
     class-validator "^0.14.0"
+    crypto-random-string "^3.3.1"
     firebase-admin "^11.9.0"
+    jsonwebtoken "^8.5.1"
     postmark "^3.0.18"
     sequelize "^6.32.1"
     sequelize-typescript "^2.1.5"
@@ -2651,7 +2654,7 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-crypto-random-string@3.3.1:
+crypto-random-string@3.3.1, crypto-random-string@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-3.3.1.tgz#13cee94cac8001e4842501608ef779e0ed08f82d"
   integrity sha512-5j88ECEn6h17UePrLi6pn1JcLtAiANa3KExyr9y9Z5vo2mv56Gh3I4Aja/B9P9uyMwyxNHAHWv+nE72f30T5Dg==
@@ -4582,7 +4585,7 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsonwebtoken@8.5.1:
+jsonwebtoken@8.5.1, jsonwebtoken@^8.5.1:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz#00e71e0b8df54c2121a1f26137df2280673bcc0d"
   integrity sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==
