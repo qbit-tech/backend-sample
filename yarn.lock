@@ -1139,7 +1139,7 @@
 
 "@qbit-tech/libs-utils@qbit-tech/libs-utils":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-utils.git#41ba3d0e995e3c5b9aa34bd956ea7d49402dc90c"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-utils.git#f0b03a63b6f864ba232067e90bbe16841950bc79"
   dependencies:
     "@nestjs/common" "^10.1.2"
     "@nestjs/sequelize" "^10.0.0"

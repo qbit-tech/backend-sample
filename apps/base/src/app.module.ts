@@ -5,6 +5,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { AppController } from './app.controller';
 import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
+import { AppVersionModule, AppConfigModule } from '@qbit-tech/libs-utils';
 
 const notificationOptions = [
   {
@@ -87,6 +88,8 @@ export const rootImportedModules = [
 @Module({
   imports: [
     ...rootImportedModules,
+    AppVersionModule,
+    AppConfigModule,
     // TagModule,
     // Authv3Module,
     TestNotifModule,
