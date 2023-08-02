@@ -5,6 +5,8 @@ import { RedisModule } from '@nestjs-modules/ioredis';
 import { AppController } from './app.controller';
 import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
+import { AuthenticationModule } from '@qbit-tech/libs-authv3';
+import { Authv3Module } from './modules/authv3/authv3.module';
 
 const notificationOptions = [
   {
@@ -44,40 +46,40 @@ export const rootImportedModules = [
     synchronize: false,
   }),
   NotificationModule.forRoot(notificationOptions),
-  // AuthenticationModule.forRoot(
-  //   [
-  //     {
-  //       name: 'email',
-  //       setting: {},
-  //     },
-  //     {
-  //       name: 'apple',
-  //       setting: {
-  //         clientId: process.env.APPLE_CLIENT_ID,
-  //       },
-  //     },
-  //     {
-  //       name: 'google',
-  //       setting: {
-  //         appId: process.env.GOOGLE_CLIENT_ID.split(','),
-  //         appSecret: process.env.GOOGLE_CLIENT_SECRET,
-  //       },
-  //     },
-  //     {
-  //       name: 'fb',
-  //       setting: {
-  //         appId: process.env.FACEBOOK_CLIENT_ID,
-  //         appSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  //         baseUrl: process.env.FACEBOOK_BASE_URL,
-  //       },
-  //     },
-  //     {
-  //       name: 'phone',
-  //       setting: {},
-  //     },
-  //   ],
-  //   notificationOptions,
-  // ),
+  AuthenticationModule.forRoot(
+    [
+      {
+        name: 'email',
+        setting: {},
+      },
+      {
+        name: 'apple',
+        setting: {
+          clientId: process.env.APPLE_CLIENT_ID,
+        },
+      },
+      {
+        name: 'google',
+        setting: {
+          appId: process.env.GOOGLE_CLIENT_ID.split(','),
+          appSecret: process.env.GOOGLE_CLIENT_SECRET,
+        },
+      },
+      // {
+      //   name: 'fb',
+      //   setting: {
+      //     appId: process.env.FACEBOOK_CLIENT_ID,
+      //     appSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      //     baseUrl: process.env.FACEBOOK_BASE_URL,
+      //   },
+      // },
+      {
+        name: 'phone',
+        setting: {},
+      },
+    ],
+    notificationOptions,
+  ),
   // FirebaseModule.forRoot({
   //   credential: process.env.FIREBASE_CERT
   //     ? FirebaseAdmin.credential.cert(process.env.FIREBASE_CERT)
@@ -88,7 +90,7 @@ export const rootImportedModules = [
   imports: [
     ...rootImportedModules,
     // TagModule,
-    // Authv3Module,
+    Authv3Module,
     TestNotifModule,
     // UserModule,
     // PermissionModule,

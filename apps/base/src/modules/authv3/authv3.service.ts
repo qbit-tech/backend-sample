@@ -2,7 +2,7 @@ import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 // import { SessionService } from 'libs/authv3/src/session/src';
 import {
   SessionService,
-  EmailAuthenticatorService,
+  AuthService,
   ESessionAction,
   ValidationSessionResponse,
 } from '@qbit-tech/libs-authv3';
@@ -12,6 +12,7 @@ import { DEFAULT_HASH_TOKEN } from '../../core/constants';
 // import uuid from 'uuid';
 import * as uuid from 'uuid';
 import * as cryptoRandomString from 'crypto-random-string';
+import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 
 @Injectable()
 export class Authv3Service {
@@ -19,7 +20,7 @@ export class Authv3Service {
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly emailAuthService: EmailAuthenticatorService,
+    private readonly emailAuthService: AuthService,
   ) {}
 
   async generateLoginToken(userId: string): Promise<{ token: string }> {
@@ -75,7 +76,7 @@ export class Authv3Service {
     const sessionTimeoutInSec = 600; // 600 = 10 minutes
     sessionData = {
       action,
-      email,
+      username: email,
       otp,
     };
 
@@ -87,7 +88,7 @@ export class Authv3Service {
     if (config && config.sendOTP) {
       // send otp
 
-      const findUser = await this.emailAuthService.findOneByEmail(email);
+      const findUser = await this.emailAuthService.findOne(EAuthMethod.emailPassword, email);
       // await this.sibService.sendTemplate({
       //   to: { email },
       //   templateId: parseInt(process.env.SENDINBLUE_TEMPLATE_ID_EMAIL_OTP),
@@ -128,7 +129,7 @@ export class Authv3Service {
     email: string,
   ): Promise<{
     isValid: boolean;
-    email?: ValidationSessionResponse['email'];
+    email?: ValidationSessionResponse['username'];
   }> {
     this.logger.log('==== verifySessionId ====');
     this.logger.log('sessionId: ' + sessionId);
@@ -141,7 +142,7 @@ export class Authv3Service {
     if (sessionDetail) {
       if (
         sessionDetail.action === ESessionAction.VERIFIED_OTP_EMAIL &&
-        email === sessionDetail.email
+        email === sessionDetail.username
       ) {
         return { ...sessionDetail, isValid: true };
       } else {
@@ -158,7 +159,7 @@ export class Authv3Service {
   }> {
     Logger.log('--ENTER FORGOT PASSWORD BY LINK, AUTH SERVICE--');
 
-    const user = await this.emailAuthService.findOneByEmail(params.email);
+    const user = await this.emailAuthService.findOne(EAuthMethod.emailPassword, params.email);
 
     if (!user) {
       return Promise.reject({
@@ -168,7 +169,7 @@ export class Authv3Service {
     }
     const sessionData: ValidationSessionResponse = {
       action: ESessionAction.VERIFIED_LINK_EMAIL,
-      email: params.email,
+      username: params.email,
       userId: user.userId,
     };
     const sessionId = await this.sessionService.saveSession(sessionData, 600);
@@ -211,7 +212,8 @@ export class Authv3Service {
       );
     }
 
-    await this.emailAuthService.changePasswordByEmail(
+    await this.emailAuthService.changePassword(
+      EAuthMethod.emailPassword,
       sessionData.email,
       params.newPassword,
     );

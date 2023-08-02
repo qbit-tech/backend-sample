@@ -9,7 +9,8 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   SessionService,
-  EmailAuthenticatorService,
+  // EmailAuthenticatorService,
+  AuthService,
   CheckEmailExistRequest,
   CheckEmailExistResponse,
   ESessionAction,
@@ -25,6 +26,7 @@ import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { Authv3Service } from './authv3.service';
 import { EMAIL_OTP_LENGTH } from '../../data/config';
 import { ulid } from 'ulid';
+import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 
 @ApiTags('Auth v3 Email OTP')
 @Controller('auth/v3/email')
@@ -33,7 +35,7 @@ export class Authv3EmailOTPController {
 
   constructor(
     private readonly authEmailOTPService: Authv3Service,
-    private readonly emailAuthService: EmailAuthenticatorService,
+    private readonly emailAuthService: AuthService,
     private readonly sessionService: SessionService,
   ) {}
 
@@ -44,9 +46,9 @@ export class Authv3EmailOTPController {
     try {
       const userId = ulid();
 
-      const result = await this.emailAuthService.register({
+      const result = await this.emailAuthService.register(EAuthMethod.emailPassword,{
         userId,
-        email: body.email,
+        username: body.email,
         password: body.password,
       });
       return result;
@@ -61,8 +63,9 @@ export class Authv3EmailOTPController {
   // @ApiOkResponse({ type: SignInResponse })
   async signIn(@Body() req: SignInRequest): Promise<any> {
     try {
-      const authenticateLogin = await this.emailAuthService.authenticateLogin({
-        email: req.email,
+      const authenticateLogin = await this.emailAuthService.authenticate({
+        method: EAuthMethod.emailPassword,
+        username: req.email,
         password: req.password,
       });
 
@@ -100,7 +103,7 @@ export class Authv3EmailOTPController {
     @Body() body: CheckEmailExistRequest,
   ): Promise<CheckEmailExistResponse> {
     try {
-      const result = await this.emailAuthService.findOneByEmail(body.email);
+      const result = await this.emailAuthService.findOne(EAuthMethod.emailPassword, body.email);
 
       if (result) {
         return {
@@ -149,8 +152,9 @@ export class Authv3EmailOTPController {
 
     if (sessionDetail) {
       if (sessionDetail.otp === body.otp) {
-        const findUserByEmail = await this.emailAuthService.findOneByEmail(
-          sessionDetail.email,
+        const findUserByEmail = await this.emailAuthService.findOne(
+          EAuthMethod.emailPassword,
+          sessionDetail.username,
         );
 
         if (findUserByEmail) {

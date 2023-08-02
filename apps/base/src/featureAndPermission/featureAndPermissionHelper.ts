@@ -1,5 +1,5 @@
 // import { RoleProperties } from '../modules/role/role.entity';
-import { RoleProperties } from 'libs/role/src/role.entity';
+// import { RoleProperties } from 'libs/role/src/role.entity';
 import { FeaturePermissionType } from './featureAndPermission.type';
 
 export function hasPermission(userPermissions: FeaturePermissionType, feature: string, permission: string) {
@@ -7,7 +7,7 @@ export function hasPermission(userPermissions: FeaturePermissionType, feature: s
 }
 
 export function hasPermissionFromRoles(
-  roles: RoleProperties[],
+  roles: any[],
   feature: string,
   permission: string,
 ) {

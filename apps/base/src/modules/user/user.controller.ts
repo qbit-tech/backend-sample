@@ -40,10 +40,11 @@ import {
 import { UserProperties } from './user.entity';
 // import { AuthService } from '../auth/auth.service';
 import { async as crypt } from 'crypto-random-string';
-import { EmailAuthenticatorService } from '@qbit-tech/libs-authv3';
+import { AuthService } from '@qbit-tech/libs-authv3';
 import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
 import { NotificationService } from '@qbit-tech/libs-notification';
+import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 
 @ApiTags('Users')
 @Controller('users')
@@ -52,7 +53,7 @@ export class UserController implements UserApiContract {
 
   constructor(
     private userService: UserService,
-    private emailAuthenticatorService: EmailAuthenticatorService,
+    private emailAuthenticatorService: AuthService,
     private notificationService: NotificationService,
   ) {}
 
@@ -82,9 +83,10 @@ export class UserController implements UserApiContract {
 
       if (body.email) {
         console.info('email registered');
-        const res = await this.emailAuthenticatorService.register({
+        const res = await this.emailAuthenticatorService.register( EAuthMethod.emailPassword,
+          {
           userId: userData.userId,
-          email: body.email,
+          username: body.email,
           password: body.password ? body.password : randomPassword,
         });
         // if (res) {
