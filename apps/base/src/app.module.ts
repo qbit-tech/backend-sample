@@ -2,11 +2,15 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import type { RedisClientOptions } from 'redis';
+import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager';
 import { AppController } from './app.controller';
 import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { Authv3Module } from './modules/authv3/authv3.module';
+import { TagModule } from './modules/tag/tag.module';
 
 const notificationOptions = [
   {
@@ -31,6 +35,13 @@ export const rootImportedModules = [
       url: process.env.REDIS_URL,
     },
   }),
+  CacheModule.register<RedisClientOptions>({
+    isGlobal: true,
+    store: redisStore,
+
+    // Store-specific configuration:
+    host: process.env.REDIS_URL,
+  } as any),
   SequelizeModule.forRoot({
     username: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASS || 'letmein',
@@ -89,7 +100,7 @@ export const rootImportedModules = [
 @Module({
   imports: [
     ...rootImportedModules,
-    // TagModule,
+    TagModule,
     Authv3Module,
     TestNotifModule,
     // UserModule,
