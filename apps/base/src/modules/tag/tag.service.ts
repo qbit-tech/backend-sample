@@ -56,7 +56,7 @@ export class TagService {
         order: [['createdAt', 'DESC']],
       });
 
-      Logger.log('file found: ' + JSON.stringify(results), 'tag.service');
+      Logger.log('results: ' + JSON.stringify(results), 'tag.service');
 
       return {
         ...generateResultPagination(count, params),
