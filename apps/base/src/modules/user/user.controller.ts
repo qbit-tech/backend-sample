@@ -45,6 +45,7 @@ import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
 import { NotificationService } from '@qbit-tech/libs-notification';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
+// import { UploaderService } from '@qbit-tech/libs-uploader';
 
 @ApiTags('Users')
 @Controller('users')
@@ -55,6 +56,7 @@ export class UserController implements UserApiContract {
     private userService: UserService,
     private emailAuthenticatorService: AuthService,
     private notificationService: NotificationService,
+    // private uploaderService: UploaderService,
   ) {}
 
   @ApiOperation({ summary: 'New admin using email authenticator' })
@@ -305,21 +307,21 @@ export class UserController implements UserApiContract {
     },
   })
   @ApiBearerAuth()
-  @Put('photo')
+  @Put(':userId/photo')
   // @UseGuards(AuthPermissionGuard())
   @UseInterceptors(FileInterceptor('image'))
   @ApiOkResponse({ type: UpdatePhotoResponse })
   async updateMyProfilePic(
-    // @Param('userId') userId: string,
+    @Param('userId') userId: string,
     @UploadedFile() file,
     @Req() req: AppRequest,
   ): Promise<UpdatePhotoResponse> {
     try {
-      // this.logger.log('Update user: ' + userId);
-      // let uid = userId;
-      // if (userId === 'me') {
-      //   uid = req.user.userId;
-      // }
+      this.logger.log('Update user: ' + userId);
+      let uid = userId;
+      if (userId === 'me') {
+        uid = req.user.userId;
+      }
       // const updateUserImage = await this.uploaderService.updateImage(
       //   'users',
       //   uid,
@@ -332,6 +334,27 @@ export class UserController implements UserApiContract {
       // });
 
       return file.path
+
+      // const updateImage = await this.uploaderService.updateImage(
+      //   'users',
+      //   uid,
+      //   file,
+      //   null,
+      //   true,
+      //   // false
+      // );
+
+      // console.log(file)
+
+      // if(updateImage) {
+      //   return {
+      //     isSuccess: true
+      //   }
+      // } else {
+      //   return {
+      //     isSuccess: false
+      //   }
+      // }
     } catch (err) {
       console.info('error: ', err);
     }

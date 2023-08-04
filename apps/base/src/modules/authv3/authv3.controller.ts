@@ -87,17 +87,17 @@ export class Authv3Controller {
     }
   }
 
-  @ApiOperation({
-    summary: 'User can reset password after got reset password link via email',
-  })
-  @Post('change-password/session')
-  //   @ApiOkResponse({ type: ChangePasswordUsingSessionResponse })
-  async changePasswordUsingSession(
-    @Body() params: ChangePasswordUsingSessionRequest,
-  ): Promise<ChangePasswordUsingSessionResponse> {
-    return this.authv3Service.changePasswordUsingSession({
-      sessionId: params.sessionId,
-      newPassword: params.newPassword,
-    });
-  }
+  // @ApiOperation({
+  //   summary: 'User can reset password after got reset password link via email',
+  // })
+  // @Post('change-password/session')
+  // //   @ApiOkResponse({ type: ChangePasswordUsingSessionResponse })
+  // async changePasswordUsingSession(
+  //   @Body() params: ChangePasswordUsingSessionRequest,
+  // ): Promise<ChangePasswordUsingSessionResponse> {
+  //   return this.authv3Service.changePasswordUsingSession({
+  //     sessionId: params.sessionId,
+  //     newPassword: params.newPassword,
+  //   });
+  // }
 }

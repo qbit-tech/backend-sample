@@ -7,12 +7,14 @@ import { RoleModel, RoleService } from '@qbit-tech/libs-role';
 import { ConfigModule } from '@nestjs/config';
 import { AuthSessionModule } from '../authUser/authUser.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { UploaderModule } from '@qbit-tech/libs-uploader';
 import multer = require('multer');
 import path = require('path');
 
 @Module({
   imports: [
     AuthSessionModule,
+    UploaderModule,
     SequelizeModule.forFeature([UserModel, RoleModel]),
     ConfigModule.forRoot({
       isGlobal: true,

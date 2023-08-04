@@ -15,8 +15,8 @@ export class ForgotPasswordByLinkResponse {
 }
 
 export class ChangePasswordUsingSessionRequest {
-    @ApiProperty()
-    sessionId: string;
+    // @ApiProperty()
+    // sessionId: string;
 
     @ApiProperty()
     newPassword: string;
