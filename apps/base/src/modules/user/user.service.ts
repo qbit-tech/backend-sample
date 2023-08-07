@@ -3,7 +3,11 @@ import { UserModel, UserProperties } from './user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ulid } from 'ulid';
-import { RoleModel, RoleProperties } from '@qbit-tech/libs-role';
+import { 
+  RoleModel, 
+  RoleProperties, 
+  RoleService 
+} from '@qbit-tech/libs-role';
 import {
   generateResultPagination,
   cleanPhoneNumber,
@@ -17,6 +21,7 @@ export class UserService {
   constructor(
     @InjectModel(UserModel)
     private readonly userRepositories: typeof UserModel,
+    private readonly roleService: RoleService,
   ) {}
 
   async findAll(params: {
@@ -111,10 +116,10 @@ export class UserService {
       const options: any = {
         where,
         include: [
-          {
-            model: RoleModel,
-            as: 'roles',
-          },
+          // {
+          //   model: RoleModel,
+          //   as: 'roles',
+          // },
           //   {
           //     model: EventModel,
           //     as: 'events',
@@ -146,138 +151,36 @@ export class UserService {
 
       const count = await this.userRepositories.count({ ...options });
 
-      const results = await this.userRepositories.findAll({
+      const users = await this.userRepositories.findAll({
         ...options,
         limit: params.limit,
         offset: params.offset,
         order: [['createdAt', 'desc']],
       });
 
-      return {
-        ...generateResultPagination(count, params),
-        results: results.map((row) => row.get()),
-      };
-    } catch (error) {
-      Logger.error(
-        'findAll user::: error: ' + JSON.stringify(error),
-        'user.service',
-        'user.service',
-      );
-      return Promise.reject(error);
-    }
-  }
+      const results = []
 
-  async findAllToExport(params: {
-    offset?: number;
-    limit?: number;
-    search?: string;
-    filterStatus?: string;
-    filterGender?: string;
-    filterCustomerCode?: string;
-    startDate?: Date;
-    endDate?: Date;
-  }): Promise<{
-    count: number;
-    prev: string;
-    next: string;
-    results: any[];
-  }> {
-    try {
-      this.logger.log('Find all user...');
-      this.logger.log('Params: ' + JSON.stringify(params));
+      for (const user of users.map((row) => row.get())) {
+        if(user.roleId) {
+          const getRole = await this.roleService.findOne(user.roleId)
 
-      let where = {};
-
-      if (params.startDate && params.endDate) {
-        where = {
-          ...where,
-          createdAt: {
-            [Op.and]: {
-              [Op.gte]: params.startDate,
-              [Op.lte]: params.endDate,
-            },
-          },
-        };
+          if(getRole) {
+            results.push({
+              ...user,
+              role: getRole
+            })
+          } else {
+            results.push({
+              ...user
+            })
+          }
+        }
       }
-
-      params.search &&
-        (where = {
-          ...where,
-          [Op.or]: [
-            { name: { [Op.iLike]: `%${params.search}%` } },
-            { email: { [Op.iLike]: `%${params.search}%` } },
-            { phone: { [Op.iLike]: `%${params.search}%` } },
-          ],
-        });
-
-      // if (
-      //   params.hasOwnProperty('filterStatus') &&
-      //   typeof params.filterStatus === 'boolean'
-      // ) {
-      //   where = {
-      //     ...where,
-      //     status: params.filterStatus ? 'active' : 'inactive',
-      //   };
-      // }
-
-      if (
-        params.hasOwnProperty('filterStatus') &&
-        typeof params.filterStatus === 'string'
-      ) {
-        where = {
-          ...where,
-          status: {
-            [Op.iLike]: `%${params.filterStatus}%`,
-          },
-        };
-      }
-
-      if (
-        params.hasOwnProperty('filterGender') &&
-        typeof params.filterGender === 'string'
-      ) {
-        where = {
-          ...where,
-          gender: params.filterGender === 'male' ? 'male' : 'female',
-        };
-      }
-
-      if (
-        params.hasOwnProperty('filterCustomerCode') &&
-        typeof params.filterCustomerCode === 'string'
-      ) {
-        where = {
-          ...where,
-          userCode: {
-            [Op.iLike]: `%${params.filterCustomerCode}%`,
-          },
-        };
-      }
-
-      const options: any = {
-        where,
-        include: [
-          {
-            model: RoleModel,
-            as: 'roles',
-          },
-        ],
-        distinct: true,
-        col: 'userId',
-      };
-
-      const count = await this.userRepositories.count({ ...options });
-
-      const results = await this.userRepositories.findAll({
-        ...options,
-        limit: params.limit,
-        offset: params.offset,
-        order: [['createdAt', 'desc']],
-      });
 
       return {
         ...generateResultPagination(count, params),
-        results: results.map((row) => row.get()),
+        // results: results.map((row) => row.get()),
+        results: results,
       };
     } catch (error) {
       Logger.error(
@@ -356,15 +259,6 @@ export class UserService {
         status: user.status || 'active',
       });
 
-      const roles = user.roles ? [...user.roles] : [];
-
-      const roleIds = roles
-        .filter((item) => item.roleId !== '')
-        .map((spec) => spec.roleId);
-      this.logger.verbose('Params: ' + JSON.stringify(roleIds));
-
-      // await this.userRoleService.create(user.userId, roleIds);
-
       return {
         ...result.get(),
       };
@@ -379,31 +273,26 @@ export class UserService {
     this.logger.log('Find user by email: ' + email);
 
     try {
-      const result = await this.userRepositories.findOne({
+      let result:any = await this.userRepositories.findOne({
         where: {
           email,
         },
       });
 
-      return result ? result.get() : null;
-    } catch (err) {
-      this.logger.error('Failed find user by email!');
-      this.logger.error(err);
-      return Promise.reject(err);
-    }
-  }
+      if(result && result.roleId) {
+        const getRole = await this.roleService.findOne(result.roleId)
 
-  async findOneByUsername(username: string): Promise<UserProperties> {
-    this.logger.log('Find user by username: ' + username);
+        if(getRole) {
+          result = {
+            ...result.get(),
+            role: getRole
+          }
+        } else {
+          result = result.get()
+        }
+      }
 
-    try {
-      const result = await this.userRepositories.findOne({
-        where: {
-          username,
-        },
-      });
-
-      return result ? result.get() : null;
+      return result ? result : null;
     } catch (err) {
       this.logger.error('Failed find user by email!');
       this.logger.error(err);
@@ -412,11 +301,24 @@ export class UserService {
   }
 
   async findOneByUserId(userId: string): Promise<UserProperties> {
-    const result = await this.userRepositories.findOne({
+    let result:any = await this.userRepositories.findOne({
       where: { userId },
     });
+    
+    if(result && result.roleId) {
+      const getRole = await this.roleService.findOne(result.roleId)
 
-    return result ? result.get() : null;
+      if(getRole) {
+        result = {
+          ...result.get(),
+          role: getRole
+        }
+      } else {
+        result = result.get()
+      }
+    }
+
+    return result ? result : null;
   }
 
   async update(
@@ -494,13 +396,6 @@ export class UserService {
             returning: true,
           },
         );
-      const roles = user.roles ? [...user.roles] : [];
-
-      const roleIds = roles
-        .filter((item) => item.roleId !== '')
-        .map((spec) => spec.roleId);
-      this.logger.verbose('Params: ' + JSON.stringify(roleIds));
-
       // await this.userRoleService.update(user.userId, roleIds);
 
       return numberOfAffectedRows ? updatedUser.get() : null;
@@ -589,7 +484,7 @@ export class UserService {
   }
 
   async findOneByPhone(phoneNumber: string): Promise<UserProperties> {
-    const result = await this.userRepositories.findOne({
+    let result:any = await this.userRepositories.findOne({
       where: {
         phone: phoneNumber,
       },
@@ -625,7 +520,21 @@ export class UserService {
       // ],
     });
 
-    return result ? result.get() : null;
+    
+    if(result && result.roleId) {
+      const getRole = await this.roleService.findOne(result.roleId)
+
+      if(getRole) {
+        result = {
+          ...result.get(),
+          role: getRole
+        }
+      } else {
+        result = result.get()
+      }
+    }
+
+    return result ? result : null;
   }
 
   async updateUserImage(params: {
