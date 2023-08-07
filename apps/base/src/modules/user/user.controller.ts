@@ -62,7 +62,7 @@ export class UserController implements UserApiContract {
   @ApiOperation({ summary: 'New admin using email authenticator' })
   @ApiBearerAuth()
   @Post()
-  @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuard())
   @UseInterceptors(FileInterceptor('image'))
   async createUser(
     @Req() req: AppRequest,

@@ -5,6 +5,7 @@ import { UserModel, UserProperties } from '../user/user.entity';
 import { verify } from 'jsonwebtoken';
 import { SessionService } from '@qbit-tech/libs-authv3';
 import { DEFAULT_HASH_TOKEN } from '../../core/constants';
+import { RoleService } from '@qbit-tech/libs-role';
 import { EPlatform } from 'apps/base/src/core/constants';
 
 @Injectable()
@@ -15,20 +16,34 @@ export class AuthSessionService {
     @InjectModel(UserModel)
     private readonly userRepositories: typeof UserModel,
     private readonly sessionService: SessionService,
+    private readonly roleService: RoleService,
   ) {}
 
   async findOneByUserId(userId: string): Promise<UserProperties> {
-    const result = await this.userRepositories.findOne({
+    let result:any = await this.userRepositories.findOne({
       where: { userId },
       include: [
-        {
-          model: RoleModel,
-          as: 'roles',
-        },
+        // {
+        //   model: RoleModel,
+        //   as: 'roles',
+        // },
       ],
     });
 
-    return result ? result.get() : null;
+    if(result.roleId) {
+      const getRole = await this.roleService.findOne(result.roleId)
+
+      if(getRole) {
+        result = {
+          ...result.get(),
+          role: getRole
+        }
+      } else {
+        result = result.get()
+      }
+    }
+
+    return result ? result : null;
   }
 
   async validateToken(token: string) {

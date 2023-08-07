@@ -14,7 +14,7 @@ import { AuthSessionService } from '../modules/authUser/authUser.service';
 export const AuthPermissionGuard = (feature?: string, permission?: string, isTokenOptional?: boolean) => {
   @Injectable()
   class AuthPermissionGuardMixin implements CanActivate {
-    constructor(private readonly authSessionService: AuthSessionService) {}
+    constructor(readonly authSessionService: AuthSessionService) {}
 
     canActivate(context: ExecutionContext): Promise<boolean> {
       const request = context.switchToHttp().getRequest();
@@ -46,7 +46,7 @@ export const AuthPermissionGuard = (feature?: string, permission?: string, isTok
           // for (const role of auth.roles) {
           //   approved = hasPermission(role.permissions, feature, permission);
           // }
-          approved = hasPermissionFromRoles(auth.user.roles, feature, permission);
+          approved = hasPermissionFromRoles(auth.user.role, feature, permission);
         } else {
           approved = true;
         }

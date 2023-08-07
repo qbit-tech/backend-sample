@@ -19,9 +19,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "run-migration-windows": "cd apps/base& set ENV_PATH=.env.development& sequelize-cli db:migrate --env development& cd ../..",
+    "run-migration-windows": "cd apps/base& set ENV_PATH=.env.local& sequelize-cli db:migrate --env development& cd ../..",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "start:dev-windows": "set ENV_PATH=apps/base/.env.development& nest start base --watch"
+    "start:dev-windows": "set ENV_PATH=apps/base/.env.local& nest start base --watch"
   },
   "dependencies": {
     "@nestjs-modules/ioredis": "1.0.0",

@@ -7,13 +7,13 @@ export function hasPermission(userPermissions: FeaturePermissionType, feature: s
 }
 
 export function hasPermissionFromRoles(
-  roles: any[],
+  role: any,
   feature: string,
   permission: string,
 ) {
     let isHasPermission = false;
-    for (const role of roles) {
+    // for (const role of roles) {
       isHasPermission = hasPermission(role.permissions, feature, permission);
-    }
+    // }
     return isHasPermission;
   }

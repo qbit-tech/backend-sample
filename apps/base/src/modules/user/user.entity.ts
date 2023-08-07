@@ -24,6 +24,9 @@ export class UserProperties {
   userId: string;
 
   @ApiProperty()
+  roleId?: string;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
@@ -47,8 +50,8 @@ export class UserProperties {
   @ApiPropertyOptional()
   address?: string;
 
-  @ApiPropertyOptional()
-  profilePic?: string;
+  // @ApiPropertyOptional()
+  // profilePic?: string;
 
   @ApiPropertyOptional()
   status?: string;
@@ -72,7 +75,7 @@ export class UserProperties {
   nickName?: string;
 
   @ApiPropertyOptional()
-  roles?: RoleProperties[];
+  role?: RoleProperties;
 }
 
 @Table({
@@ -83,6 +86,9 @@ export class UserModel extends Model {
   @PrimaryKey
   @Column
   userId: string;
+
+  @Column
+  roleId?: string;
 
   @Column
   name: string;
@@ -117,9 +123,9 @@ export class UserModel extends Model {
   @Column
   address?: string;
 
-  @AllowNull
-  @Column
-  profilePic?: string;
+  // @AllowNull
+  // @Column
+  // profilePic?: string;
 
   @AllowNull
   @Column

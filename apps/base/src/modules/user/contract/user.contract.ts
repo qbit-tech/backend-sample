@@ -95,6 +95,9 @@ export class CreateUserRequest {
   readonly isSubscribed?: boolean;
 
   @ApiPropertyOptional()
+  readonly roleId?: string;
+
+  @ApiPropertyOptional()
   readonly phone?: string;
 
   @ApiPropertyOptional()
@@ -136,10 +139,10 @@ export class CreateUserRequest {
   @ApiPropertyOptional()
   readonly platform?: string;
 
-  @IsNotEmpty()
-  @ApiPropertyOptional()
-  @IsArray()
-  roles: Omit<RoleProperties, 'createdAt' | 'updatedAt'>[];
+  // @IsNotEmpty()
+  // @ApiPropertyOptional()
+  // @IsArray()
+  // roles: Omit<RoleProperties, 'createdAt' | 'updatedAt'>[];
 
   // additional
   @ApiPropertyOptional()
@@ -165,6 +168,8 @@ export class UpdateRequest {
     message: 'gender must be either male or female',
   })
   readonly gender: Gender;
+  @ApiPropertyOptional()
+  readonly roleId?: string;
   @ApiPropertyOptional()
   readonly phone?: string;
   @ApiPropertyOptional()

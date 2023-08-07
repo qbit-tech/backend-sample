@@ -11,6 +11,7 @@ import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
+import { RoleModule } from '@qbit-tech/libs-role';
 import { TagModule } from './modules/tag/tag.module';
 
 const notificationOptions = [
@@ -106,7 +107,7 @@ export const rootImportedModules = [
     TestNotifModule,
     UserModule,
     // PermissionModule,
-    // RoleModule,
+    RoleModule,
     // AuthSessionModule
   ],
   controllers: [AppController],
