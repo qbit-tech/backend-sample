@@ -447,6 +447,114 @@ export class TransactionService {
     }
   }
 
+  async updateJneResponse(
+    transactionId: string,
+    resJne?: any,
+    lastJNEStatus?: number,
+  ): Promise<TransactionShipmentModel> {
+    this.logger.log('--- UPDATE JNE Response ---');
+    this.logger.log('resJne::: ' + JSON.stringify(resJne));
+    this.logger.log('lastJNEStatus::: ' + JSON.stringify(lastJNEStatus));
+
+    try {
+      const [_, results] = await this.transactionShipmentRepositories.update(
+        {
+          jneResponse: resJne,
+          lastJNEStatus: lastJNEStatus,
+        },
+        {
+          where: {
+            transactionId: transactionId,
+          },
+          returning: true,
+        },
+      );
+
+      return results ? results[0].get() : null;
+    } catch (err) {
+      this.logger.error('ERROR UPDATE JNE RESPONSE');
+      this.logger.error('err::: ' + JSON.stringify(err));
+      return Promise.reject(err);
+    }
+  }
+
+  async updateWaybill(
+    transactionId: string,
+    waybill: string,
+    shipmentType: string,
+    shipmentDate: string,
+    shipmentTime: string,
+  ): Promise<TransactionShipmentModel> {
+    this.logger.log('--- UPDATE WAYBILL ---');
+    this.logger.log('transactionId::: ' + JSON.stringify(transactionId));
+    this.logger.log('waybill::: ' + JSON.stringify(waybill));
+
+    try {
+      const [_, results] = await this.transactionShipmentRepositories.update(
+        {
+          waybill: waybill,
+          shipmentStatus: EShipmentStatus.SCHEDULED,
+          shipmentType: shipmentType,
+          shipmentDate: shipmentDate,
+          shipmentTime: shipmentTime,
+        },
+        {
+          where: {
+            transactionId,
+          },
+          returning: true,
+        },
+      );
+
+      await this.transactionRepositories.update(
+        {
+          transactionStatus: ETransactionStatus.scheduled_for_shipment,
+        },
+        { where: { transactionId } },
+      );
+
+      return results ? results[0].get() : null;
+    } catch (err) {
+      this.logger.error('ERROR PAYMENT STATUS');
+      this.logger.error('err::: ' + JSON.stringify(err));
+      return Promise.reject(err);
+    }
+  }
+
+  async shippingServiceOption(
+    params: ShippingServiceOptionRequest,
+  ): Promise<any> {
+    this.logger.log('--- SHIPPING SERVICE OPTION ---');
+    this.logger.log('params::: ' + JSON.stringify(params));
+
+    try {
+
+
+      return []
+    } catch (error) {
+      this.logger.error('ERROR SHIPPING SERVICE OPTION');
+      this.logger.error(error);
+      return Promise.reject(error);
+    }
+  }
+
+  async shipmentProgress(transactionId: string): Promise<any> {
+    this.logger.log('--- SHIPPING PROGRESS ---');
+    this.logger.log('transactionId::: ' + JSON.stringify(transactionId));
+
+    try {
+      return await this.transactionShipmentRepositories.findOne({
+        where: {
+          transactionId: transactionId,
+        },
+      });
+    } catch (error) {
+      this.logger.error('ERROR SHIPPING PROGRESS');
+      this.logger.error(error);
+      return Promise.reject(error);
+    }
+  }
+
   async delete(transactionId: string): Promise<{ isSuccess: boolean }> {
     this.logger.log('DELETE TRANSACTION');
     this.logger.log('transactionId::: ' + JSON.stringify(transactionId));

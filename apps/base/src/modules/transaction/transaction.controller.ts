@@ -124,6 +124,28 @@ export class TransactionController {
     }
   }
 
+  @ApiBearerAuth()
+  @Post('shipping-service-option')
+  @UseGuards(AuthPermissionGuard())
+  async shippingServiceOption(
+    @Body() body: ShippingServiceOptionRequest,
+  ): Promise<any> {
+    this.logger.log('-- SHIPPING SERVICE OPTION --');
+    this.logger.log('body: ' + JSON.stringify(body));
+
+    try {
+      const res = await this.transactionService.shippingServiceOption({
+        ...body,
+      });
+
+      return res;
+    } catch (err) {
+      this.logger.error('ERROR shipping service option');
+      this.logger.error(err);
+      throw new HttpException(err, getErrorStatusCode(err));
+    }
+  }
+
   
   @ApiBearerAuth()
   @Post('calculate')
