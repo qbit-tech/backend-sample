@@ -1144,7 +1144,7 @@
 
 "@qbit-tech/libs-role@qbit-tech/libs-role":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-role.git#0d3fb87cc643a14be29a020009da4ae3da54eae5"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-role.git#bb117dcd05e4ff0415c096bb9a1a111fd751ece1"
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
