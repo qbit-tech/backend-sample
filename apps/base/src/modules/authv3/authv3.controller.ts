@@ -29,7 +29,7 @@ export class Authv3Controller {
 
   constructor(
     private readonly authv3Service: AuthService,
-    private readonly sessionService: SessionService,
+    // private readonly sessionService: SessionService,
     private readonly userService: UserService,
   ) {}
 
