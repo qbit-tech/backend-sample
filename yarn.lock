@@ -1106,7 +1106,7 @@
 
 "@qbit-tech/libs-authv3@qbit-tech/libs-authv3":
   version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-authv3.git#8fbacb9a9b142c6877b7781f0d2d672d01fa7bb4"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-authv3.git#b400e655649b254ff95062155a9e93b028cc2534"
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
