@@ -12,8 +12,10 @@ import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
 import { RoleModule } from '@qbit-tech/libs-role';
+import { TransactionModule } from '@qbit-tech/libs-transaction';
+import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
-import { TransactionModule } from './modules/transaction/transaction.module';
+// import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
   {
@@ -108,6 +110,7 @@ export const rootImportedModules = [
     TestNotifModule,
     UserModule,
     TransactionModule,
+    FaqModule,
     // PermissionModule,
     RoleModule,
     // AuthSessionModule
