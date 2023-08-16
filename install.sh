@@ -7,26 +7,14 @@ echo "==== START - Install ===="
 echo "> INSTALL ROOT"
 yarn install
 
-yarn add qbit-tech/libs-authv3
+echo "> INSTALL LIBS"
 yarn add qbit-tech/libs-notification
-yarn add qbit-tech/libs-role
 yarn add qbit-tech/libs-utils
+yarn add qbit-tech/libs-authv3
+yarn add qbit-tech/libs-role
 yarn add qbit-tech/libs-uploader
-
-# echo "> INSTALL LIBS AUTHV3"
-# cd ./libs/authv3
-# yarn install
-# cd ../..
-
-# echo "> INSTALL LIBS NOTIFICATION"
-# cd ./libs/libs-notification
-# yarn install
-# cd ../..
-
-# echo "> INSTALL LIBS UTILS"
-# cd ./libs/libs-utils
-# yarn install
-# cd ../..
+yarn add qbit-tech/libs-transaction
+yarn add qbit-tech/libs-faq
 
 echo "> RUN MIGRATION"
 ./run_migration.sh base local
