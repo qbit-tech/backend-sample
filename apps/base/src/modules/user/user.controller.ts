@@ -282,6 +282,7 @@ export class UserController implements UserApiContract {
     let uid = userId;
     if (userId === 'me') {
       Logger.log('get my profile');
+      console.log(req.user)
       uid = req.user.userId;
     }
     Logger.log('req.user', req.user);

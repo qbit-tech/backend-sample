@@ -316,6 +316,8 @@ export class UserService {
       } else {
         result = result.get()
       }
+    } else {
+      result = result.get()
     }
 
     return result ? result : null;

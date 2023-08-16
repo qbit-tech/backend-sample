@@ -41,6 +41,8 @@ export class AuthSessionService {
       } else {
         result = result.get()
       }
+    } else {
+      result = result.get()
     }
 
     return result ? result : null;
@@ -76,6 +78,7 @@ export class AuthSessionService {
         '(userFromSession as any).platform',
         (userFromSession as any).platform,
       );
+      console.info(userFromSession)
 
       let latestSessionId;
       if ((userFromSession as any).platform === EPlatform.CMS) {
@@ -111,7 +114,7 @@ export class AuthSessionService {
       // end check
 
       const user = await this.findOneByUserId((userFromSession as any).userId);
-
+      console.log(user)
       return { decodedToken, userFromSession, user };
     } else {
       return null;
