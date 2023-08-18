@@ -30,7 +30,7 @@ then
   MODE="local"
 fi
 
-echo "----- Migration: Started -----"
+echo "--- Migration: Started ---"
 
 # if [ -f ./apps/$PROJECT/.env.$MODE ]
 # then
@@ -49,44 +49,53 @@ echo "----- Migration: Started -----"
 #   echo "$INCLUDE_LIBS"
 # fi
 
-echo "===== Migrate DB @qbit-tech/libs-authv3 ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-authv3 ==="
 cd ./node_modules/@qbit-tech/libs-authv3/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-role ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-role ==="
 cd ./node_modules/@qbit-tech/libs-role/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-notification ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-notification ==="
 cd ./node_modules/@qbit-tech/libs-notification/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-utils (appConfig, appVersion) ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-utils (appConfig, appVersion) ==="
 cd ./node_modules/@qbit-tech/libs-utils/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-faq ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-faq ==="
 cd ./node_modules/@qbit-tech/libs-faq/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-uploader ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-uploader ==="
 cd ./node_modules/@qbit-tech/libs-uploader/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB @qbit-tech/libs-transaction ====="
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-transaction ==="
 cd ./node_modules/@qbit-tech/libs-transaction/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
-echo "===== Migrate DB Project ====="
+echo -ne '\n'
+echo "=== MIGRATE DB Project ==="
 cd apps/$PROJECT
 ENV_PATH=.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../..
 
-echo "----- Migration: Finished -----"
+echo -ne '\n'
+echo "--- Migration: Finished ---"

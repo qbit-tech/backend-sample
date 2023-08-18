@@ -12,6 +12,10 @@ import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 import { Authv3Module } from './modules/authv3/authv3.module';
 import { RoleModule } from '@qbit-tech/libs-role';
+import {
+  FeatureConfigModule,
+  FeatureVersionModule,
+} from '@qbit-tech/feature-utils';
 import { TransactionModule } from '@qbit-tech/libs-transaction';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
@@ -114,6 +118,8 @@ export const rootImportedModules = [
     // PermissionModule,
     RoleModule,
     // AuthSessionModule
+    FeatureConfigModule,
+    FeatureVersionModule,
   ],
   controllers: [AppController],
 })
