@@ -1088,8 +1088,8 @@
     "@qbit-tech/libs-utils" latest
 
 "@qbit-tech/libs-notification@qbit-tech/libs-notification":
-  version "1.2.4"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#a6dac7d0a89bc97d1c5cc0697837a5b2b34d89b8"
+  version "1.2.5"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-notification.git#17f96ddd8f4fd649b1a29c2c161bc61d024d637b"
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/schedule" "^3.0.1"
