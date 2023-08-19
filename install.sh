@@ -14,6 +14,7 @@ yarn add qbit-tech/libs-role
 yarn add qbit-tech/libs-uploader
 yarn add qbit-tech/libs-transaction
 yarn add qbit-tech/libs-faq
+yarn add qbit-tech/libs-payments
 yarn add qbit-tech/feature-utils
 
 echo "> RUN MIGRATION"
