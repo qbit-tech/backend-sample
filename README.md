@@ -21,6 +21,11 @@ Clone this repo use SSH. Don't use HTTPS.
 - ?? ask your mentor !!
 6. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
+## Generate SSH
+- Run command `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
+- Don't use `passphrases`. Ignore it.
+Refferences: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
 ===
 
 ## ABOUT NEST
