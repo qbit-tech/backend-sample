@@ -1,4 +1,6 @@
-Requirements:
+Clone this repo use SSH. Don't use HTTPS.
+
+## Requirements:
 - Please use `yarn`
 - NodeJS v18.17.0
 - Database PostgreSQL
