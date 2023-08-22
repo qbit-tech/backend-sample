@@ -21,9 +21,10 @@ Clone this repo use SSH. Don't use HTTPS.
 - ?? ask your mentor !!
 6. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
-## Generate SSH
+## Generate SSH & Add to Github
 - Run command `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
 - Don't use `passphrases`. Ignore it.
+- Add your SSH Key to Github >> https://github.com/settings/keys
   
 Refferences: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
