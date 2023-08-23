@@ -38,6 +38,7 @@
     "@qbit-tech/libs-faq": "qbit-tech/libs-faq",
     "@qbit-tech/libs-notification": "qbit-tech/libs-notification",
     "@qbit-tech/libs-payments": "qbit-tech/libs-payments",
+    "@qbit-tech/libs-products": "qbit-tech/libs-products",
     "@qbit-tech/libs-role": "qbit-tech/libs-role",
     "@qbit-tech/libs-transaction": "qbit-tech/libs-transaction",
     "@qbit-tech/libs-uploader": "qbit-tech/libs-uploader",
