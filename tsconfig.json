@@ -8,6 +8,9 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
+    "types": [
+      "node"
+    ],
     "baseUrl": "./",
     "incremental": true,
     "resolveJsonModule": true,
