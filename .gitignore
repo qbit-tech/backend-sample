@@ -3,6 +3,7 @@
 **/.env
 **/.env.local
 .npmrc
+.yarnrc
 
 # compiled output
 /dist
