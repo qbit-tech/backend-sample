@@ -1,20 +1,32 @@
-Please use `yarn`
+Clone this repo use SSH. Don't use HTTPS.
+
+## Requirements:
+- Please use `yarn`
+- NodeJS v18.17.0
+- Database PostgreSQL
 
 ## Step By Step, How to Install & Start (LINUX / MACOS / Windows WSL)
-1. Enter the folder apps/[project]
+1. Enter the folder apps/[project]. Misalnya `cd apps/base`.
 2. Copy file `.env.example` to `.env.local`. Then fill the value.
-3. Back to root project folder
+3. Back to root project folder. Run command `cd ../..` from folder apps/[project].
 4. Run command `./install.sh`
 5. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
 
 ## Step By Step, How to Install & Start (WINDOWS without WSL)
-1. Enter the folder apps/[project]
+1. Enter the folder apps/[project]. Misalnya `cd apps/base`.
 2. Copy file `.env.example` to `.env.local`. Then fill the value.
-3. Back to root project folder
-4. Run `yarn install`
+3. Back to root project folder. Run command `cd ../..` from folder apps/[project].
+4. Run command `yarn install`
 5. Run all migrations manually
-- ??
+- ?? ask your mentor !!
 6. Run command `yarn start-[folder-name-in-apps]`. e.g `yarn start-base`
+
+## Generate SSH & Add to Github
+- Run command `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`
+- Don't use `passphrases`. Ignore it.
+- Add your SSH Key to Github >> https://github.com/settings/keys
+  
+Refferences: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 ===
 

@@ -19,6 +19,8 @@ import {
 import { TransactionModule } from '@qbit-tech/libs-transaction';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
+import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
+import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -100,6 +102,17 @@ export const rootImportedModules = [
     ],
     notificationOptions,
   ),
+  PaymentModule.forRoot({
+    STAGE: 'development',
+    SERVER_KEY: process.env.SERVER_KEY,
+    CLIENT_KEY: process.env.CLIENT_KEY,
+    SECRET_KEY: process.env.SECRET_KEY,
+    PASSWORD: process.env.PASSWORD,
+    BASE_URL: process.env.BASE_URL,
+    BASE_URL_PAYMENT_PAGE: process.env.BASE_URL_PAYMENT_PAGE,
+    MERCHANT_ID: process.env.MERCHANT_ID,
+    MERCHANT_KEY_ID: process.env.MERCHANT_KEY_ID,
+  })
   // FirebaseModule.forRoot({
   //   credential: process.env.FIREBASE_CERT
   //     ? FirebaseAdmin.credential.cert(process.env.FIREBASE_CERT)
@@ -120,7 +133,8 @@ export const rootImportedModules = [
     // AuthSessionModule
     FeatureConfigModule,
     FeatureVersionModule,
+    ProductsModule
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }
