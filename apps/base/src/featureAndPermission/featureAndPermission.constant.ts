@@ -28,6 +28,13 @@ export const FEATURE_PERMISSIONS = {
       value: true,
     },
   },
+  PRODUCT: {
+    __type: 'PRODUCT',
+    __title: 'Product',
+    __description: 'Manage product',
+
+    ...PERMISSIONS_CRUD,
+  },
   ROLE: {
     __type: 'ROLE',
     __title: 'Role',
