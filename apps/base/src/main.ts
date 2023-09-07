@@ -13,7 +13,7 @@ async function bootstrap() {
     logger: ['verbose', 'log', 'warn', 'error'],
   });
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.SWAGGER_DOCS_PATH) {
     const config = new DocumentBuilder()
       .setTitle(appJSON.name)
       .setDescription('API Documentation')
@@ -21,7 +21,7 @@ async function bootstrap() {
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup(process.env.SWAGGER_DOCS_PATH, app, document);
   }
 
   app.useGlobalInterceptors(new OutputInterceptor());
