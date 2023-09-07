@@ -6,7 +6,7 @@ import { Op } from 'sequelize';
 import { ERRORS } from '../../core/error.constant';
 import { generateResultPagination } from '@qbit-tech/libs-utils';
 
-@Injectable
+@Injectable()
 export class ArticleService {
     constructor(
         @InjectModel(ArticleModel)

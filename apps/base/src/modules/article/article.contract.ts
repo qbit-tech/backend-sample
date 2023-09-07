@@ -20,7 +20,7 @@ export abstract class ArticleApiContract {
 
 export class ArticleFindAllRequest extends DefaultFindAllRequest {
     @ApiPropertyOptional()
-    @IsOptional
+    @IsOptional()
     readonly search?: string;
 }
 
@@ -33,19 +33,19 @@ export class ArticleFindOneResponse {
     @ApiProperty()
     readonly articleId: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly title: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly content: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly author: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly category: string;
 
@@ -75,23 +75,23 @@ export class UpdateThumbnailResponse {
 }
 
 export class ArticleCreateRequest {
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly articleId: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly title: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly content: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly author: string;
 
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly category: string;
 
@@ -111,7 +111,7 @@ export class ArticleCreateResponse {
 }
 
 export class ArticleUpdateRequest extends ArticleCreateRequest {
-    @IsNotEmpty
+    @IsNotEmpty()
     @ApiProperty()
     readonly articleId: string;
 }

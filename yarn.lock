@@ -1118,8 +1118,8 @@
     postmark "^3.0.18"
 
 "@qbit-tech/libs-payments@qbit-tech/libs-payments#latest":
-  version "1.0.0"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-payments.git#b2e767302c7a0b4670d6b1b20dfa861a2088e5f2"
+  version "1.1.3"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-payments.git#a0b053e048d87b1f977f79679f502884784ad8f3"
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/common" "^10.0.0"
@@ -1128,6 +1128,7 @@
     "@nestjs/platform-express" "^10.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.8"
+    "@qbit-tech/libs-session" qbit-tech/libs-session
     "@qbit-tech/libs-utils" "^1.2.3"
     axios "^1.4.0"
     base-64 "^1.0.0"
@@ -1181,6 +1182,10 @@
   dependencies:
     "@qbit-tech/libs-utils" latest
 
+"@qbit-tech/libs-session@qbit-tech/libs-session":
+  version "1.1.0"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-session.git#7963c775d783b85a929f92f4767db85b01b1e19b"
+
 "@qbit-tech/libs-transaction@qbit-tech/libs-transaction#latest":
   version "1.3.0"
   resolved "git+ssh://git@github.com/qbit-tech/libs-transaction.git#2255d0be7217c89d0bb9dcdf32724d8ddf9a8a6b"
@@ -1189,10 +1194,9 @@
     "@qbit-tech/libs-utils" latest
 
 "@qbit-tech/libs-uploader@qbit-tech/libs-uploader#latest":
-  version "1.1.3"
-  resolved "git+ssh://git@github.com/qbit-tech/libs-uploader.git#458a120fd79d35dbe319dd43aa8cb30658ced66a"
+  version "1.3.1"
+  resolved "git+ssh://git@github.com/qbit-tech/libs-uploader.git#38fbab6783c901b6d86c37bb8d36d8ca840a1eba"
   dependencies:
-    "@types/multer" "^1.4.7"
     aws-sdk "^2.868.0"
 
 "@qbit-tech/libs-utils@^1.2.3", "@qbit-tech/libs-utils@latest":
