@@ -37,12 +37,6 @@ export class TagController implements TagApiContract {
   @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Find all event tags' })
   @Get()
-  // @UseGuards(
-  //   AuthPermissionGuard(
-  //     FEATURE_PERMISSIONS.TAG.__type,
-  //     FEATURE_PERMISSIONS.TAG.LIST.__type,
-  //   ),
-  // )
   @ApiOkResponse({ type: TagFindAllResponse })
   async findAll(
     @Query() params: TagFindAllRequest,
