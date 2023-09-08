@@ -31,7 +31,35 @@ export const FEATURE_PERMISSIONS = {
   PRODUCT: {
     __type: 'PRODUCT',
     __title: 'Product',
-    __description: 'Manage product',
+    __description: 'Manage Product',
+
+    ...PERMISSIONS_CRUD,
+  },
+  PRODUCT_CATEGORY: {
+    __type: 'PRODUCT_CATEGORY',
+    __title: 'Product Category',
+    __description: 'Manage Product Category',
+
+    ...PERMISSIONS_CRUD,
+  },
+  PRODUCT_STOCKS: {
+    __type: 'PRODUCT_STOCKS',
+    __title: 'Product STOCKS',
+    __description: 'Manage Product Stocks',
+
+    ...PERMISSIONS_CRUD,
+  },
+  PRODUCT_STORE: {
+    __type: 'PRODUCT_STORE',
+    __title: 'Product Store',
+    __description: 'Manage Product Store',
+
+    ...PERMISSIONS_CRUD,
+  },
+  PRODUCT_VARIANTS: {
+    __type: 'PRODUCT_VARIANTS',
+    __title: 'Product Variants',
+    __description: 'Manage Product Variants',
 
     ...PERMISSIONS_CRUD,
   },
