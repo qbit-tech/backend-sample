@@ -14,7 +14,7 @@ import {
 
 export class ArticleProperties {
     @ApiProperty()
-    articleId: string;
+    articleId?: string;
 
     @ApiProperty()
     title: string;

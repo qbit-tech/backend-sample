@@ -31,7 +31,7 @@ export class ArticleFindAllResponse extends PaginationResponse {
 
 export class ArticleFindOneResponse {
     @ApiProperty()
-    readonly articleId: string;
+    readonly articleId?: string;
 
     @IsNotEmpty()
     @ApiProperty()
@@ -77,10 +77,6 @@ export class UpdateThumbnailResponse {
 export class ArticleCreateRequest {
     @IsNotEmpty()
     @ApiProperty()
-    readonly articleId: string;
-
-    @IsNotEmpty()
-    @ApiProperty()
     readonly title: string;
 
     @IsNotEmpty()
@@ -97,12 +93,6 @@ export class ArticleCreateRequest {
 
     @ApiPropertyOptional()
     readonly thumbnail?: string;
-
-    @ApiPropertyOptional()
-    readonly updatedAt?: Date;
-
-    @ApiPropertyOptional()
-    readonly createdAt?: Date;
 }
 
 export class ArticleCreateResponse {

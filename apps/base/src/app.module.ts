@@ -23,6 +23,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { MinioClientModule } from './modules/testMinio/minio.module';
+import { ArticleModule } from './modules/article/article.module'
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -124,6 +125,7 @@ export const rootImportedModules = [
 @Module({
   imports: [
     ...rootImportedModules,
+    ArticleModule,
     TagModule,
     Authv3Module,
     TestNotifModule,

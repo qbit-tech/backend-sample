@@ -22,7 +22,7 @@ import {
 } from './article.contract';
 import { ArticleService } from './article.service';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
 import { CacheInterceptor } from '@nestjs/cache-manager';
@@ -81,7 +81,7 @@ export class ArticleController implements ArticleApiContract {
     }
 
     @ApiOperation({ summary: 'Create new event article' })
-    // @ApiBearerAuth()
+    @ApiBearerAuth()
     @Post()
     @UseGuards(
         AuthPermissionGuard(
@@ -130,7 +130,7 @@ export class ArticleController implements ArticleApiContract {
     }
 
     @ApiOperation({ summary: 'Update event article' })
-    // @ApiBearerAuth()
+    @ApiBearerAuth()
     @Patch(':articleId')
     @UseGuards(
         AuthPermissionGuard(
@@ -177,7 +177,7 @@ export class ArticleController implements ArticleApiContract {
     }
 
     @ApiOperation({ summary: 'Delete single article' })
-    // @ApiBearerAuth()
+    @ApiBearerAuth()
     @Delete(':articleId')
     @UseGuards(
         AuthPermissionGuard(
