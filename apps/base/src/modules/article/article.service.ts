@@ -122,7 +122,6 @@ export class ArticleService {
                 content: params.content,
                 author: params.author,
                 category: params.category,
-                thumbnail: params.thumbnail,
             });
 
             Logger.log('article created: ' + JSON.stringify(result), 'article.service');

@@ -28,8 +28,8 @@ export class ArticleProperties {
     @ApiProperty()
     category: string;
 
-    @ApiPropertyOptional()
-    thumbnail?: string;
+    // @ApiPropertyOptional()
+    // thumbnail?: string;
 
     @ApiPropertyOptional()
     updatedAt?: Date;
@@ -59,9 +59,9 @@ export class ArticleModel extends Model {
     @Column
     category: string;
 
-    @AllowNull
-    @Column
-    thumbnail?: string;
+    // @AllowNull
+    // @Column
+    // thumbnail?: string;
 
     @UpdatedAt
     updatedAt?: Date;
