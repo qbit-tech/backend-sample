@@ -1,16 +1,19 @@
 import {
+    Body,
     Controller,
+    Put,
+    UseInterceptors,
+    UploadedFile,
+    Req,
+    UseGuards,
     Get,
     Query,
+    Delete,
     Param,
+    Patch,
     Logger,
     Post,
-    Patch,
-    Body,
-    Delete,
     HttpException,
-    UseGuards,
-    UseInterceptors,
 } from '@nestjs/common';
 import {
     ArticleApiContract,
@@ -19,13 +22,15 @@ import {
     ArticleFindOneResponse,
     ArticleCreateRequest,
     ArticleUpdateRequest,
+    UpdateThumbnailResponse,
 } from './article.contract';
 import { ArticleService } from './article.service';
-import { getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { getErrorStatusCode, AppRequest, SimpleResponse } from '@qbit-tech/libs-utils';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Articles')
 @Controller('articles')
@@ -105,12 +110,12 @@ export class ArticleController implements ArticleApiContract {
         );
 
         // await this.eventLogService.create({
-        //   userId: req.user.userId,
+        //   articleId: req.article.articleId,
         //   dataId: res.articleId,
         //   action: ELogAction.CREATE_TAG,
-        //   metaUser: req.user,
+        //   metaUser: req.article,
         //   dataAfter: res,
-        //   note: `${req.user.name} create article ${res.articleName}`
+        //   note: `${req.article.name} create article ${res.articleName}`
         // })
 
         return res;
@@ -157,13 +162,13 @@ export class ArticleController implements ArticleApiContract {
             });
 
             // await this.eventLogService.create({
-            //   userId: req.user.userId,
+            //   articleId: req.article.articleId,
             //   dataId: articleId,
             //   action: ELogAction.UPDATE_TAG,
-            //   metaUser: req.user,
+            //   metaUser: req.article,
             //   dataBefore: findDataBefore,
             //   dataAfter: res,
-            //   note: `${req.user.name} update article ${res.articleName}`
+            //   note: `${req.article.name} update article ${res.articleName}`
             // })
 
             return res;
@@ -198,18 +203,59 @@ export class ArticleController implements ArticleApiContract {
             // const findDataBefore = await this.articleService.findOne(articleId);
 
             // await this.eventLogService.create({
-            //   userId: req.user.userId,
+            //   articleId: req.article.articleId,
             //   dataId: articleId,
             //   action: ELogAction.HARD_DELETE_TAG,
-            //   metaUser: req.user,
+            //   metaUser: req.article,
             //   dataBefore: findDataBefore,
-            //   note: `${req.user.name} delete article ${findDataBefore.articleName}`
+            //   note: `${req.article.name} delete article ${findDataBefore.articleName}`
             // })
 
             return await this.articleService.delete(articleId);
         } catch (error) {
             // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
             throw new HttpException(error, getErrorStatusCode(error));
+        }
+    }
+
+    @ApiOperation({
+        summary:
+            'Change thumbnail by articleId',
+    })
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                image: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiBearerAuth()
+    @Put(':articleId/thumbnail')
+    // @UseGuards(AuthPermissionGuard())
+    @UseInterceptors(FileInterceptor('image'))
+    @ApiOkResponse({ type: UpdateThumbnailResponse })
+    async updateThumbnail(
+        @Param('articleId') articleId: string,
+        @UploadedFile() file,
+        @Req() req: AppRequest,
+    ): Promise<UpdateThumbnailResponse> {
+        try {
+            Logger.log('Update article: ' + articleId);
+            let uid = articleId;
+            if (articleId === 'me') {
+                uid = req.user.userId;
+            }
+
+            return file.path
+
+
+        } catch (err) {
+            console.info('error: ', err);
         }
     }
 }
