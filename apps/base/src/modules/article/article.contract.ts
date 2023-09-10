@@ -101,20 +101,16 @@ export class ArticleCreateResponse {
 }
 
 export class ArticleUpdateRequest {
-    @IsNotEmpty()
-    @ApiProperty()
+    @ApiPropertyOptional()
     readonly title: string;
 
-    @IsNotEmpty()
-    @ApiProperty()
+    @ApiPropertyOptional()
     readonly content: string;
 
-    @IsNotEmpty()
-    @ApiProperty()
+    @ApiPropertyOptional()
     readonly author: string;
 
-    @IsNotEmpty()
-    @ApiProperty()
+    @ApiPropertyOptional()
     readonly category: string;
 
     // @ApiPropertyOptional()
