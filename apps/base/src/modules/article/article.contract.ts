@@ -49,8 +49,8 @@ export class ArticleFindOneResponse {
     @ApiProperty()
     readonly category: string;
 
-    @ApiPropertyOptional()
-    readonly thumbnail?: string;
+    // @ApiPropertyOptional()
+    // readonly thumbnail?: string;
 
     @ApiPropertyOptional()
     readonly updatedAt?: Date;
@@ -91,8 +91,8 @@ export class ArticleCreateRequest {
     @ApiProperty()
     readonly category: string;
 
-    @ApiPropertyOptional()
-    readonly thumbnail?: string;
+    // @ApiPropertyOptional()
+    // readonly thumbnail?: string;
 }
 
 export class ArticleCreateResponse {
@@ -100,8 +100,23 @@ export class ArticleCreateResponse {
     readonly results: string[]
 }
 
-export class ArticleUpdateRequest extends ArticleCreateRequest {
+export class ArticleUpdateRequest {
     @IsNotEmpty()
     @ApiProperty()
-    readonly articleId: string;
+    readonly title: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly content: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly author: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly category: string;
+
+    // @ApiPropertyOptional()
+    // readonly thumbnail?: string;
 }

@@ -53,12 +53,12 @@ export class ArticleController implements ArticleApiContract {
 
     @ApiOperation({ summary: 'Find one event article' })
     @Get(':articleId')
-    @UseGuards(
-        AuthPermissionGuard(
-            FEATURE_PERMISSIONS.TAG.__type,
-            FEATURE_PERMISSIONS.TAG.DETAIL.__type,
-        ),
-    )
+    // @UseGuards(
+    //     AuthPermissionGuard(
+    //         FEATURE_PERMISSIONS.TAG.__type,
+    //         FEATURE_PERMISSIONS.TAG.DETAIL.__type,
+    //     ),
+    // )
     @ApiOkResponse({ type: ArticleFindOneResponse })
     async findOne(@Param('articleId') articleId: string): Promise<ArticleFindOneResponse> {
         try {
@@ -83,12 +83,12 @@ export class ArticleController implements ArticleApiContract {
     @ApiOperation({ summary: 'Create new event article' })
     @ApiBearerAuth()
     @Post()
-    @UseGuards(
-        AuthPermissionGuard(
-            FEATURE_PERMISSIONS.TAG.__type,
-            FEATURE_PERMISSIONS.TAG.CREATE.__type,
-        ),
-    )
+    // @UseGuards(
+    //     AuthPermissionGuard(
+    //         FEATURE_PERMISSIONS.TAG.__type,
+    //         FEATURE_PERMISSIONS.TAG.CREATE.__type,
+    //     ),
+    // )
     // @UseGuards(AuthPermissionGuard())
     @ApiOkResponse({ type: ArticleFindOneResponse })
     async create(
@@ -132,18 +132,18 @@ export class ArticleController implements ArticleApiContract {
     @ApiOperation({ summary: 'Update event article' })
     @ApiBearerAuth()
     @Patch(':articleId')
-    @UseGuards(
-        AuthPermissionGuard(
-            FEATURE_PERMISSIONS.TAG.__type,
-            FEATURE_PERMISSIONS.TAG.UPDATE.__type,
-        ),
-    )
+    // @UseGuards(
+    //     AuthPermissionGuard(
+    //         FEATURE_PERMISSIONS.TAG.__type,
+    //         FEATURE_PERMISSIONS.TAG.UPDATE.__type,
+    //     ),
+    // )
     // @UseGuards(AuthPermissionGuard())
     @ApiOkResponse({ type: ArticleFindOneResponse })
     async update(
         // @Req() req: AppRequest,
         @Param('articleId') articleId: string,
-        @Body() params: Omit<ArticleUpdateRequest, 'articleId'>,
+        @Body() params: ArticleUpdateRequest,
     ): Promise<ArticleFindOneResponse> {
         try {
             Logger.log('--ENTER UPDATE TAG CONTROLLER--');
@@ -179,12 +179,12 @@ export class ArticleController implements ArticleApiContract {
     @ApiOperation({ summary: 'Delete single article' })
     @ApiBearerAuth()
     @Delete(':articleId')
-    @UseGuards(
-        AuthPermissionGuard(
-            FEATURE_PERMISSIONS.TAG.__type,
-            FEATURE_PERMISSIONS.TAG.DELETE.__type,
-        ),
-    )
+    // @UseGuards(
+    //     AuthPermissionGuard(
+    //         FEATURE_PERMISSIONS.TAG.__type,
+    //         FEATURE_PERMISSIONS.TAG.DELETE.__type,
+    //     ),
+    // )
     // @UseGuards(AuthPermissionGuard())
     // @ApiOkResponse({type: SimpleResponse})
     async delete(
