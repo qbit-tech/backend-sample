@@ -27,6 +27,7 @@ import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
+import { MinioClientModule } from './modules/testMinio/minio.module';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -153,7 +154,8 @@ export const rootImportedModules = [
     // AuthSessionModule
     FeatureConfigModule,
     FeatureVersionModule,
-    ProductsModule
+    ProductsModule,
+    MinioClientModule
   ],
   controllers: [AppController],
 })

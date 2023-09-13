@@ -28,6 +28,12 @@ Clone this repo use SSH. Don't use HTTPS.
   
 Refferences: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
+## How to Generate New Migration
+- cd apps/[project]
+- npx sequelize migration:generate --name [migration_name]
+- write some code in new created file
+- cd ../.. (back to root project)
+
 ===
 
 ## ABOUT NEST
