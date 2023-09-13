@@ -49,7 +49,7 @@ export class AuthSessionService {
   }
 
   async validateToken(token: string) {
-    let decodedToken: { sessionId: string } = {
+    let decodedToken: any = {
       sessionId: 'invalidSessionId',
     };
 
@@ -61,7 +61,7 @@ export class AuthSessionService {
           {
             algorithms: ['HS256'],
           },
-        ) as { sessionId: string };
+        ) as any;
       } catch (err) {
         //
       }
@@ -78,7 +78,7 @@ export class AuthSessionService {
         '(userFromSession as any).platform',
         (userFromSession as any).platform,
       );
-      console.info(userFromSession)
+      console.info('decodedToken', decodedToken)
 
       let latestSessionId;
       if ((userFromSession as any).platform === EPlatform.CMS) {
@@ -90,11 +90,11 @@ export class AuthSessionService {
         // );
 
         // console.info('latestSessionId', latestSessionId);
-        const user = await this.findOneByUserId(
-          (userFromSession as any).userId,
-        );
+        // const user = await this.findOneByUserId(
+        //   (userFromSession as any).userId,
+        // );
 
-        return { decodedToken, userFromSession, user };
+        return { decodedToken, userFromSession, user: decodedToken.user };
       } else {
         // check is latest session, kick old session
         latestSessionId = await this.sessionService.getLatestSessionIdByKey(
@@ -113,7 +113,13 @@ export class AuthSessionService {
       }
       // end check
 
-      const user = await this.findOneByUserId((userFromSession as any).userId);
+      const user = decodedToken.user ??
+      {
+        method: userFromSession.method,
+        username: userFromSession.username,
+        userId: userFromSession.userId,
+      }
+      // const user = await this.findOneByUserId((userFromSession as any).userId);
       console.log(user)
       return { decodedToken, userFromSession, user };
     } else {

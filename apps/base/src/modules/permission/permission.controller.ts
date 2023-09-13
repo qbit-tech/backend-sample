@@ -4,7 +4,7 @@ import {
 	Logger,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { DEFAULT_PERMISSION_FULL_ACCESS, DEFAULT_PERMISSION_MINIMUM_ACCESS, DEFAULT_PERMISSION_NO_ACCESS } from '../../featureAndPermission/defaultPermission.constant';
+import { DEFAULT_PERMISSION_FULL_ACCESS, DEFAULT_PERMISSION_MINIMUM_ACCESS, DEFAULT_PERMISSION_NO_ACCESS } from './featureAndPermission/defaultPermission.constant';
 
 @ApiTags('Permissions')
 @Controller('permissions')

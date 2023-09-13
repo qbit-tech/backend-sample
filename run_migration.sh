@@ -92,14 +92,26 @@ ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env
 cd ../../../..
 
 echo -ne '\n'
-echo "=== MIGRATE DB @qbit-tech/libs-payments ==="
-cd ./node_modules/@qbit-tech/libs-payments/dist
+echo "=== MIGRATE DB @qbit-tech/libs-products ==="
+cd ./node_modules/@qbit-tech/libs-products/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 
 echo -ne '\n'
-echo "=== MIGRATE DB @qbit-tech/libs-products ==="
-cd ./node_modules/@qbit-tech/libs-products/dist
+echo "=== MIGRATE DB @qbit-tech/libs-address ==="
+cd ./node_modules/@qbit-tech/libs-address/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
+
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-notification-scheduler ==="
+cd ./node_modules/@qbit-tech/libs-notification-scheduler/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
+
+echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-payments ==="
+cd ./node_modules/@qbit-tech/libs-payments/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
 cd ../../../..
 

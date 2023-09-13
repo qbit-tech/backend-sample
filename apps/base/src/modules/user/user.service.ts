@@ -204,7 +204,8 @@ export class UserService {
     middleName?: string;
     lastName?: string;
     nickName?: string;
-    roles?: Omit<RoleProperties, 'createdAt' | 'updatedAt'>[];
+    roleId?: string;
+    // roles?: Omit<RoleProperties, 'createdAt' | 'updatedAt'>[];
   }): Promise<UserProperties> {
     if (!user.email && !user.phone) {
       return Promise.reject('Email and phone number is empty!');
@@ -225,7 +226,7 @@ export class UserService {
       user.firstName = user.name;
     }
     this.logger.log('Create new user: ' + user.userId);
-    this.logger.verbose('Params: ' + JSON.stringify(user.roles));
+    // this.logger.verbose('Params: ' + JSON.stringify(user.roles));
 
     try {
       if (user.email) {

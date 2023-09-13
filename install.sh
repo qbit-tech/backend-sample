@@ -17,6 +17,9 @@ yarn add qbit-tech/libs-faq#latest
 yarn add qbit-tech/libs-payments#latest
 yarn add qbit-tech/libs-products#latest
 yarn add qbit-tech/feature-utils#latest
+yarn add qbit-tech/libs-session#latest
+yarn add qbit-tech/libs-address#latest
+yarn add qbit-tech/libs-notification-scheduler#latest
 
 echo "> RUN MIGRATION"
 ./run_migration.sh base local

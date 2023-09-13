@@ -22,9 +22,9 @@ import {
 } from './tag.contract';
 import { TagService } from './tag.service';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthPermissionGuard } from '../../core/authPermission.guard';
-import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
+import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @ApiTags('Tags')
@@ -34,15 +34,16 @@ export class TagController implements TagApiContract {
     private readonly tagService: TagService, // private readonly eventLogService: EventLogService,
   ) {}
 
-  @UseInterceptors(CacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
   @ApiOperation({ summary: 'Find all event tags' })
+  @ApiBearerAuth()
   @Get()
-  // @UseGuards(
-  //   AuthPermissionGuard(
-  //     FEATURE_PERMISSIONS.TAG.__type,
-  //     FEATURE_PERMISSIONS.TAG.LIST.__type,
-  //   ),
-  // )
+  @UseGuards(
+    AuthPermissionGuard(
+      FEATURE_PERMISSIONS.TAG.__type,
+      FEATURE_PERMISSIONS.TAG.LIST.__type,
+    ),
+  )
   @ApiOkResponse({ type: TagFindAllResponse })
   async findAll(
     @Query() params: TagFindAllRequest,
