@@ -22,7 +22,8 @@ import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
 import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
-import { MinioClientModule } from './modules/testMinio/minio.module';
+import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
+import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -136,7 +137,8 @@ export const rootImportedModules = [
     FeatureConfigModule,
     FeatureVersionModule,
     ProductsModule,
-    MinioClientModule
+    FileUploadModule,
+    TestMinio2Module
   ],
   controllers: [AppController],
 })
