@@ -45,6 +45,7 @@ import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { FEATURE_PERMISSIONS, AuthPermissionGuard } from '@qbit-tech/libs-session';
 import { NotificationService } from '@qbit-tech/libs-notification';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
+import { UploaderService } from '@qbit-tech/libs-uploader';
 // import { UploaderService } from '@qbit-tech/libs-uploader';
 
 @ApiTags('Users')
@@ -56,7 +57,7 @@ export class UserController implements UserApiContract {
     private userService: UserService,
     private emailAuthenticatorService: AuthService,
     private notificationService: NotificationService,
-    // private uploaderService: UploaderService,
+    private uploaderService: UploaderService,
   ) {}
 
   @ApiOperation({ summary: 'New admin using email authenticator' })
@@ -323,18 +324,18 @@ export class UserController implements UserApiContract {
       if (userId === 'me') {
         uid = req.user.userId;
       }
-      // const updateUserImage = await this.uploaderService.updateImage(
-      //   'users',
-      //   uid,
-      //   file,
-      // );
+      const updateUserImage = await this.uploaderService.updateImage(
+        'users',
+        uid,
+        file,
+      );
 
       // const res = await this.userService.updateUserImage({
       //   userId: uid,
       //   imageLink: updateUserImage.payload.fileLinkCache,
       // });
 
-      return file.path
+      return updateUserImage
 
       // const updateImage = await this.uploaderService.updateImage(
       //   'users',
