@@ -1,0 +1,7 @@
+export const MinioConfig = {
+    MINIO_ENDPOINT: '18.143.145.243',
+    MINIO_PORT: 9000,
+    MINIO_ACCESSKEY: 'dfZgFBj2L2KEmu8pBRRZ',
+    MINIO_SECRETKEY: 'dnvp0yINNSWGQdk8v0B11kYQlrP9y1lCTYw6qHPn',
+    MINIO_BUCKET: 'test'
+}

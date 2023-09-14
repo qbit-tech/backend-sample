@@ -1,7 +1,7 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { MinioService } from 'nestjs-minio-client';
 import { Stream } from 'stream';
-import { MinioConfig } from './minio.config'
+import { MinioConfig } from './config'
 import { BufferedFile } from './file.model';
 import * as crypto from 'crypto'
 
