@@ -27,7 +27,7 @@ import {
   UpdateUserRequest,
 } from './contract/user.contract';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthPermissionGuard } from '../../core/authPermission.guard';
+// import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { AppRequest, SimpleResponse } from '@qbit-tech/libs-utils';
 import {
   ApiBearerAuth,
@@ -42,7 +42,7 @@ import { UserProperties } from './user.entity';
 import { async as crypt } from 'crypto-random-string';
 import { AuthService } from '@qbit-tech/libs-authv3';
 import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { FEATURE_PERMISSIONS } from '../../featureAndPermission/featureAndPermission.constant';
+import { FEATURE_PERMISSIONS, AuthPermissionGuard } from '@qbit-tech/libs-session';
 import { NotificationService } from '@qbit-tech/libs-notification';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 // import { UploaderService } from '@qbit-tech/libs-uploader';

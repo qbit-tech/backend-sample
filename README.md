@@ -111,3 +111,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## If you're using windows and struggling run yarn :
+- delete node_modules & yarn.lock
+- delete libs address, notification-scheduler, session, uploader, product on package.json
+- run yarn
+- run yarn add libs session -> address | notification-scheduler -> uploader -> product

@@ -8,7 +8,7 @@ import {
   mixin,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { hasPermissionFromRoles } from '../featureAndPermission/featureAndPermissionHelper';
+import { hasPermissionFromRoles } from '../modules/permission/featureAndPermission/featureAndPermissionHelper';
 import { AuthSessionService } from '../modules/authUser/authUser.service';
 
 export const AuthPermissionGuard = (feature?: string, permission?: string, isTokenOptional?: boolean) => {
@@ -26,7 +26,7 @@ export const AuthPermissionGuard = (feature?: string, permission?: string, isTok
     async validateRequest(req: Request, res: Response): Promise<boolean> {
       const token = AuthPermissionGuardMixin.getToken(req);
 
-      if (!token && isTokenOptional) {
+      if (isTokenOptional) {
         Logger.log('!token && isTokenOptional');
         return true;
       }

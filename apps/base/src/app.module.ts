@@ -10,9 +10,11 @@ import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
-import { Authv3Module } from './modules/authv3/authv3.module';
+// import { Authv3Module } from './modules/authv3/authv3.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { RoleModule } from '@qbit-tech/libs-role';
+// import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import {
   FeatureConfigModule,
   FeatureVersionModule,
@@ -20,10 +22,13 @@ import {
 import { TransactionModule } from '@qbit-tech/libs-transaction';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
-import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
+// import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
+import { SessionModule } from '@qbit-tech/libs-session';
+import { RegionModule } from '@qbit-tech/libs-address';
+import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -39,16 +44,26 @@ const notificationOptions = [
   },
 ];
 
+const sessionOption = {
+  sessionHashToken: process.env.SESSION_HASH_TOKEN,
+  randomSessionIdKey: process.env.RANDOM_SESSIONID_KEY,
+  projectId: process.env.PROJECT_ID,
+  expiredJWTTokenAccessInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES),
+  expiredJWTTokenRefreshInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES)
+}
+
+const redisOption = {
+  config: {
+    url: process.env.REDIS_URL,
+  },
+}
+
 export const rootImportedModules = [
   ConfigModule.forRoot({
     isGlobal: true,
     envFilePath: process.env.ENV_PATH,
   }),
-  RedisModule.forRoot({
-    config: {
-      url: process.env.REDIS_URL,
-    },
-  }),
+  RedisModule.forRoot(redisOption),
   CacheModule.register<RedisClientOptions>({
     isGlobal: true,
     store: redisStore,
@@ -105,17 +120,20 @@ export const rootImportedModules = [
     ],
     notificationOptions,
   ),
-  PaymentModule.forRoot({
-    STAGE: 'development',
-    SERVER_KEY: process.env.SERVER_KEY,
-    CLIENT_KEY: process.env.CLIENT_KEY,
-    SECRET_KEY: process.env.SECRET_KEY,
-    PASSWORD: process.env.PASSWORD,
-    BASE_URL: process.env.BASE_URL,
-    BASE_URL_PAYMENT_PAGE: process.env.BASE_URL_PAYMENT_PAGE,
-    MERCHANT_ID: process.env.MERCHANT_ID,
-    MERCHANT_KEY_ID: process.env.MERCHANT_KEY_ID,
-  })
+  SessionModule.forRoot(sessionOption, redisOption),
+  RegionModule.forRoot(sessionOption, redisOption),
+  NotificationScheduleModule.forRoot(sessionOption, redisOption),
+  // PaymentModule.forRoot({
+  //   STAGE: 'development',
+  //   SERVER_KEY: process.env.SERVER_KEY,
+  //   CLIENT_KEY: process.env.CLIENT_KEY,
+  //   SECRET_KEY: process.env.SECRET_KEY,
+  //   PASSWORD: process.env.PASSWORD,
+  //   BASE_URL: process.env.BASE_URL,
+  //   BASE_URL_PAYMENT_PAGE: process.env.BASE_URL_PAYMENT_PAGE,
+  //   MERCHANT_ID: process.env.MERCHANT_ID,
+  //   MERCHANT_KEY_ID: process.env.MERCHANT_KEY_ID,
+  // })
   // FirebaseModule.forRoot({
   //   credential: process.env.FIREBASE_CERT
   //     ? FirebaseAdmin.credential.cert(process.env.FIREBASE_CERT)
@@ -126,7 +144,8 @@ export const rootImportedModules = [
   imports: [
     ...rootImportedModules,
     TagModule,
-    Authv3Module,
+    // Authv3Module,
+    AuthModule,
     TestNotifModule,
     UserModule,
     TransactionModule,
