@@ -20,7 +20,7 @@ export class MinioClientService {
         this.logger = new Logger('MinioStorageService');
     }
 
-    public async upload(file: BufferedFile, baseBucket: string = this.baseBucket) {
+    public async upload(file: BufferedFile | any, baseBucket: string = this.baseBucket) {
         if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
             throw new HttpException('Error uploading file', HttpStatus.BAD_REQUEST)
         }
@@ -39,7 +39,7 @@ export class MinioClientService {
         })
 
         return {
-            url: `${MinioConfig.MINIO_ENDPOINT}:${MinioConfig.MINIO_PORT}/${MinioConfig.MINIO_BUCKET}/${filename}`
+            url: `${MinioConfig.MINIO_ENDPOINT}/${MinioConfig.MINIO_BUCKET}/${filename}`
         }
     }
 

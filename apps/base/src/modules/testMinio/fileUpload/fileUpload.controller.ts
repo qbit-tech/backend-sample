@@ -9,13 +9,13 @@ import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 @Controller('file-upload')
 export class FileUploadController {
     constructor(
-        private fileUploadService: FileUploadService
+        private fileUploadService: FileUploadService,
     ) { }
 
     @Post('')
     @UseInterceptors(FileInterceptor('image'))
     async upload(
-        @UploadedFile() image: BufferedFile
+        @UploadedFile() image: BufferedFile | any
     ) {
         try {
             return await this.fileUploadService.upload(image)

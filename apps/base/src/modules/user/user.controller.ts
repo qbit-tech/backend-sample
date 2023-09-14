@@ -58,7 +58,7 @@ export class UserController implements UserApiContract {
     private emailAuthenticatorService: AuthService,
     private notificationService: NotificationService,
     private uploaderService: UploaderService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'New admin using email authenticator' })
   @ApiBearerAuth()
@@ -74,9 +74,8 @@ export class UserController implements UserApiContract {
     this.logger.verbose('Body: ' + JSON.stringify(body));
 
     try {
-      const fullName = `${body.firstName} ${
-        body.middleName ? body.middleName : '.'
-      } ${body.lastName ? body.lastName : '.'}`;
+      const fullName = `${body.firstName} ${body.middleName ? body.middleName : '.'
+        } ${body.lastName ? body.lastName : '.'}`;
       const name = fullName.replace(/[^a-zA-Z ]/g, '');
       const randomPassword = await crypt({ length: 10 });
 
@@ -86,12 +85,12 @@ export class UserController implements UserApiContract {
 
       if (body.email) {
         console.info('email registered');
-        const res = await this.emailAuthenticatorService.register( EAuthMethod.emailPassword,
+        const res = await this.emailAuthenticatorService.register(EAuthMethod.emailPassword,
           {
-          userId: userData.userId,
-          username: body.email,
-          password: body.password ? body.password : randomPassword,
-        });
+            userId: userData.userId,
+            username: body.email,
+            password: body.password ? body.password : randomPassword,
+          });
         // if (res) {
         //   await this.sibService.sendTemplate({
         //     to: [
@@ -129,12 +128,13 @@ export class UserController implements UserApiContract {
   async checkUser(@Body() body: CheckUserRequest): Promise<{
     isEmailExist: boolean,
     isUsernameExist: boolean,
-    isPhoneExist: boolean}> {
+    isPhoneExist: boolean
+  }> {
     try {
       let res
-      if(body.email){
+      if (body.email) {
         const findUser = await this.userService.findOneByEmail(body.email);
-        if(findUser) {
+        if (findUser) {
           res = {
             ...res,
             isEmailExist: true
@@ -147,10 +147,10 @@ export class UserController implements UserApiContract {
         }
       }
 
-      if(body.phone){
+      if (body.phone) {
         const phone = cleanPhoneNumber(body.phone)
         const findUser = await this.userService.findOneByPhone(phone);
-        if(findUser) {
+        if (findUser) {
           res = {
             ...res,
             isPhoneExist: true
@@ -232,10 +232,10 @@ export class UserController implements UserApiContract {
       if (userId === 'me') {
         uid = req.user.userId;
       }
-  
+
       if (userId !== 'me') {
         // only for admin
-  
+
         if (body.email && body.isEmailVerified !== undefined) {
           // await this.emailAuthenticatorService.updateDataByUserId(uid, {
           //   email: body.email,
@@ -243,12 +243,12 @@ export class UserController implements UserApiContract {
           // });
         }
       }
-  
+
       const res = await this.update({
         ...body,
         userId: uid,
       });
-  
+
       return res
     } catch (error) {
       this.logger.error(error);
