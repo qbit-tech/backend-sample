@@ -5,6 +5,15 @@ Clone this repo use SSH. Don't use HTTPS.
 - NodeJS v18.17.0
 - Database PostgreSQL
 
+## Prepare
+1. Create file .npmrc
+```
+registry=https://registry.npmjs.org/
+@qbit-tech:registry=https://npm.pkg.github.com/
+//npm.pkg.github.com/:_authToken=GITHUB_TOKEN
+```
+*Notes: Replace GITHUB_TOKEN with your token (Generate here -> https://github.com/settings/tokens). Permission: read:packages, write:packages, and delete:packages*
+
 ## Step By Step, How to Install & Start (LINUX / MACOS / Windows WSL)
 1. Enter the folder apps/[project]. Misalnya `cd apps/base`.
 2. Copy file `.env.example` to `.env.local`. Then fill the value.
