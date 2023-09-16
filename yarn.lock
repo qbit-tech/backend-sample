@@ -1142,6 +1142,37 @@
     firebase-admin "^11.9.0"
     postmark "^3.0.18"
 
+"@qbit-tech/libs-payments@^1.1.5":
+  version "1.1.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-payments/1.1.5/e842dc510c691fe9a3e5f76795dac4dd0431161c#e842dc510c691fe9a3e5f76795dac4dd0431161c"
+  integrity sha512-TWbnmoQk2dGdItA9onvs8yZGMpyxC2FOqANaH41V4FrHVuM+8UMBOjvRk4kqQfssobJHojKJ952FqtwQOgSrOA==
+  dependencies:
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/common" "^10.0.0"
+    "@nestjs/config" "^3.0.0"
+    "@nestjs/core" "^10.0.0"
+    "@nestjs/platform-express" "^10.0.0"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.8"
+    "@qbit-tech/libs-session" "^1.4.1"
+    "@qbit-tech/libs-utils" "^1.2.5"
+    axios "^1.4.0"
+    base-64 "^1.0.0"
+    class-transformer "^0.5.1"
+    class-validator "^0.14.0"
+    compare-versions "3.6.0"
+    crypto-js "^4.1.1"
+    cryptr "^6.2.0"
+    dotenv "^16.3.1"
+    js-sha512 "^0.8.0"
+    pg "^8.11.2"
+    reflect-metadata "^0.1.13"
+    rxjs "^7.8.1"
+    sequelize "^6.32.1"
+    sequelize-cli "^6.6.1"
+    sequelize-typescript "^2.1.5"
+    uuid "^9.0.0"
+
 "@qbit-tech/libs-products@^1.4.6":
   version "1.4.6"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.4.6/99bc5e68c0bb693cfdaa3db3b3a65e2814ea3ad0#99bc5e68c0bb693cfdaa3db3b3a65e2814ea3ad0"

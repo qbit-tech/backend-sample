@@ -18,6 +18,7 @@ yarn add @qbit-tech/libs-products
 yarn add @qbit-tech/libs-role
 yarn add @qbit-tech/libs-session
 yarn add @qbit-tech/libs-transaction
+yarn add @qbit-tech/libs-payments
 yarn add @qbit-tech/libs-uploader
 yarn add @qbit-tech/libs-utils
 
