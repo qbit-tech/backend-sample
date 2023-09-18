@@ -30,6 +30,7 @@ import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
 // import { TransactionModule } from './modules/transaction/transaction.module';
+import { ArticleModule } from './article/article.module';
 
 const notificationOptions = [
   {
@@ -157,7 +158,8 @@ export const rootImportedModules = [
     FeatureVersionModule,
     ProductsModule,
     FileUploadModule,
-    TestMinio2Module
+    TestMinio2Module,
+    ArticleModule
   ],
   controllers: [AppController],
 })
