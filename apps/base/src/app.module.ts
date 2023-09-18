@@ -26,11 +26,11 @@ import { TagModule } from './modules/tag/tag.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
+import { ArticleModule } from './modules/article/article.module';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
 // import { TransactionModule } from './modules/transaction/transaction.module';
-import { ArticleModule } from './article/article.module';
 
 const notificationOptions = [
   {
@@ -49,15 +49,19 @@ const sessionOption = {
   sessionHashToken: process.env.SESSION_HASH_TOKEN,
   randomSessionIdKey: process.env.RANDOM_SESSIONID_KEY,
   projectId: process.env.PROJECT_ID,
-  expiredJWTTokenAccessInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES),
-  expiredJWTTokenRefreshInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES)
-}
+  expiredJWTTokenAccessInMinutes: parseInt(
+    process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES,
+  ),
+  expiredJWTTokenRefreshInMinutes: parseInt(
+    process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES,
+  ),
+};
 
 const redisOption = {
   config: {
     url: process.env.REDIS_URL,
   },
-}
+};
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -159,8 +163,8 @@ export const rootImportedModules = [
     ProductsModule,
     FileUploadModule,
     TestMinio2Module,
-    ArticleModule
+    ArticleModule,
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}

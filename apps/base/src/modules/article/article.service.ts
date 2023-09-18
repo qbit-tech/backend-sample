@@ -7,13 +7,14 @@ import * as fsp from 'fs/promises';
 
 @Injectable()
 export class ArticleService {
-  private imageDir: string = './images';
+  private readonly imageDir: string = './images';
+
   constructor(
     @InjectModel(ArticleModel)
     private readonly articleRepository: typeof ArticleModel,
   ) {}
 
-  async createArticle(
+  public async createArticle(
     newArticle: CreateArticleDto,
     filename?: string,
     coverImageFile?: Buffer,
@@ -67,7 +68,7 @@ export class ArticleService {
     }
   }
 
-  async findAllWithPaginate(page: number): Promise<{
+  public async findAllWithPaginate(page: number): Promise<{
     totalPage: number;
     currentPage: number;
     articles: ArticleModel[];
@@ -101,7 +102,7 @@ export class ArticleService {
     }
   }
 
-  async findById(articleId: string): Promise<ArticleModel> {
+  public async findById(articleId: string): Promise<ArticleModel> {
     if (!articleId) {
       return Promise.reject({
         statusCode: 400,
@@ -128,7 +129,7 @@ export class ArticleService {
     }
   }
 
-  async updateArticle(
+  public async updateArticle(
     articleId: string,
     article: UpdateArticleDto,
   ): Promise<ArticleModel> {
@@ -176,7 +177,7 @@ export class ArticleService {
     }
   }
 
-  async updateCoverImage(
+  public async updateCoverImage(
     articleId: string,
     newCoverName: string,
     newCoverImage: Buffer,
@@ -231,7 +232,7 @@ export class ArticleService {
     }
   }
 
-  async deleteById(articleId: string): Promise<string> {
+  public async deleteById(articleId: string): Promise<string> {
     if (!articleId) {
       return Promise.reject({
         statusCode: 400,
@@ -262,7 +263,7 @@ export class ArticleService {
     }
   }
 
-  async checkDir() {
+  private async checkDir() {
     try {
       await fsp.readdir(this.imageDir.replace('./', ''));
     } catch (error) {
