@@ -3,6 +3,7 @@ import { ArticleService } from './article.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ArticleModel } from './article.entity';
 import { ArticleController } from './article.controller';
+import { AuthSessionModule } from '../authUser/authUser.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ArticleController } from './article.controller';
     //     },
     //   }),
     // }),
+    AuthSessionModule,
   ],
   providers: [ArticleService],
   controllers: [ArticleController],

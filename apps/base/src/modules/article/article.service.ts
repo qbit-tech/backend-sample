@@ -207,8 +207,11 @@ export class ArticleService {
         try {
           await fsp.readFile(article.coverImage);
 
+          // remove file to update
           await fsp.rm(article.coverImage);
-        } catch (_) {}
+        } catch (_) {
+          // when file does't exists in the directory
+        }
       }
 
       const imagePath = `${this.imageDir}/${newCoverName}`;
@@ -242,6 +245,16 @@ export class ArticleService {
     }
 
     try {
+      // const article = await this.articleRepository.findByPk(articleId);
+
+      // if (!article) {
+      //   return Promise.reject({
+      //     statusCode: 404,
+      //     code: 'failed_to_delete',
+      //     message: `article with id ${articleId} not found`,
+      //   });
+      // }
+
       const rowsAffected = await this.articleRepository.destroy({
         where: {
           id: articleId,

@@ -2,18 +2,16 @@ import {
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
-  MaxFileSizeValidator,
   Param,
-  ParseFilePipe,
   ParseFilePipeBuilder,
   ParseIntPipe,
   Patch,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
@@ -29,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateArticleDto } from './dto/update.article.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthPermissionGuard } from '../../core/authPermission.guard';
 
 @ApiTags('Article')
 @Controller('articles')
@@ -44,18 +43,23 @@ export class ArticleController {
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: 'success create article' })
   @Post()
+  // @UseGuards(AuthPermissionGuard())
   @UseInterceptors(FileInterceptor('cover-article'))
   async createArticle(
     @Body() body: CreateArticleDto,
     @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 200000, message: 'Max 2 mb' }),
-          new FileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ }),
-        ],
-        errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-      }),
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpg|jpeg|png)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 200000,
+          message: 'Max 2 mb',
+        })
+        .build({
+          fileIsRequired: false,
+          errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        }),
     )
     coverImage?: Express.Multer.File,
   ): Promise<ArticleModel> {
@@ -118,6 +122,7 @@ export class ArticleController {
   })
   @ApiBearerAuth()
   @Patch(':articleId')
+  // @UseGuards(AuthPermissionGuard())
   async updateArticle(
     @Param('articleId') articleId: string,
     @Body() body: UpdateArticleDto,
@@ -137,19 +142,23 @@ export class ArticleController {
   @ApiOperation({ summary: 'update article cover image' })
   @ApiBearerAuth()
   @Patch('/cover/:articleId')
+  // @UseGuards(AuthPermissionGuard())
   @UseInterceptors(FileInterceptor('cover-article'))
   async updateCoverImage(
     @Param('articleId') articleId: string,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: 'image/png',
+          fileType: /(jpg|jpeg|png)$/,
         })
         .addMaxSizeValidator({
           maxSize: 200000,
           message: 'Max 2 mb',
         })
-        .build({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+        .build({
+          fileIsRequired: true,
+          errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        }),
     )
     coverImage: Express.Multer.File,
   ): Promise<ArticleModel> {
@@ -172,6 +181,7 @@ export class ArticleController {
   @ApiOperation({ summary: 'delete article' })
   @ApiBearerAuth()
   @Delete(':articleId')
+  // @UseGuards(AuthPermissionGuard())
   async deleteById(@Param('articleId') articleId: string): Promise<Object> {
     try {
       const message = await this.articleService.deleteById(articleId);
