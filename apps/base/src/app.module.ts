@@ -29,6 +29,7 @@ import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.mod
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
+import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -123,6 +124,7 @@ export const rootImportedModules = [
   SessionModule.forRoot(sessionOption, redisOption),
   RegionModule.forRoot(sessionOption, redisOption),
   NotificationScheduleModule.forRoot(sessionOption, redisOption),
+  SubscriptionModule.forRoot(sessionOption, redisOption),
   // PaymentModule.forRoot({
   //   STAGE: 'development',
   //   SERVER_KEY: process.env.SERVER_KEY,
@@ -148,8 +150,8 @@ export const rootImportedModules = [
     AuthModule,
     TestNotifModule,
     UserModule,
-    TransactionModule,
-    FaqModule,
+    // TransactionModule,
+    // FaqModule,
     PermissionModule,
     RoleModule,
     // AuthSessionModule

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="style.css">
+    
+   <title>Subscription Preference</title>
+</head>
+<body>
+    <div style="background-color: white; margin-bottom: 20px;">
+        <img height="100px" src="./images/logo-qbit.png"/>
+    </div>
+    <div class="container">
+        <header>Subscription Preference</header>
+
+        <form id="subscriptionForm">
+            <div class="form first">
+                <div class="details personal">
+                    <span class="title">Personal Details</span>
+
+                    <div class="fields">
+
+                        <div class="input-field">
+                            <label>Email</label>
+                            <input type="text" id="email" placeholder="Enter your email" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details ID">
+                    <span class="title">Subscription Details</span>
+
+                    <div class="fields">
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="event" name="event" value="EVENT" />
+                            <label for="event">Event</label>
+                        </div>
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="product" name="product" value="PRODUCT" />
+                            <label for="product">Product</label>
+                        </div>
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="news" name="news" value="NEWS" />
+                            <label for="news">News</label>
+                        </div>
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="survey" name="Survey" value="SURVEY" />
+                            <label for="survey">Survey</label>
+                        </div>
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="promotional" name="promotional" value="PROMOTIONAL" />
+                            <label for="promotional">Promotional</label>
+                        </div>
+                        <div>
+                            <input class="subs-checkbox" type="checkbox" id="announcement" name="announcement" value="ANNOUNCEMENT" />
+                            <label for="announcement">Announcement</label>
+                        </div>
+                    </div>
+                </div> 
+                
+                <div class="bottom">
+                    <button type="submit">Save preference</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
