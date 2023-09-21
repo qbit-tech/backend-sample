@@ -43,6 +43,16 @@ const notificationOptions = [
       },
     },
   },
+  {
+    name: 'goSMSGateway' as any,
+    setting: {
+      apiKey: process.env.NODE_ENV,
+      goSmsGateway: {
+        username: process.env.GOSMSGATEWAY_USERNAME,
+        password: process.env.GOSMSGATEWAY_PASSWORD,
+      },
+    },
+  },
 ];
 
 const sessionOption = {

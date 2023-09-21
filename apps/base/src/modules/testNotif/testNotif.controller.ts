@@ -1,5 +1,8 @@
 import { Controller, Logger, Post, Body, HttpException } from '@nestjs/common';
-import { TestNotificationEmailRequest } from './testNotif.contract';
+import {
+  TestNotificationEmailRequest,
+  TestNotificationSmsRequest,
+} from './testNotif.contract';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -42,6 +45,44 @@ export class TestNotifController {
         },
         createdByUserId: 'SYSTEM',
       });
+    } catch (error) {
+      throw new HttpException(error, getErrorStatusCode(error));
+    }
+  }
+
+  @Post('sms')
+  async testSendNotifGoSmsGateway(
+    @Body() body: TestNotificationSmsRequest,
+  ): Promise<any> {
+    if (!body.phoneNumber) {
+      throw new HttpException('phone number is required', 400);
+    }
+
+    try {
+      Logger.log('--ENTER TEST SMS CONTROLLER--');
+      Logger.log('tag : ' + JSON.stringify(body), 'tag.controller');
+
+      const queue = await this.notificationService.addToQueue({
+        externalId: 'TEST',
+        platform: ENotificationPlatform.GOSMSGATEWAY,
+        senderUserId: 'SYSTEM-TEST',
+        receiverUserId: 'system-test-receiver-user-id',
+        body: {
+          name: 'Username',
+        },
+        title: 'Test SMS Title',
+        message: body.message || 'Test SMS Message',
+        requestData: {
+          templateId: 1,
+          from: 'SYSTEM',
+          to: body.phoneNumber,
+        },
+        createdByUserId: 'SYSTEM',
+      });
+
+      const res = await this.notificationService.sendFromQueue(queue.id);
+
+      return res;
     } catch (error) {
       throw new HttpException(error, getErrorStatusCode(error));
     }

@@ -1142,6 +1142,22 @@
     firebase-admin "^11.9.0"
     postmark "^3.0.18"
 
+"@qbit-tech/libs-notification@^1.5.1":
+  version "1.5.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.5.1/42105e3c36a52fc3bf5be9e9bc3c4d8799b041ea#42105e3c36a52fc3bf5be9e9bc3c4d8799b041ea"
+  integrity sha512-ZIi7hiRZ8K8oJW4m8QIQFJT5CEiwkL8ye8bpFjsO33pzy7BRqJj1W6V3vyu8m0NWa98foxROfjXHd0v4+0Q5pQ==
+  dependencies:
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/schedule" "^3.0.1"
+    "@sendgrid/mail" "^7.7.0"
+    "@sendinblue/client" "^3.3.1"
+    base-64 "^1.0.0"
+    dotenv "^16.3.1"
+    firebase-admin "^11.9.0"
+    js-md5 "^0.7.3"
+    pg "^8.11.3"
+    postmark "^3.0.18"
+
 "@qbit-tech/libs-payments@^1.1.5":
   version "1.1.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-payments/1.1.5/e842dc510c691fe9a3e5f76795dac4dd0431161c#e842dc510c691fe9a3e5f76795dac4dd0431161c"
@@ -5067,6 +5083,11 @@ js-beautify@^1.14.5:
     glob "^8.1.0"
     nopt "^6.0.0"
 
+js-md5@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/js-md5/-/js-md5-0.7.3.tgz#b4f2fbb0b327455f598d6727e38ec272cd09c3f2"
+  integrity sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==
+
 js-sha512@^0.8.0:
   version "0.8.0"
   resolved "https://registry.npmjs.org/js-sha512/-/js-sha512-0.8.0.tgz#dd22db8d02756faccf19f218e3ed61ec8249f7d4"
@@ -6261,7 +6282,7 @@ pg-types@^2.1.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.11.1, pg@^8.11.2:
+pg@^8.11.1, pg@^8.11.2, pg@^8.11.3:
   version "8.11.3"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.3.tgz#d7db6e3fe268fcedd65b8e4599cda0b8b4bf76cb"
   integrity sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==
