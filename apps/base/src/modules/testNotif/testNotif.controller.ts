@@ -13,7 +13,7 @@ import {
 @ApiTags('Test Notif')
 @Controller('test-notif')
 export class TestNotifController {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(private readonly notificationService: NotificationService) { }
 
   @Post('email')
   async testSendNotifEmail(
@@ -22,9 +22,9 @@ export class TestNotifController {
     try {
       Logger.log('--ENTER TEST EMAIL CONTROLLER--');
       Logger.log('tag : ' + JSON.stringify(body), 'tag.controller');
-      return await this.notificationService.addToQueue({
+      const queue = await this.notificationService.addToQueue({
         externalId: 'TEST',
-        platform: ENotificationPlatform.SENDINBLUE,
+        platform: ENotificationPlatform.BREVO,
         senderUserId: 'SYSTEM-TEST',
         receiverUserId: 'system-test-receiver-user-id',
         title: 'Test Title',
@@ -33,10 +33,10 @@ export class TestNotifController {
           name: 'User',
         },
         requestData: {
-          templateId: process.env.SENDINBLUE_TEMPLATE_ID_TEST_NOTIF,
+          templateId: process.env.BREVO_TEMPLATE_ID_TEST_NOTIF,
           from: {
-            email: process.env.SENDINBLUE_EMAIL_FROM,
-            name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
+            email: process.env.BREVO_EMAIL_FROM,
+            name: process.env.BREVO_EMAIL_FROM_NAME,
           },
           to: {
             email: body.email,
@@ -45,6 +45,10 @@ export class TestNotifController {
         },
         createdByUserId: 'SYSTEM',
       });
+
+      const res = await this.notificationService.sendFromQueue(queue.id);
+
+      return res;
     } catch (error) {
       throw new HttpException(error, getErrorStatusCode(error));
     }
