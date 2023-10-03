@@ -45,6 +45,16 @@ const notificationOptions = [
     },
   },
   {
+    name: 'brevo' as any,
+    setting: {
+      apiKey: process.env.BREVO_API_KEY || '-',
+      from: {
+        email: process.env.BREVO_EMAIL_FROM,
+        name: process.env.BREVO_EMAIL_FROM_NAME,
+      },
+    },
+  },
+  {
     name: 'goSMSGateway' as any,
     setting: {
       apiKey: process.env.NODE_ENV,
@@ -179,4 +189,4 @@ export const rootImportedModules = [
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }
