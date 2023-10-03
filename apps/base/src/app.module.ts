@@ -55,6 +55,16 @@ const notificationOptions = [
     },
   },
   {
+    name: 'nodemailer' as any,
+    setting: {
+      apiKey: process.env.NODEMAILER_API_KEY || '-',
+      nodemailer: {
+        username: process.env.NODEMAILER_USERNAME,
+        password: process.env.NODEMAILER_PASSWORD,
+      },
+    },
+  },
+  {
     name: 'goSMSGateway' as any,
     setting: {
       apiKey: process.env.NODE_ENV,

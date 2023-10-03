@@ -15,6 +15,45 @@ import {
 export class TestNotifController {
   constructor(private readonly notificationService: NotificationService) { }
 
+  // @Post('email')
+  // async testSendNotifEmail(
+  //   @Body() body: TestNotificationEmailRequest,
+  // ): Promise<any> {
+  //   try {
+  //     Logger.log('--ENTER TEST EMAIL CONTROLLER--');
+  //     Logger.log('tag : ' + JSON.stringify(body), 'tag.controller');
+  //     const queue = await this.notificationService.addToQueue({
+  //       externalId: 'TEST',
+  //       platform: ENotificationPlatform.NODEMAILER,
+  //       senderUserId: 'SYSTEM-TEST',
+  //       receiverUserId: 'system-test-receiver-user-id',
+  //       title: 'Test Title',
+  //       message: 'Test Message',
+  //       body: {
+  //         name: 'User',
+  //       },
+  //       requestData: {
+  //         templateId: process.env.NODEMAILER_TEMPLATE_ID_TEST_NOTIF,
+  //         from: {
+  //           email: process.env.NODEMAILER_EMAIL_FROM,
+  //           name: process.env.NODEMAILER_EMAIL_FROM_NAME,
+  //         },
+  //         to: {
+  //           email: body.email,
+  //           name: 'User',
+  //         },
+  //       },
+  //       createdByUserId: 'SYSTEM',
+  //     });
+
+  //     const res = await this.notificationService.sendFromQueue(queue.id);
+
+  //     return res;
+  //   } catch (error) {
+  //     throw new HttpException(error, getErrorStatusCode(error));
+  //   }
+  // }
+
   @Post('email')
   async testSendNotifEmail(
     @Body() body: TestNotificationEmailRequest,
@@ -24,7 +63,7 @@ export class TestNotifController {
       Logger.log('tag : ' + JSON.stringify(body), 'tag.controller');
       const queue = await this.notificationService.addToQueue({
         externalId: 'TEST',
-        platform: ENotificationPlatform.BREVO,
+        platform: ENotificationPlatform.NODEMAILER,
         senderUserId: 'SYSTEM-TEST',
         receiverUserId: 'system-test-receiver-user-id',
         title: 'Test Title',
@@ -33,10 +72,10 @@ export class TestNotifController {
           name: 'User',
         },
         requestData: {
-          templateId: process.env.BREVO_TEMPLATE_ID_TEST_NOTIF,
+          templateId: process.env.NODEMAILER_TEMPLATE_ID_TEST_NOTIF,
           from: {
-            email: process.env.BREVO_EMAIL_FROM,
-            name: process.env.BREVO_EMAIL_FROM_NAME,
+            email: process.env.NODEMAILER_EMAIL_FROM,
+            name: process.env.NODEMAILER_EMAIL_FROM_NAME,
           },
           to: {
             email: body.email,
