@@ -58,9 +58,14 @@ const notificationOptions = [
     name: 'nodemailer' as any,
     setting: {
       apiKey: process.env.NODEMAILER_API_KEY || '-',
+      from: {
+        email: process.env.NODEMAILER_EMAIL_FROM,
+        name: process.env.NODEMAILER_EMAIL_FROM_NAME,
+      },
       nodemailer: {
         username: process.env.NODEMAILER_USERNAME,
         password: process.env.NODEMAILER_PASSWORD,
+        service: process.env.NODEMAILER_SERVICE,
       },
     },
   },
