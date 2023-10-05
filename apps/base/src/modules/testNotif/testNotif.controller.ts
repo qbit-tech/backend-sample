@@ -24,7 +24,7 @@ export class TestNotifController {
       Logger.log('tag : ' + JSON.stringify(body), 'tag.controller');
       const queue = await this.notificationService.addToQueue({
         externalId: 'TEST',
-        platform: ENotificationPlatform.BREVO,
+        platform: ENotificationPlatform.NODEMAILER,
         senderUserId: 'SYSTEM-TEST',
         receiverUserId: 'system-test-receiver-user-id',
         title: 'Test Title',
@@ -33,10 +33,10 @@ export class TestNotifController {
           name: 'User',
         },
         requestData: {
-          templateId: process.env.BREVO_TEMPLATE_ID_TEST_NOTIF,
+          templateId: 1,
           from: {
-            email: process.env.BREVO_EMAIL_FROM,
-            name: process.env.BREVO_EMAIL_FROM_NAME,
+            email: process.env.NODEMAILER_EMAIL_FROM,
+            name: process.env.NODEMAILER_EMAIL_FROM_NAME,
           },
           to: {
             email: body.email,
