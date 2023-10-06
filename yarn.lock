@@ -1150,20 +1150,20 @@
     firebase-admin "^11.9.0"
     postmark "^3.0.18"
 
-"@qbit-tech/libs-notification@^1.5.1":
-  version "1.5.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.5.1/42105e3c36a52fc3bf5be9e9bc3c4d8799b041ea#42105e3c36a52fc3bf5be9e9bc3c4d8799b041ea"
-  integrity sha512-ZIi7hiRZ8K8oJW4m8QIQFJT5CEiwkL8ye8bpFjsO33pzy7BRqJj1W6V3vyu8m0NWa98foxROfjXHd0v4+0Q5pQ==
+"@qbit-tech/libs-notification@^1.6.0":
+  version "1.6.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.6.0/31fa2faa387e96d02646f9346c43ad8c85f7e048#31fa2faa387e96d02646f9346c43ad8c85f7e048"
+  integrity sha512-EMP5hyaTJGZAmfQW7eugmfKAHarAVrfJ9hg3vvrxhsYQDpob9BGn2DhD7+RHSegrqc35T0YlR060nK9+VovPpA==
   dependencies:
+    "@getbrevo/brevo" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
     "@nestjs/schedule" "^3.0.1"
     "@sendgrid/mail" "^7.7.0"
     "@sendinblue/client" "^3.3.1"
     base-64 "^1.0.0"
-    dotenv "^16.3.1"
     firebase-admin "^11.9.0"
     js-md5 "^0.7.3"
-    pg "^8.11.3"
+    nodemailer "^6.9.5"
     postmark "^3.0.18"
 
 "@qbit-tech/libs-payments@^1.1.5":
@@ -6308,7 +6308,7 @@ pg-types@^2.1.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.11.1, pg@^8.11.2, pg@^8.11.3:
+pg@^8.11.1, pg@^8.11.2:
   version "8.11.3"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.11.3.tgz#d7db6e3fe268fcedd65b8e4599cda0b8b4bf76cb"
   integrity sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==
