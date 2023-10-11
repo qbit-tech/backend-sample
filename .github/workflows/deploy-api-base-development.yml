@@ -48,6 +48,11 @@ jobs:
       - name: yarn global add sequelize-cli@6.2.0
         run: yarn global add sequelize-cli@6.2.0
 
+      - name: Use .npmrc
+        uses: bduff9/use-npmrc@v1.2
+        with:
+          dot-npmrc: ${{ secrets.DOT_NPMRC }}
+
       - name: 'Create env.development file'
         run: |
           touch ./apps/base/.env.development
@@ -114,6 +119,11 @@ jobs:
       - name: Show version number
         run: echo "${{ steps.package-json.outputs.version }}"
 
+      - name: Use .npmrc
+        uses: bduff9/use-npmrc@v1.2
+        with:
+          dot-npmrc: ${{ secrets.DOT_NPMRC }}
+          
       - name: yarn install
         run: yarn install
 
