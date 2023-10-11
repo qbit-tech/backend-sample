@@ -51,12 +51,12 @@ jobs:
       - name: 'Create env.development file'
         run: |
           touch ./apps/base/.env.development
-          echo DB_PORT=${{ secrets.DB_PORT_base_development }} >> ./apps/base/.env.development
+          echo DB_PORT=${{ secrets.DB_PORT_DEVELOPMENT }} >> ./apps/base/.env.development
           echo DB_DIALECT=postgres >> ./apps/base/.env.development
-          echo DB_HOST=${{ secrets.DB_HOST_base_development }} >> ./apps/base/.env.development
-          echo DB_USER=${{ secrets.DB_USER_base_development }} >> ./apps/base/.env.development
-          echo DB_PASS=${{ secrets.DB_PASS_base_development }} >> ./apps/base/.env.development
-          echo DB_NAME=${{ secrets.DB_NAME_base_development }} >> ./apps/base/.env.development
+          echo DB_HOST=${{ secrets.DB_HOST_DEVELOPMENT }} >> ./apps/base/.env.development
+          echo DB_USER=${{ secrets.DB_USER_DEVELOPMENT }} >> ./apps/base/.env.development
+          echo DB_PASS=${{ secrets.DB_PASS_DEVELOPMENT }} >> ./apps/base/.env.development
+          echo DB_NAME=${{ secrets.DB_NAME_DEVELOPMENT }} >> ./apps/base/.env.development
           cat ./apps/base/.env.development
 
       - name: run migration
