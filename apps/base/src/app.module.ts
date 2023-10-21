@@ -8,6 +8,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { AppController } from './app.controller';
 import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
+import { NotificationModule as NotificationFindFullModule } from './modules/notification/notification.module'
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 // import { Authv3Module } from './modules/authv3/authv3.module';
@@ -204,6 +205,7 @@ export const rootImportedModules = [
     FileUploadModule,
     TestMinio2Module,
     ArticleModule,
+    NotificationFindFullModule,
   ],
   controllers: [AppController],
 })
