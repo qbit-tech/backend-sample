@@ -6,11 +6,7 @@ import { InitDataController } from './initData.controller';
 import { InitDataService } from './initData.service';
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([
-      RoleModel,
-    ]), 
-    UserModule],
+  imports: [SequelizeModule.forFeature([RoleModel]), UserModule],
   controllers: [InitDataController],
   providers: [InitDataService],
 })
