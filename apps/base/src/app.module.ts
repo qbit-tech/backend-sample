@@ -26,6 +26,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
+import { ArticleModule } from './modules/article/article.module';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
@@ -43,21 +44,63 @@ const notificationOptions = [
       },
     },
   },
+  {
+    name: 'brevo' as any,
+    setting: {
+      apiKey: process.env.BREVO_API_KEY || '-',
+      from: {
+        email: process.env.BREVO_EMAIL_FROM,
+        name: process.env.BREVO_EMAIL_FROM_NAME,
+      },
+    },
+  },
+  {
+    name: 'nodemailer' as any,
+    setting: {
+      apiKey: process.env.NODEMAILER_API_KEY || '-',
+      from: {
+        email: process.env.NODEMAILER_EMAIL_FROM,
+        name: process.env.NODEMAILER_EMAIL_FROM_NAME,
+      },
+      nodemailer: {
+        username: process.env.NODEMAILER_USERNAME,
+        password: process.env.NODEMAILER_PASSWORD,
+        service: process.env.NODEMAILER_SERVICE,
+        host: process.env.NODEMAILER_SMTP_HOST,
+        port: process.env.NODEMAILER_SMTP_PORT,
+        secure: process.env.NODEMAILER_SMTP_SECURE,
+      },
+    },
+  },
+  {
+    name: 'goSMSGateway' as any,
+    setting: {
+      apiKey: process.env.NODE_ENV,
+      goSmsGateway: {
+        username: process.env.GOSMSGATEWAY_USERNAME,
+        password: process.env.GOSMSGATEWAY_PASSWORD,
+      },
+    },
+  },
 ];
 
 const sessionOption = {
   sessionHashToken: process.env.SESSION_HASH_TOKEN,
   randomSessionIdKey: process.env.RANDOM_SESSIONID_KEY,
   projectId: process.env.PROJECT_ID,
-  expiredJWTTokenAccessInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES),
-  expiredJWTTokenRefreshInMinutes: parseInt(process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES)
-}
+  expiredJWTTokenAccessInMinutes: parseInt(
+    process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES,
+  ),
+  expiredJWTTokenRefreshInMinutes: parseInt(
+    process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES,
+  ),
+};
 
 const redisOption = {
   config: {
     url: process.env.REDIS_URL,
   },
-}
+};
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -159,7 +202,8 @@ export const rootImportedModules = [
     FeatureVersionModule,
     ProductsModule,
     FileUploadModule,
-    TestMinio2Module
+    TestMinio2Module,
+    ArticleModule,
   ],
   controllers: [AppController],
 })
