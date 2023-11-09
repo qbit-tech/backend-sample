@@ -11,6 +11,7 @@ import {
   AllowNull,
   BeforeCreate,
   BeforeUpdate,
+  HasMany,
 } from 'sequelize-typescript';
 import { RoleProperties } from '@qbit-tech/libs-role';
 

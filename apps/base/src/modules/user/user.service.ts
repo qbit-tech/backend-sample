@@ -3,11 +3,7 @@ import { UserModel, UserProperties } from './user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { ulid } from 'ulid';
-import { 
-  RoleModel, 
-  RoleProperties, 
-  RoleService 
-} from '@qbit-tech/libs-role';
+import { RoleModel, RoleProperties, RoleService } from '@qbit-tech/libs-role';
 import {
   generateResultPagination,
   cleanPhoneNumber,
@@ -158,21 +154,21 @@ export class UserService {
         order: [['createdAt', 'desc']],
       });
 
-      const results = []
+      const results = [];
 
       for (const user of users.map((row) => row.get())) {
-        if(user.roleId) {
-          const getRole = await this.roleService.findOne(user.roleId)
+        if (user.roleId) {
+          const getRole = await this.roleService.findOne(user.roleId);
 
-          if(getRole) {
+          if (getRole) {
             results.push({
               ...user,
-              role: getRole
-            })
+              role: getRole,
+            });
           } else {
             results.push({
-              ...user
-            })
+              ...user,
+            });
           }
         }
       }
@@ -274,22 +270,22 @@ export class UserService {
     this.logger.log('Find user by email: ' + email);
 
     try {
-      let result:any = await this.userRepositories.findOne({
+      let result: any = await this.userRepositories.findOne({
         where: {
           email,
         },
       });
 
-      if(result && result.roleId) {
-        const getRole = await this.roleService.findOne(result.roleId)
+      if (result && result.roleId) {
+        const getRole = await this.roleService.findOne(result.roleId);
 
-        if(getRole) {
+        if (getRole) {
           result = {
             ...result.get(),
-            role: getRole
-          }
+            role: getRole,
+          };
         } else {
-          result = result.get()
+          result = result.get();
         }
       }
 
@@ -302,23 +298,23 @@ export class UserService {
   }
 
   async findOneByUserId(userId: string): Promise<UserProperties> {
-    let result:any = await this.userRepositories.findOne({
+    let result: any = await this.userRepositories.findOne({
       where: { userId },
     });
-    
-    if(result && result.roleId) {
-      const getRole = await this.roleService.findOne(result.roleId)
 
-      if(getRole) {
+    if (result && result.roleId) {
+      const getRole = await this.roleService.findOne(result.roleId);
+
+      if (getRole) {
         result = {
           ...result.get(),
-          role: getRole
-        }
+          role: getRole,
+        };
       } else {
-        result = result.get()
+        result = result.get();
       }
     } else {
-      result = result.get()
+      result = result.get();
     }
 
     return result ? result : null;
@@ -487,7 +483,7 @@ export class UserService {
   }
 
   async findOneByPhone(phoneNumber: string): Promise<UserProperties> {
-    let result:any = await this.userRepositories.findOne({
+    let result: any = await this.userRepositories.findOne({
       where: {
         phone: phoneNumber,
       },
@@ -523,17 +519,16 @@ export class UserService {
       // ],
     });
 
-    
-    if(result && result.roleId) {
-      const getRole = await this.roleService.findOne(result.roleId)
+    if (result && result.roleId) {
+      const getRole = await this.roleService.findOne(result.roleId);
 
-      if(getRole) {
+      if (getRole) {
         result = {
           ...result.get(),
-          role: getRole
-        }
+          role: getRole,
+        };
       } else {
-        result = result.get()
+        result = result.get();
       }
     }
 
