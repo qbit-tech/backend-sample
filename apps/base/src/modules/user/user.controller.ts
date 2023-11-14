@@ -42,7 +42,11 @@ import { UserProperties } from './user.entity';
 import { async as crypt } from 'crypto-random-string';
 import { AuthService } from '@qbit-tech/libs-authv3';
 import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { FEATURE_PERMISSIONS, AuthPermissionGuard } from '@qbit-tech/libs-session';
+import {
+  FEATURE_PERMISSIONS,
+  AuthPermissionGuard,
+  SessionService,
+} from '@qbit-tech/libs-session';
 import { NotificationService } from '@qbit-tech/libs-notification';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 import { UploaderService } from '@qbit-tech/libs-uploader';
@@ -55,10 +59,11 @@ export class UserController implements UserApiContract {
 
   constructor(
     private userService: UserService,
-    private emailAuthenticatorService: AuthService,
+    private authenticatorService: AuthService,
     private notificationService: NotificationService,
     private uploaderService: UploaderService,
-  ) { }
+    private sessionService: SessionService,
+  ) {}
 
   @ApiOperation({ summary: 'New admin using email authenticator' })
   @ApiBearerAuth()
@@ -74,23 +79,35 @@ export class UserController implements UserApiContract {
     this.logger.verbose('Body: ' + JSON.stringify(body));
 
     try {
-      const fullName = `${body.firstName} ${body.middleName ? body.middleName : '.'
-        } ${body.lastName ? body.lastName : '.'}`;
+      const fullName = `${body.firstName} ${
+        body.middleName ? body.middleName : '.'
+      } ${body.lastName ? body.lastName : '.'}`;
       const name = fullName.replace(/[^a-zA-Z ]/g, '');
       const randomPassword = await crypt({ length: 10 });
+
+      let result;
 
       const userData = await this.userService.create({
         ...body,
       });
 
       if (body.email) {
-        console.info('email registered');
-        const res = await this.emailAuthenticatorService.register(EAuthMethod.emailPassword,
+        this.logger.log('email registered');
+        const registerByEmail = await this.authenticatorService.register(
+          EAuthMethod.emailPassword,
           {
             userId: userData.userId,
             username: body.email,
             password: body.password ? body.password : randomPassword,
-          });
+          },
+        );
+
+        result = {
+          ...result,
+          registerByEmailResult: {
+            ...registerByEmail,
+          },
+        };
         // if (res) {
         //   await this.sibService.sendTemplate({
         //     to: [
@@ -115,55 +132,73 @@ export class UserController implements UserApiContract {
       //     body.platform === 'cms' ? EPlatform.CMS : EPlatform.MOBILE_APP,
       // });
 
-      return userData;
+      if (body.username) {
+        this.logger.log('username registered');
+        const registerByUsername = await this.authenticatorService.register(
+          EAuthMethod.usernamePassword,
+          {
+            userId: userData.userId,
+            username: body.email,
+            password: body.password ? body.password : randomPassword,
+          },
+        );
+
+        result = {
+          ...result,
+          registerByUsernameResult: {
+            ...registerByUsername,
+          },
+        };
+
+        return result;
+      }
     } catch (error) {
       this.logger.error(error);
       throw new HttpException(error, getErrorStatusCode(error));
-      // return Promise.reject(error.message);
     }
   }
 
   @Post('/check')
   // @ApiBearerAuth()
   async checkUser(@Body() body: CheckUserRequest): Promise<{
-    isEmailExist: boolean,
-    isUsernameExist: boolean,
-    isPhoneExist: boolean
+    isEmailExist: boolean;
+    isUsernameExist: boolean;
+    isPhoneExist: boolean;
   }> {
     try {
-      let res
+      let res;
       if (body.email) {
         const findUser = await this.userService.findOneByEmail(body.email);
         if (findUser) {
           res = {
             ...res,
-            isEmailExist: true
-          }
+            isEmailExist: true,
+          };
         } else {
           res = {
             ...res,
-            isEmailExist: false
-          }
+            isEmailExist: false,
+          };
         }
       }
 
       if (body.phone) {
-        const phone = cleanPhoneNumber(body.phone)
+        const phone = cleanPhoneNumber(body.phone);
         const findUser = await this.userService.findOneByPhone(phone);
         if (findUser) {
           res = {
             ...res,
-            isPhoneExist: true
-          }
+            isPhoneExist: true,
+          };
         } else {
           res = {
             ...res,
-            isPhoneExist: false
-          }
+            isPhoneExist: false,
+          };
         }
       }
 
-      return res
+      return res;
     } catch (err) {
       throw new HttpException(
         {
@@ -179,12 +214,11 @@ export class UserController implements UserApiContract {
   @ApiOperation({ summary: 'List all user' })
   @ApiBearerAuth()
   @Get()
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.USER.__type,
-      FEATURE_PERMISSIONS.USER.LIST.__type,
-    ),
-  )
+  @UseGuards()
+  // AuthPermissionGuard(
+  //   FEATURE_PERMISSIONS.USER.__type,
+  //   FEATURE_PERMISSIONS.USER.LIST.__type,
+  // ),
   @ApiOkResponse({ type: UserFindAllResponse })
   async findAll(
     @Query() params: UserFindAllRequest,
@@ -199,7 +233,7 @@ export class UserController implements UserApiContract {
         email: result.email,
         phone: result.phone,
       });
-      res.results = res.results.map(item => {
+      res.results = res.results.map((item) => {
         if (result.userId === item.userId) {
           item = {
             ...item,
@@ -227,7 +261,6 @@ export class UserController implements UserApiContract {
     @Req() req: AppRequest,
   ): Promise<UserProperties> {
     try {
-
       let uid = userId;
       if (userId === 'me') {
         uid = req.user.userId;
@@ -237,7 +270,7 @@ export class UserController implements UserApiContract {
         // only for admin
 
         if (body.email && body.isEmailVerified !== undefined) {
-          // await this.emailAuthenticatorService.updateDataByUserId(uid, {
+          // await this.authenticatorService.updateDataByUserId(uid, {
           //   email: body.email,
           //   isConfirmed: body.isEmailVerified,
           // });
@@ -249,15 +282,14 @@ export class UserController implements UserApiContract {
         userId: uid,
       });
 
-      return res
+      return res;
     } catch (error) {
       this.logger.error(error);
       throw new HttpException(error, getErrorStatusCode(error));
     }
   }
 
-  async update(
-    request: UpdateRequest): Promise<any> {
+  async update(request: UpdateRequest): Promise<any> {
     try {
       await this.userService.update(request, request.userId);
       return this.getProfile(request.userId);
@@ -283,7 +315,7 @@ export class UserController implements UserApiContract {
     let uid = userId;
     if (userId === 'me') {
       Logger.log('get my profile');
-      console.log(req.user)
+      console.log(req.user);
       uid = req.user.userId;
     }
     Logger.log('req.user', req.user);
@@ -335,7 +367,7 @@ export class UserController implements UserApiContract {
       //   imageLink: updateUserImage.payload.fileLinkCache,
       // });
 
-      return updateUserImage
+      return updateUserImage;
 
       // const updateImage = await this.uploaderService.updateImage(
       //   'users',
@@ -416,10 +448,9 @@ export class UserController implements UserApiContract {
       isPhoneVerified: false,
     };
     if (data.email) {
-      // const emailAuthData = await this.emailAuthenticatorService.findOneByEmail(
+      // const emailAuthData = await this.authenticatorService.findOneByEmail(
       //   data.email,
       // );
-
       // if (emailAuthData) {
       //   res = {
       //     ...res,
@@ -456,11 +487,10 @@ export class UserController implements UserApiContract {
     @Req() req: AppRequest,
     @Param('userId') userId: string,
   ): Promise<{ isSuccess: boolean }> {
-
     const isSuccess = await this.userService.delete(userId);
     if (isSuccess) {
       // await Promise.all([
-      //   this.emailAuthenticatorService.deleteByUserId(userId),
+      //   this.authenticatorService.deleteByUserId(userId),
       //   this.phoneAuthenticatorService.deleteByUserId(userId),
       // ]);
     }

@@ -11,11 +11,13 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SignInRequest, AuthService } from '@qbit-tech/libs-authv3';
 import { SessionService } from '@qbit-tech/libs-session';
-import { getErrorStatusCode } from '@qbit-tech/libs-utils';
+import { AppRequest, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import {
   ChangePasswordUsingSessionRequest,
   ChangePasswordUsingSessionResponse,
@@ -26,7 +28,10 @@ import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 import { AuthPermissionGuard } from '@qbit-tech/libs-session';
 import { verify } from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '@qbit-tech/libs-session/dist/session.helper';
-
+import { CreateUserRequest } from '../user/contract/user.contract';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UserProperties } from '../user/user.entity';
+import { async as crypt } from 'crypto-random-string';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -37,6 +42,77 @@ export class AuthController {
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
   ) {}
+
+  @ApiOperation({ summary: 'New admin using email authenticator' })
+  @ApiBearerAuth()
+  @Post('register-with-profile')
+  // @UseGuards(AuthPermissionGuard())
+  @UseInterceptors(FileInterceptor('image'))
+  async createUser(
+    @Req() req: AppRequest,
+    @Body() body: CreateUserRequest,
+    @UploadedFile() file,
+  ): Promise<UserProperties> {
+    this.logger.log('Create new user');
+    this.logger.verbose('Body: ' + JSON.stringify(body));
+
+    try {
+      const fullName = `${body.firstName} ${
+        body.middleName ? body.middleName : '.'
+      } ${body.lastName ? body.lastName : '.'}`;
+      const name = fullName.replace(/[^a-zA-Z ]/g, '');
+      const randomPassword = await crypt({ length: 10 });
+
+      let result;
+
+      const userData = await this.userService.create({
+        ...body,
+      });
+
+      if (body.email) {
+        this.logger.log('email registered');
+        const registerByEmail = await this.authv3Service.register(
+          EAuthMethod.emailPassword,
+          {
+            userId: userData.userId,
+            username: body.email,
+            password: body.password ? body.password : randomPassword,
+          },
+        );
+
+        result = {
+          ...result,
+          registerByEmailResult: {
+            ...registerByEmail,
+          },
+        };
+      }
+
+      if (body.username) {
+        this.logger.log('username registered');
+        const registerByUsername = await this.authv3Service.register(
+          EAuthMethod.usernamePassword,
+          {
+            userId: userData.userId,
+            username: body.email,
+            password: body.password ? body.password : randomPassword,
+          },
+        );
+
+        result = {
+          ...result,
+          registerByUsernameResult: {
+            ...registerByUsername,
+          },
+        };
+
+        return result;
+      }
+    } catch (error) {
+      this.logger.error(error);
+      throw new HttpException(error, getErrorStatusCode(error));
+    }
+  }
 
   @ApiOperation({ summary: 'Sign In using email auth' })
   @Post('signin')
@@ -49,15 +125,17 @@ export class AuthController {
         password: req.password,
       });
 
-      const user = await this.userService.findOneByUserId(authenticateLogin.userId)
+      const user = await this.userService.findOneByUserId(
+        authenticateLogin.userId,
+      );
 
       const signInResult = await this.sessionService.generateLoginToken(
         {
           method: EAuthMethod.emailPassword,
           username: req.email,
-          userId: authenticateLogin.userId
-        }, 
-        user
+          userId: authenticateLogin.userId,
+        },
+        user,
       );
 
       if (signInResult.access_token === null) {
@@ -73,6 +151,8 @@ export class AuthController {
       return {
         access_token: signInResult.access_token,
         refresh_token: signInResult.refresh_token,
+        userId: authenticateLogin.userId,
+        isVerified: authenticateLogin.isVerified,
         isPasswordExpired: authenticateLogin.isPasswordExpired,
         passwordExpiredAt: authenticateLogin.passwordExpiredAt,
         isBlocked: authenticateLogin.isBlocked,
@@ -83,14 +163,13 @@ export class AuthController {
     }
   }
 
-  
   @ApiOperation({ summary: 'Refresh token' })
   @Post('refresh-token')
   @ApiBearerAuth()
   @UseGuards(AuthPermissionGuard(null, null, true))
   async refreshToken(@Req() req: any): Promise<any> {
     try {
-      const token = req.headers.authorization.substr(7)
+      const token = req.headers.authorization.substr(7);
 
       const decodedToken = verify(
         token,
@@ -98,9 +177,9 @@ export class AuthController {
         {
           algorithms: ['HS256'],
         },
-      ) as any
-      const user = await this.userService.findOneByUserId(decodedToken.sub)
-      return this.sessionService.refreshToken(token, user)
+      ) as any;
+      const user = await this.userService.findOneByUserId(decodedToken.sub);
+      return this.sessionService.refreshToken(token, user);
     } catch (err) {
       throw new HttpException(err, getErrorStatusCode(err));
     }

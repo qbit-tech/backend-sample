@@ -32,6 +32,7 @@ import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
 import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
+import { InitDataModule } from './modules/initData/initData.module';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
 const notificationOptions = [
@@ -206,7 +207,8 @@ export const rootImportedModules = [
     TestMinio2Module,
     ArticleModule,
     EbookModule,
+    InitDataModule,
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
