@@ -38,7 +38,10 @@ import { TestMinio2Controller } from './minioWithLibsUploader.controller';
                     cb(null, { fieldname: file.fieldname });
                 },
                 key: function (req, file, cb) {
-                    cb(null, `backend-sample/test-minio/${uuidv4()}`);
+                    cb(
+                      null,
+                      `${process.env.PROJECT_ID}/test-minio/${uuidv4()}`,
+                    );
                 },
             }),
         }),

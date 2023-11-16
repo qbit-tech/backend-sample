@@ -37,7 +37,10 @@ import * as MulterS3 from 'multer-s3';
                     cb(null, { fieldname: file.fieldname });
                 },
                 key: function (req, file, cb) {
-                    cb(null, `backend-template/images/${Date.now()}.png`);
+                    cb(
+                      null,
+                      `${process.env.PROJECT_ID}/test-minio/${Date.now()}.png`,
+                    );
                 },
             }),
         }),

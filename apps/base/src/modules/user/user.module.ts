@@ -50,7 +50,7 @@ import path = require('path');
           cb(null, { fieldname: file.fieldname });
         },
         key: function (req, file, cb) {
-          cb(null, `backend-template/images/${Date.now()}.png`);
+          cb(null, `${process.env.PROJECT_ID}/users/${Date.now()}.png`);
         },
       }),
     }),
