@@ -11,11 +11,15 @@ export const DEFAULT_ROLES: Partial<RoleModel>[] = [
     roleName: 'Super Admin',
     roleDescription: 'Super admin can do all actions.',
     permissions: DEFAULT_PERMISSION_FULL_ACCESS,
+    isActive: true,
+    isDeleted: false,
   },
   {
     roleId: ROLE_CUSTOMER_ID,
     roleName: 'Customer',
     roleDescription: 'Customer',
     permissions: DEFAULT_PERMISSION_CUSTOMER,
+    isActive: true,
+    isDeleted: false,
   },
 ];
