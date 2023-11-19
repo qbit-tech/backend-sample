@@ -77,6 +77,7 @@ export class BannerController {
             );
         }
     }
+    
 
     @ApiOperation({ summary: "create new banner" })
     @Post()
