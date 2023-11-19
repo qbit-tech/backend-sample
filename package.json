@@ -36,7 +36,7 @@
     "@nestjs/swagger": "^7.1.1",
     "@qbit-tech/feature-utils": "^1.5.0",
     "@qbit-tech/libs-address": "^1.2.3",
-    "@qbit-tech/libs-authv3": "^1.3.2",
+    "@qbit-tech/libs-authv3": "^1.3.4",
     "@qbit-tech/libs-faq": "^1.3.2",
     "@qbit-tech/libs-notification": "^1.6.1",
     "@qbit-tech/libs-notification-scheduler": "^1.0.4",

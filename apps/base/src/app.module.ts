@@ -27,6 +27,7 @@ import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
 import { ArticleModule } from './modules/article/article.module';
+import { BannerModule } from './modules/banner/banner.module';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
@@ -204,6 +205,7 @@ export const rootImportedModules = [
     FeatureVersionModule,
     ProductsModule,
     FileUploadModule,
+    BannerModule,
     TestMinio2Module,
     ArticleModule,
     EbookModule,

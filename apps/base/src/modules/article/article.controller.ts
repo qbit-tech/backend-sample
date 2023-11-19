@@ -129,7 +129,6 @@ export class ArticleController {
   ): Promise<ArticleModel> {
     try {
       const article = await this.articleService.updateArticle(articleId, body);
-
       return article;
     } catch (error: any) {
       throw new HttpException(
