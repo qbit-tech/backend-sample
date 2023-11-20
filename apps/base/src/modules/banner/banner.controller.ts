@@ -99,7 +99,7 @@ export class BannerController {
     }
 
     @ApiOperation({ summary: "update banner" })
-    @Post(":bannerId")
+    @Patch(":bannerId")
     @ApiBody({
         type: CreateBannerDto,
       })
