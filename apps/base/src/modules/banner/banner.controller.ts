@@ -12,7 +12,6 @@ import {
     UploadedFile,
     UseInterceptors} from '@nestjs/common';
 import { BannerService } from "./banner.service";
-import { FileInterceptor } from '@nestjs/platform-express';
 import { BannerModel } from "./banner.entity";
 import { CreateBannerDto } from "./dto/create.banner.dto";
 import {
@@ -25,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 
 
-@Controller("banner")
+@Controller("banners")
 @ApiTags("Banner")
 export class BannerController {
     constructor(private readonly bannerService: BannerService) {}
@@ -77,7 +76,6 @@ export class BannerController {
             );
         }
     }
-    
 
     @ApiOperation({ summary: "create new banner" })
     @Post()
@@ -88,10 +86,10 @@ export class BannerController {
         @Body() body: CreateBannerDto
     ): Promise<BannerModel> {
         try {
-            const banner = await this.bannerService.createBanner(
+            const banners = await this.bannerService.createBanner(
                 body
             );
-            return banner;
+            return banners;
         } catch (error) {
             throw new HttpException(
                 error,

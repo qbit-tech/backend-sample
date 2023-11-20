@@ -2,9 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { BannerModel } from "./banner.entity";
 import { CreateBannerDto } from "./dto/create.banner.dto";
-import * as fsp from 'fs/promises';
-import { async } from "crypto-random-string";
-
+import { v4 as uuidv4} from "uuid";
 @Injectable()
 export class BannerService {
 
@@ -17,15 +15,17 @@ export class BannerService {
         newBanner: CreateBannerDto
     ): Promise<BannerModel> {
         try {
-            const [banner, created] = await this.bannerRepository.findOrCreate({
+            const uuid = uuidv4()
+            const [banners, created] = await this.bannerRepository.findOrCreate({
                 where: {
+                    id: uuid,
                     title: newBanner.title,
                     bannerImage: newBanner.bannerImage,
                     bannerLink: newBanner.bannerLink
                 }
             });
             if (created) {
-                return banner;
+                return banners;
             }
             return Promise.reject({
                 statusCode: 400,
