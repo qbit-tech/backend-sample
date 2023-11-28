@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, Logger } from '@nestjs/common';
+import { Controller, Get, HttpException, Logger, NotFoundException, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { EBOOKS, IEbook } from './ebook.data';
@@ -16,6 +16,21 @@ export class EbookController {
   async fetchList(): Promise<{ results: IEbook[] }> {
     try {
       return { results: EBOOKS };
+    } catch (err) {
+      throw new HttpException(err, getErrorStatusCode(err));
+    }
+  }
+
+  @Get(':ebookId')
+  async getDetail(@Param('ebookId') ebookId: string): Promise<any> {
+    try {
+      const res = EBOOKS.find((item) => item.ebookId === ebookId);
+
+      if (res) {
+        return res;
+      } else {
+        throw new NotFoundException();
+      }
     } catch (err) {
       throw new HttpException(err, getErrorStatusCode(err));
     }
