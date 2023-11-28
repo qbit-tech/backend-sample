@@ -1247,6 +1247,11 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.4.2/f2893ea039702ca13dddf93d5fc96d078bf5662e#f2893ea039702ca13dddf93d5fc96d078bf5662e"
   integrity sha512-+V/jCa5ryUxOZWwvErq7GkinhNlJ+RtqJpsC4bxxhdwpX4ZmN10gO4eDST9j50mJL+77iuI8d670kVcEagSHxg==
 
+"@qbit-tech/libs-session@^1.5.1":
+  version "1.5.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.5.1/638d0aeda274013dc1c68b8567b8a82524d2e72d#638d0aeda274013dc1c68b8567b8a82524d2e72d"
+  integrity sha512-3D5iZvQH7uJSh0SDNz7Aw6SZZ9s5sFaNOq5Vwnb9VhxbCARXD1BcbFmy6ZMqkM9KutBJFfElrgUdldD+q1Ibsw==
+
 "@qbit-tech/libs-subscription@^1.0.5":
   version "1.0.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-subscription/1.0.5/d2e5a2f711f3e0b67b14f168a19c1ab0d5de6a40#d2e5a2f711f3e0b67b14f168a19c1ab0d5de6a40"
