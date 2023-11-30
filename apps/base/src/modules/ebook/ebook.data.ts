@@ -22,7 +22,7 @@ export type IEbook = {
   price: number;
   currency: ECurrency;
   author?: IEbookAuthor;
-  access?: { url: string }; // jika ada ini, artinya sudah dibeli
+  access?: { url: string, password?: string }; // jika ada ini, artinya sudah dibeli
   description: string;
   size: string;
   pages: number;
@@ -112,6 +112,7 @@ export const EBOOKS = [
     currency: ECurrency.USD,
     access: {
       url: 'https://qbit-tech.sgp1.digitaloceanspaces.com/dev-ebooks/sample-pdf-cardio.pdf',
+      password: 'implat123',
     },
     size: '4.5mb',
     publisher: 'Pottermire Publishing',
