@@ -28,7 +28,7 @@ export type IEbook = {
   price: number;
   currency: ECurrency;
   author?: IEbookAuthor;
-  access?: { url: string, password?: string }; // jika ada ini, artinya sudah dibeli
+  access?: { url: string; password?: string }; // jika ada ini, artinya sudah dibeli
   description: string;
   size: string;
   pages: number;
