@@ -33,9 +33,10 @@ import { NotificationScheduleModule } from '@qbit-tech/libs-notification-schedul
 import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
+import { NotificationOption } from '@qbit-tech/libs-notification/dist/notification.helper';
 // import { TransactionModule } from './modules/transaction/transaction.module';
 
-const notificationOptions = [
+const notificationOptions: NotificationOption[] = [
   {
     name: 'sendinblue' as any,
     setting: {
