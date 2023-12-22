@@ -1150,10 +1150,10 @@
     firebase-admin "^11.9.0"
     postmark "^3.0.18"
 
-"@qbit-tech/libs-notification@^1.6.1":
-  version "1.6.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.6.1/52e04e1bd8abef96884b67961e0c336257eca139#52e04e1bd8abef96884b67961e0c336257eca139"
-  integrity sha512-fo+sDQk82MiN9XQ/jolX3uRjRzazDHIl6rUDEbQaWUAM5gOt6xWxrWLz0vtoIqoKcB0I3VuLcYQSemcxXVXsyw==
+"@qbit-tech/libs-notification@^1.6.8":
+  version "1.6.8"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.6.8/608419b168a0c9bd107eab5f5852d67774b0b122#608419b168a0c9bd107eab5f5852d67774b0b122"
+  integrity sha512-MkEuELpdASWYmWDa013teJI28FrHdGAH+Y8FK4VVX9/U5N6NbBqrvRMqRYPsBiq6Kk8T0JEwuamXCTEPz2hq2g==
   dependencies:
     "@getbrevo/brevo" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1247,10 +1247,10 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.4.2/f2893ea039702ca13dddf93d5fc96d078bf5662e#f2893ea039702ca13dddf93d5fc96d078bf5662e"
   integrity sha512-+V/jCa5ryUxOZWwvErq7GkinhNlJ+RtqJpsC4bxxhdwpX4ZmN10gO4eDST9j50mJL+77iuI8d670kVcEagSHxg==
 
-"@qbit-tech/libs-session@^1.5.1":
-  version "1.5.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.5.1/638d0aeda274013dc1c68b8567b8a82524d2e72d#638d0aeda274013dc1c68b8567b8a82524d2e72d"
-  integrity sha512-3D5iZvQH7uJSh0SDNz7Aw6SZZ9s5sFaNOq5Vwnb9VhxbCARXD1BcbFmy6ZMqkM9KutBJFfElrgUdldD+q1Ibsw==
+"@qbit-tech/libs-session@^1.6.1":
+  version "1.6.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.1/28d685ee9d056597250a40d70bffe7590f729924#28d685ee9d056597250a40d70bffe7590f729924"
+  integrity sha512-v9RC2vhHlYYLiYSzG6lbc1sBw2d6RlcVlFhcKWGW6ubAH4pdpMGXfQCGF/cGoCUf7jmnDCRn8+4FUeLJ/sG53Q==
 
 "@qbit-tech/libs-subscription@^1.0.5":
   version "1.0.5"
@@ -1272,6 +1272,13 @@
   version "1.3.3"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-uploader/1.3.3/6c20f926c6f761d055045471eae96a5a83b5d0d0#6c20f926c6f761d055045471eae96a5a83b5d0d0"
   integrity sha512-OU1DIX8rGon3FfdFEYI8MFfsXRAtCiM7oKoY36HiqFvRzfXGLen2XxCoIaghWUDNUcWC5I3FI7tiExIbsG8djQ==
+  dependencies:
+    aws-sdk "^2.868.0"
+
+"@qbit-tech/libs-uploader@^1.3.5":
+  version "1.3.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-uploader/1.3.5/ed37e6d155d487d44025866af3c08deecc7b2760#ed37e6d155d487d44025866af3c08deecc7b2760"
+  integrity sha512-XXUDJyWxhT7NXb12htTUi2Doae7CZQyUhjP6uZkpPqNDl5x4jGtpQU2gWK4HvwinJyJLqOjPxrooKq0jo7+fQA==
   dependencies:
     aws-sdk "^2.868.0"
 
