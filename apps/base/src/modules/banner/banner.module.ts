@@ -48,7 +48,7 @@ import { SessionModule } from '@qbit-tech/libs-session';
           cb(null, { fieldname: file.fieldname })
         },
         key: function (req, file, cb) {
-          cb(null, `vines/banner/${uuidv4()}`);
+          cb(null, `${process.env.PROJECT_ID}/banner/${uuidv4()}`);
         }
       })
     }),
