@@ -1,4 +1,16 @@
 #!/bin/bash
+abort()
+{
+    echo >&2 '
+***************
+*** ABORTED ***
+***************
+'
+    echo "An error occurred. Exiting..." >&2
+    exit 1
+}
+trap 'abort' 0
+set -e
 
 if [ -z "$1" ]
 then
@@ -129,3 +141,11 @@ cd ../..
 
 echo -ne '\n'
 echo "--- Migration: Finished ---"
+
+trap : 0
+
+echo >&2 '
+************
+*** DONE *** 
+************
+'
