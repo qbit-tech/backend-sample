@@ -84,17 +84,24 @@ export class BannerController implements BannerApiContract {
         },
     ): Promise<BannerCreateResponse> {
         try {
+            
             // const user = await this.userService.findOneByUserId(req.user.userId)
             Logger.log('--ENTER CREATE BANNER CONTROLLER--');
+            const createdByUserId = req.user && req.user.userId ? req.user.userId : '';
+            const metaCreatedByUser = req.user
+                ? {
+                      userId: req.user.userId,
+                      userType: req.user.userType,
+                      name: req.user.name,
+                  }
+                : { userId: '', userType: '', name: '' };
+            
             const banner = await this.bannerService.createBanner({
                 ...body,
-                createdByUserId: req.user.userId,
-                metaCreatedByUser: {
-                    userId: req.user.userId,
-                    userType: req.user.userType,
-                    name: req.user.name,
-                },
+                createdByUserId,
+                metaCreatedByUser,
             });
+            
 
             if (file) {
                 Logger.log('file added: ' + JSON.stringify(body), 'banner.controller');

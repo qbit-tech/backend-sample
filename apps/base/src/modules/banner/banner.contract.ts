@@ -77,32 +77,47 @@ export class BannerFindOneResponse {
 }
 
 export class BannerCreateRequest {
-    @IsNotEmpty()
+  @ApiProperty()
+  @IsNotEmpty()
   readonly title: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   readonly subtitle: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   readonly createdByUserId: string;
 
+  @ApiProperty()
   @IsOptional()
   readonly bannerType: string;
 
+  @ApiProperty()
   @IsOptional()
   readonly content?: string;
 
+  @ApiProperty()
   @IsOptional()
   readonly relatedContentId?: string;
 
+  @ApiProperty()
   @IsOptional()
   readonly relatedContentType?: string;
 
+  @ApiProperty()
   @IsOptional()
   readonly relatedContentUrl?: string;
 
+  // @ApiProperty()
+  // readonly bannerImageUrl?: string;
+  // file?: Express.Multer.File;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
   file?: Express.Multer.File;
 
+
+  @ApiProperty()
   metaCreatedByUser: UserMetadata;
 
   @IsOptional()

@@ -5,10 +5,7 @@ import {
 } from '@nestjs/swagger';
 import { UserMetadata } from './banner.contract';
 
-// @Table({
-//   tableName: 'banners',
-//   timestamps: true
-// })
+
 
 export class BaseBannerProperties {
     @ApiProperty()
@@ -39,6 +36,10 @@ export class BaseBannerProperties {
 export class BannerProperties extends BaseBannerProperties {
 }
 
+@Table({
+    tableName: 'banners',
+    timestamps: true
+})
 export class BannerModel extends Model {
     @PrimaryKey
     @Column
