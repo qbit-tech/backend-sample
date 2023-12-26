@@ -33,10 +33,11 @@ import { NotificationScheduleModule } from '@qbit-tech/libs-notification-schedul
 import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
-import { NotificationOption } from '@qbit-tech/libs-notification/dist/notification.helper';
+import { BannerModule } from './modules/banner/banner.module';
 // import { TransactionModule } from './modules/transaction/transaction.module';
+import { AuthSessionService } from './modules/authUser/authUser.service';
 
-const notificationOptions: NotificationOption[] = [
+const notificationOptions = [
   {
     name: 'sendinblue' as any,
     setting: {
@@ -200,7 +201,7 @@ export const rootImportedModules = [
     // FaqModule,
     PermissionModule,
     RoleModule,
-    // AuthSessionModule
+    // AuthSessionService,
     FeatureConfigModule,
     FeatureVersionModule,
     ProductsModule,
@@ -209,6 +210,7 @@ export const rootImportedModules = [
     ArticleModule,
     EbookModule,
     InitDataModule,
+    BannerModule,
   ],
   controllers: [AppController],
 })
