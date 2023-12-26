@@ -10,11 +10,9 @@ import { TestNotifModule } from './modules/testNotif/testNotif.module';
 import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
-// import { Authv3Module } from './modules/authv3/authv3.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PermissionModule } from './modules/permission/permission.module';
 import { RoleModule } from '@qbit-tech/libs-role';
-// import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import {
   FeatureConfigModule,
   FeatureVersionModule,
@@ -34,8 +32,6 @@ import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
 import { BannerModule } from './modules/banner/banner.module';
-// import { TransactionModule } from './modules/transaction/transaction.module';
-import { AuthSessionService } from './modules/authUser/authUser.service';
 
 const notificationOptions = [
   {
@@ -193,15 +189,13 @@ export const rootImportedModules = [
   imports: [
     ...rootImportedModules,
     TagModule,
-    // Authv3Module,
     AuthModule,
     TestNotifModule,
     UserModule,
-    // TransactionModule,
-    // FaqModule,
+    TransactionModule,
+    FaqModule,
     PermissionModule,
     RoleModule,
-    // AuthSessionService,
     FeatureConfigModule,
     FeatureVersionModule,
     ProductsModule,

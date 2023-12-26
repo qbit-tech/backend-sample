@@ -3,10 +3,6 @@ import { Module } from '@nestjs/common';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
-import { GoogleAuthenticatorService } from '@qbit-tech/libs-authv3';
-import { SessionService } from '@qbit-tech/libs-authv3';
-import { GoogleOption } from '@qbit-tech/libs-authv3';
-import { FacebookOption } from '@qbit-tech/libs-authv3';
 // import { AuthService } from '@qbit-tech/libs-authv3';
 import { AuthEmailOTPController } from './authEmailOTP.controller';
 
