@@ -56,10 +56,10 @@ export class BannerController implements BannerApiContract {
 
     @Get()
     @UseGuards(
-        AuthPermissionGuard(
-            FEATURE_PERMISSIONS.BANNER.__type,
-            FEATURE_PERMISSIONS.BANNER.LIST.__type,
-        ),
+        // AuthPermissionGuard(
+        //     FEATURE_PERMISSIONS.BANNER.__type,
+        //     FEATURE_PERMISSIONS.BANNER.LIST.__type,
+        // ),
     )
     async findAll(
         @Query() query: BannerFindAllRequest,

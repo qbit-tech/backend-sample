@@ -10,13 +10,15 @@ import { Endpoint, S3 } from 'aws-sdk';
 import { MulterModule } from '@nestjs/platform-express';
 import * as MulterS3 from 'multer-s3';
 import { v4 as uuidv4 } from 'uuid';
-import { SessionModule } from '@qbit-tech/libs-session';
+// import { SessionModule } from '@qbit-tech/libs-session';
+import { AuthSessionModule } from '../authUser/authUser.module';
 // import { NewsModule } from '../news/news.module';
 // import { BankApprovalModule } from '../bank-approval/bank-approval.module';
 
 @Module({
   imports: [
-    SessionModule,
+    // SessionModule,
+    AuthSessionModule,
     // NewsModule,
     // BankApprovalModule,
     SequelizeModule.forFeature([BannerModel]),
