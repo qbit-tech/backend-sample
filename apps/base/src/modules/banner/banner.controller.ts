@@ -39,10 +39,11 @@ import { UserService } from '../user/user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UploaderService } from '@qbit-tech/libs-uploader';
 import { convertStringToBoolean } from '@qbit-tech/libs-utils';
-import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { getAllAdminRoles } from '@qbit-tech/libs-utils';
 import { SimpleResponse } from '@qbit-tech/libs-utils';
 import { ERoles } from '../../core/roles';
+import { AuthPermissionGuard } from '../../core/authPermission.guard';
+import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
 
 @ApiTags('Banner')
 @Controller('banners')
@@ -140,7 +141,12 @@ export class BannerController implements BannerApiContract {
     }
 
     @Patch(':bannerId')
-    // @UseGuards(AuthPermissionGuard('admin'))
+    @UseGuards(
+        AuthPermissionGuard(
+          FEATURE_PERMISSIONS.BANNER.__type,
+          FEATURE_PERMISSIONS.BANNER.LIST.__type,
+        ),
+      )
     @UseInterceptors(FileInterceptor('image'))
     async update(
         @Param('bannerId') bannerId: string,
