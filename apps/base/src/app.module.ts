@@ -17,7 +17,7 @@ import {
   FeatureConfigModule,
   FeatureVersionModule,
 } from '@qbit-tech/feature-utils';
-import { TransactionModule } from '@qbit-tech/libs-transaction';
+// import { TransactionModule } from '@qbit-tech/libs-transaction';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
 // import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
@@ -192,7 +192,7 @@ export const rootImportedModules = [
     AuthModule,
     TestNotifModule,
     UserModule,
-    TransactionModule,
+    // TransactionModule,
     FaqModule,
     PermissionModule,
     RoleModule,
