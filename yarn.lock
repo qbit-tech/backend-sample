@@ -1109,16 +1109,16 @@
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-faq@^1.3.2":
-  version "1.3.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.3.2/bb4b14704cffcc4b5053230727861f47c15d7782#bb4b14704cffcc4b5053230727861f47c15d7782"
-  integrity sha512-gxrJY6Deknw4Q/LiGMKxU6nPkT4EeRtKDu3wN4j6x/PB0IbZrGTAon1MgiYksErdaOVMAtrwHEd8SE01aBaGXg==
+"@qbit-tech/libs-faq@^1.4.1":
+  version "1.4.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.4.1/d49f69fddac13b24874ce2cc92aa42196040bc6c#d49f69fddac13b24874ce2cc92aa42196040bc6c"
+  integrity sha512-Tf+b+Cbi9Z9WKW8PRizpcljHKZ19ca/ycXLHmUYB/mMoC1H7PTS9+PEeO81yO2nJWn9xvU+xPMBGSlwqaGNOUg==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.4"
-    "@qbit-tech/libs-session" "^1.4.2"
+    "@qbit-tech/libs-session" "^1.6.2"
     "@qbit-tech/libs-utils" "^1.2.5"
     class-validator "^0.14.0"
     sequelize "^6.32.1"
