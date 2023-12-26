@@ -134,6 +134,7 @@ jobs:
           yarn nest build base
           cp yarn.lock ./dist/apps/base
           cp package.json ./dist/apps/base
+          cp install_only.sh ./dist/apps/base
           cp apps/base/ecosystem-development.config.js ./dist/apps/base/ecosystem.config.js
           cp -r node_modules ./dist/apps/base
 
@@ -163,7 +164,7 @@ jobs:
             cd /var/www/html/apps/base-api-development/dist/apps/base
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            yarn install
+            ./install_only.sh
             pm2 delete base-api-development
             pm2 start
 
