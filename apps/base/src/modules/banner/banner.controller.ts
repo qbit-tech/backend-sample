@@ -55,6 +55,12 @@ export class BannerController implements BannerApiContract {
     ) { }
 
     @Get()
+    @UseGuards(
+        AuthPermissionGuard(
+            FEATURE_PERMISSIONS.BANNER.__type,
+            FEATURE_PERMISSIONS.BANNER.LIST.__type,
+        ),
+    )
     async findAll(
         @Query() query: BannerFindAllRequest,
     ): Promise<BannerFindAllResponse> {
@@ -70,7 +76,12 @@ export class BannerController implements BannerApiContract {
 
     @Post()
     @ApiBearerAuth()
-    // @UseGuards(AuthPermissionGuard())
+    @UseGuards(
+        AuthPermissionGuard(
+            FEATURE_PERMISSIONS.BANNER.__type,
+            FEATURE_PERMISSIONS.BANNER.CREATE.__type,
+        ),
+    )
     @UseInterceptors(FileInterceptor('image'))
     async create(
         @Body() body: BannerCreateRequest,
@@ -85,24 +96,24 @@ export class BannerController implements BannerApiContract {
         },
     ): Promise<BannerCreateResponse> {
         try {
-            
+
             // const user = await this.userService.findOneByUserId(req.user.userId)
             Logger.log('--ENTER CREATE BANNER CONTROLLER--');
             const createdByUserId = req.user && req.user.userId ? req.user.userId : '';
             const metaCreatedByUser = req.user
                 ? {
-                      userId: req.user.userId,
-                      userType: req.user.userType,
-                      name: req.user.name,
-                  }
+                    userId: req.user.userId,
+                    userType: req.user.userType,
+                    name: req.user.name,
+                }
                 : { userId: '', userType: '', name: '' };
-            
+
             const banner = await this.bannerService.createBanner({
                 ...body,
                 createdByUserId,
                 metaCreatedByUser,
             });
-            
+
 
             if (file) {
                 Logger.log('file added: ' + JSON.stringify(body), 'banner.controller');
@@ -143,10 +154,10 @@ export class BannerController implements BannerApiContract {
     @Patch(':bannerId')
     @UseGuards(
         AuthPermissionGuard(
-          FEATURE_PERMISSIONS.BANNER.__type,
-          FEATURE_PERMISSIONS.BANNER.LIST.__type,
+            FEATURE_PERMISSIONS.BANNER.__type,
+            FEATURE_PERMISSIONS.BANNER.LIST.__type,
         ),
-      )
+    )
     @UseInterceptors(FileInterceptor('image'))
     async update(
         @Param('bannerId') bannerId: string,
