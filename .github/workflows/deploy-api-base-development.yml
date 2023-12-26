@@ -137,6 +137,8 @@ jobs:
           cp install_only.sh ./dist/apps/base
           cp apps/base/ecosystem-development.config.js ./dist/apps/base/ecosystem.config.js
           cp -r node_modules ./dist/apps/base
+          touch ./dist/apps/base/.npmrc
+          echo ${{ secrets.DOT_NPMRC }} >> ./dist/apps/base/.npmrc
 
       - name: Upload to Server
         uses: appleboy/scp-action@master
