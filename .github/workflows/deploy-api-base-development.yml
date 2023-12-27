@@ -142,7 +142,7 @@ jobs:
           cp install_only.sh ./dist/apps/base
           echo "-- copy install_only.sh success"
           touch ./dist/apps/base/.npmrc
-          echo ${{ secrets.DOT_NPMRC }} >> ./dist/apps/base/.npmrc
+          echo "${{ secrets.DOT_NPMRC }}" >> ./dist/apps/base/.npmrc
           echo "-- create .npmrc success"
 
       - name: Upload to Server
