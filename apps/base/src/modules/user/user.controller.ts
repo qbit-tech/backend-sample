@@ -27,7 +27,6 @@ import {
   UpdateUserRequest,
 } from './contract/user.contract';
 import { FileInterceptor } from '@nestjs/platform-express';
-// import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { AppRequest, SimpleResponse } from '@qbit-tech/libs-utils';
 import {
   ApiBearerAuth,

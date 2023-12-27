@@ -42,8 +42,8 @@ import { convertStringToBoolean } from '@qbit-tech/libs-utils';
 import { getAllAdminRoles } from '@qbit-tech/libs-utils';
 import { SimpleResponse } from '@qbit-tech/libs-utils';
 import { ERoles } from '../../core/roles';
-import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
+import { AuthPermissionGuard } from '@qbit-tech/libs-session';
 
 @ApiTags('Banner')
 @Controller('banners')

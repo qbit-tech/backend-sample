@@ -27,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateArticleDto } from './dto/update.article.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthPermissionGuard } from '../../core/authPermission.guard';
+import { AuthPermissionGuard } from '@qbit-tech/libs-session';
 
 @ApiTags('Article')
 @Controller('articles')
@@ -43,7 +43,7 @@ export class ArticleController {
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: 'success create article' })
   @Post()
-  // @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuard())
   @UseInterceptors(FileInterceptor('cover-article'))
   async createArticle(
     @Body() body: CreateArticleDto,

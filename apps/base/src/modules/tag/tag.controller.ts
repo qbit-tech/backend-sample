@@ -23,9 +23,9 @@ import {
 import { TagService } from './tag.service';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
 import { ApiTags, ApiOperation, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthPermissionGuard } from '../../core/authPermission.guard';
 import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { AuthPermissionGuard } from '@qbit-tech/libs-session';
 
 @ApiTags('Tags')
 @Controller('tags')
