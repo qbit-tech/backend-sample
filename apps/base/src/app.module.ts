@@ -193,7 +193,7 @@ export const rootImportedModules = [
     TestNotifModule,
     UserModule,
     // TransactionModule,
-    FaqModule,
+    // FaqModule,
     PermissionModule,
     RoleModule,
     FeatureConfigModule,
