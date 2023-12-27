@@ -131,14 +131,19 @@ jobs:
         env:
           CI: false
         run: |
+          ls -la
           yarn nest build base
+          echo "-- build success"
           cp yarn.lock ./dist/apps/base
           cp package.json ./dist/apps/base
-          cp install_only.sh ./dist/apps/base
           cp apps/base/ecosystem-development.config.js ./dist/apps/base/ecosystem.config.js
           cp -r node_modules ./dist/apps/base
+          echo "-- copy yarn.lock - node_modules success"
+          cp install_only.sh ./dist/apps/base
+          echo "-- copy install_only.sh success"
           touch ./dist/apps/base/.npmrc
           echo ${{ secrets.DOT_NPMRC }} >> ./dist/apps/base/.npmrc
+          echo "-- create .npmrc success"
 
       - name: Upload to Server
         uses: appleboy/scp-action@master
