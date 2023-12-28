@@ -27,6 +27,9 @@
       "@qbit-tech/uploader/*": [
         "libs/uploader/src/*"
       ],
+      "@qbit-tech/feature-utils": [
+        "../feature-utils/src"
+      ],
     }
   },
   "exclude": [
