@@ -15,18 +15,9 @@
     "incremental": true,
     "resolveJsonModule": true,
     "paths": {
-      "@qbit-tech/authv3": [
-        "libs/authv3/src"
-      ],
-      "@qbit-tech/authv3/*": [
-        "libs/authv3/src/*"
-      ],
-      "@qbit-tech/uploader": [
-        "libs/uploader/src"
-      ],
-      "@qbit-tech/uploader/*": [
-        "libs/uploader/src/*"
-      ],
+      // "@qbit-tech/feature-utils": ["../feature-utils/src"],
+      // "@qbit-tech/libs-faq": ["../libs-faq/src"],
+      // "@qbit-tech/libs-session": ["../libs-session/src"]
     }
   },
   "exclude": [

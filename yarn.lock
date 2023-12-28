@@ -1087,13 +1087,13 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@qbit-tech/feature-utils@^1.6.1":
-  version "1.6.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.6.1/7f2ff1c50ccd592ab2e29ec5af4dc82948995cfd#7f2ff1c50ccd592ab2e29ec5af4dc82948995cfd"
-  integrity sha512-sHmFAPnfkGTuth2lhXeaNo3T5IqzubJB4SkHILFNd4wMnXWfi94YP8h964+p0QAHR/k0/O/tVhqxXTy6f2odmA==
+"@qbit-tech/feature-utils@^1.9.0":
+  version "1.9.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.9.0/421e54c466db451cde0c646bb463200792d3de98#421e54c466db451cde0c646bb463200792d3de98"
+  integrity sha512-y0siKmL+U3CfzLW/gprun25U/u3154A1JQTEHXfM+h8Q3RseokamfNUSFM8VmqPGJoR3OVil+U17LdmcL1R6ZA==
   dependencies:
     "@qbit-tech/libs-session" "^1.6.6"
-    "@qbit-tech/libs-utils" "^1.2.6"
+    "@qbit-tech/libs-utils" "^1.2.7"
 
 "@qbit-tech/libs-address@^1.2.3":
   version "1.2.3"
@@ -1103,17 +1103,17 @@
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
 
-"@qbit-tech/libs-authv3@^1.3.7":
-  version "1.3.7"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.3.7/e2ca2f8b0f3de5a3b41566dbf5b85f4c12cc97f8#e2ca2f8b0f3de5a3b41566dbf5b85f4c12cc97f8"
-  integrity sha512-Tx5M7HV+v0ttfXUGT5CeCrwDNhhmR8A69UhUQi/VtvjVS7hRE4hprW8xHFLtt/E4q9E53U+k/x7MSBL642EJHg==
+"@qbit-tech/libs-authv3@^1.4.0":
+  version "1.4.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.1/d4083755a7f284f841b21d79518247e94254bb62#d4083755a7f284f841b21d79518247e94254bb62"
+  integrity sha512-5/UpPM5wPZcmfF8a129vQLRiX0SprqZGX8kSvX+r+3xGWTc16TBlRxSUPJOkasfelQls9jjz9o84Yy+/DAuC/Q==
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-faq@^1.4.1":
-  version "1.4.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.4.1/d49f69fddac13b24874ce2cc92aa42196040bc6c#d49f69fddac13b24874ce2cc92aa42196040bc6c"
-  integrity sha512-Tf+b+Cbi9Z9WKW8PRizpcljHKZ19ca/ycXLHmUYB/mMoC1H7PTS9+PEeO81yO2nJWn9xvU+xPMBGSlwqaGNOUg==
+"@qbit-tech/libs-faq@^1.4.2":
+  version "1.4.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.4.2/80131139106a0408d93eb6463e83c21a2c87fe86#80131139106a0408d93eb6463e83c21a2c87fe86"
+  integrity sha512-LxcrdC0Rda7WejETqCEsNq5FJTSmU0/YOmmGseTqb10wOFjVDhLso5lUTAU46ySf35Q60LxAjO3UqaDf0lecuw==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1288,7 +1288,7 @@
   dependencies:
     compare-versions "^6.0.0"
 
-"@qbit-tech/libs-utils@^1.2.6", "@qbit-tech/libs-utils@^1.2.7":
+"@qbit-tech/libs-utils@^1.2.7":
   version "1.2.7"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-utils/1.2.7/079a697b2781b396b9f160b4fd92fef461d9e377#079a697b2781b396b9f160b4fd92fef461d9e377"
   integrity sha512-w6XOo/PncPMsnpEabVYT3OhB0Tp9s9nTY/p9zc5q+N3/875bXBJnHpMwiCYi/VoXeMq6Nfz7cNk9kg4NvRnpnA==

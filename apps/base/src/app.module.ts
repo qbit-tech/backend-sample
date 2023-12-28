@@ -18,7 +18,6 @@ import {
   FeatureVersionModule,
 } from '@qbit-tech/feature-utils';
 // import { TransactionModule } from '@qbit-tech/libs-transaction';
-import { FaqModule } from '@qbit-tech/libs-faq';
 import { TagModule } from './modules/tag/tag.module';
 // import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
@@ -32,6 +31,7 @@ import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
 import { BannerModule } from './modules/banner/banner.module';
+import { FaqModule } from '@qbit-tech/libs-faq';
 
 const notificationOptions = [
   {
@@ -168,6 +168,10 @@ export const rootImportedModules = [
   RegionModule.forRoot(sessionOption, redisOption),
   NotificationScheduleModule.forRoot(sessionOption, redisOption),
   SubscriptionModule.forRoot(sessionOption, redisOption),
+  FaqModule.forRoot(sessionOption, redisOption),
+  FeatureConfigModule.forRoot(sessionOption, redisOption),
+  FeatureVersionModule.forRoot(sessionOption, redisOption),
+
   // PaymentModule.forRoot({
   //   STAGE: 'development',
   //   SERVER_KEY: process.env.SERVER_KEY,
@@ -193,11 +197,8 @@ export const rootImportedModules = [
     TestNotifModule,
     UserModule,
     // TransactionModule,
-    // FaqModule,
     PermissionModule,
     RoleModule,
-    FeatureConfigModule,
-    FeatureVersionModule,
     ProductsModule,
     FileUploadModule,
     TestMinio2Module,
