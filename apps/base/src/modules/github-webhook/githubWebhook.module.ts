@@ -10,13 +10,7 @@ import { GithubWebhookController } from './githubWebhook.controller';
     }),
   ],
   providers: [],
-  controllers: [
-    GithubWebhookController,
-  ],
-  exports: [
-    GithubWebhookService,
-    // EventGithubWebhookService
-  ]
+  controllers: [GithubWebhookController],
+  exports: [],
 })
-
-export class GithubWebhookModule { }
+export class GithubWebhookModule {}

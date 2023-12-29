@@ -32,6 +32,7 @@ import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { FaqModule } from '@qbit-tech/libs-faq';
+import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 
 const notificationOptions = [
   {
@@ -107,6 +108,7 @@ export const rootImportedModules = [
     isGlobal: true,
     envFilePath: process.env.ENV_PATH,
   }),
+  GithubWebhookModule,
   RedisModule.forRoot(redisOption),
   CacheModule.register<RedisClientOptions>({
     isGlobal: true,
