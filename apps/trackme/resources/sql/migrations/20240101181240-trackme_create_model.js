@@ -5,6 +5,12 @@ module.exports = {
     queryInterface.createTable('trackme', {
       id: {
         allowNull: false,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      activityId: {
+        allowNull: false,
         type: Sequelize.STRING,
         primaryKey: true,
       },
@@ -20,20 +26,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      activityType: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
       eventKey: {
         type: Sequelize.STRING,
         allowNull: true,
       },
       payload: {
-        type: Sequelize.STRING,
+        type: Sequelize.JSONB,
         allowNull: false,
       },
       timestamp: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       createdAt: {

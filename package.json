@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "start-base": "ENV_PATH=apps/base/.env.local nest start --watch base",
     "start-scheduler": "ENV_PATH=apps/scheduler/.env.local nest start --watch scheduler",
+    "start-trackme": "ENV_PATH=apps/trackme/.env.local nest start --watch trackme",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
