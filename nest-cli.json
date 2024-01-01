@@ -19,6 +19,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/scheduler/tsconfig.app.json"
       }
+    },
+    "trackme": {
+      "type": "application",
+      "root": "apps/trackme",
+      "entryFile": "main",
+      "sourceRoot": "apps/trackme/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/trackme/tsconfig.app.json"
+      }
     }
   },
   "compilerOptions": {
