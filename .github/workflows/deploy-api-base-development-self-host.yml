@@ -94,7 +94,7 @@ jobs:
       #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - run: |
           echo "Project: base"
