@@ -7,6 +7,7 @@ import { Endpoint, S3 } from 'aws-sdk';
 import { MulterModule } from '@nestjs/platform-express';
 import * as MulterS3 from 'multer-s3';
 import { v4 as uuidv4 } from 'uuid';
+import { TestFileUploadController } from './testFileUpload.controller';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { v4 as uuidv4 } from 'uuid';
     }),
   ],
   providers: [],
-  controllers: [],
+  controllers: [TestFileUploadController],
   exports: []
 })
 
