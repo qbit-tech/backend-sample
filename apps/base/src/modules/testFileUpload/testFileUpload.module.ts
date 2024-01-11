@@ -39,7 +39,11 @@ import { TestFileUploadController } from './testFileUpload.controller';
           cb(null, { fieldname: file.fieldname })
         },
         key: function (req, file, cb) {
-          cb(null, `${process.env.PROJECT_ID}/test-file-upload/${uuidv4()}`);
+          // cb(null, `${process.env.PROJECT_ID}/test-file-upload/${uuidv4()}`);
+          cb(
+            null,
+            `${process.env.PROJECT_ID}/test-file-upload/${file.fieldname}`,
+          );
         }
       })
     }),
