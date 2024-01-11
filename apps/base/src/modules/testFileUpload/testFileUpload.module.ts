@@ -42,7 +42,7 @@ import { TestFileUploadController } from './testFileUpload.controller';
           // cb(null, `${process.env.PROJECT_ID}/test-file-upload/${uuidv4()}`);
           cb(
             null,
-            `${process.env.PROJECT_ID}/test-file-upload/${file.fieldname}`,
+            `${process.env.PROJECT_ID}/test-file-upload/${file.originalname}`,
           );
         }
       })
