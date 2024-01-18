@@ -25,7 +25,7 @@ import {
 } from './auth.contract';
 import { UserService } from '../user/user.service';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
-import { AuthPermissionGuard } from '@qbit-tech/libs-session';
+import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
 import { verify } from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '@qbit-tech/libs-session/dist/session.helper';
 import { CreateUserRequest } from '../user/contract/user.contract';
@@ -46,7 +46,7 @@ export class AuthController {
   @ApiOperation({ summary: 'New admin using email authenticator' })
   @ApiBearerAuth()
   @Post('register-with-profile')
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   @UseInterceptors(FileInterceptor('image'))
   async createUser(
     @Req() req: AppRequest,
@@ -166,7 +166,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh token' })
   @Post('refresh-token')
   @ApiBearerAuth()
-  @UseGuards(AuthPermissionGuard(null, null, true))
+  @UseGuards(AuthPermissionGuardV2())
   async refreshToken(@Req() req: any): Promise<any> {
     try {
       const token = req.headers.authorization.substr(7);

@@ -43,7 +43,7 @@ import { AuthService } from '@qbit-tech/libs-authv3';
 import { cleanPhoneNumber, getErrorStatusCode } from '@qbit-tech/libs-utils';
 import {
   FEATURE_PERMISSIONS,
-  AuthPermissionGuard,
+  AuthPermissionGuardV2,
   SessionService,
 } from '@qbit-tech/libs-session';
 import { NotificationService } from '@qbit-tech/libs-notification';
@@ -67,7 +67,7 @@ export class UserController implements UserApiContract {
   @ApiOperation({ summary: 'New admin using email authenticator' })
   @ApiBearerAuth()
   @Post()
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   @UseInterceptors(FileInterceptor('image'))
   async createUser(
     @Req() req: AppRequest,
@@ -214,7 +214,7 @@ export class UserController implements UserApiContract {
   @ApiBearerAuth()
   @Get()
   @UseGuards()
-  // AuthPermissionGuard(
+  // AuthPermissionGuardV2(
   //   FEATURE_PERMISSIONS.USER.__type,
   //   FEATURE_PERMISSIONS.USER.LIST.__type,
   // ),
@@ -252,7 +252,7 @@ export class UserController implements UserApiContract {
   })
   @ApiBearerAuth()
   @Patch(':userId')
-  @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuardV2())
   @ApiOkResponse({ type: UserProperties })
   async updateUserProfile(
     @Param('userId') userId: string,
@@ -305,7 +305,7 @@ export class UserController implements UserApiContract {
   })
   @ApiBearerAuth()
   @Get(':userId')
-  @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuardV2())
   @ApiOkResponse({ type: UserProperties })
   async getMyProfile(
     @Param('userId') userId: string,
@@ -341,7 +341,7 @@ export class UserController implements UserApiContract {
   })
   @ApiBearerAuth()
   @Put(':userId/photo')
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   @UseInterceptors(FileInterceptor('image'))
   @ApiOkResponse({ type: UpdatePhotoResponse })
   async updateMyProfilePic(
@@ -475,12 +475,7 @@ export class UserController implements UserApiContract {
   @ApiOperation({ summary: 'Delete user by userId' })
   @ApiBearerAuth()
   @Delete(':userId')
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.USER.__type,
-      FEATURE_PERMISSIONS.USER.FORCE_DELETE_OTHER_USER.__type,
-    ),
-  )
+  @UseGuards(AuthPermissionGuardV2(['USER.FORCE_DELETE_OTHER_USER']))
   @ApiOkResponse({ type: SimpleResponse })
   async delete(
     @Req() req: AppRequest,

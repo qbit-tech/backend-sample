@@ -27,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateArticleDto } from './dto/update.article.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthPermissionGuard } from '@qbit-tech/libs-session';
+import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
 
 @ApiTags('Article')
 @Controller('articles')
@@ -43,7 +43,7 @@ export class ArticleController {
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ description: 'success create article' })
   @Post()
-  @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuardV2())
   @UseInterceptors(FileInterceptor('cover-article'))
   async createArticle(
     @Body() body: CreateArticleDto,
@@ -122,7 +122,7 @@ export class ArticleController {
   })
   @ApiBearerAuth()
   @Patch(':articleId')
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   async updateArticle(
     @Param('articleId') articleId: string,
     @Body() body: UpdateArticleDto,
@@ -142,7 +142,7 @@ export class ArticleController {
   @ApiOperation({ summary: 'update article cover image' })
   @ApiBearerAuth()
   @Patch('/cover/:articleId')
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   @UseInterceptors(FileInterceptor('cover-article'))
   async updateCoverImage(
     @Param('articleId') articleId: string,
@@ -181,7 +181,7 @@ export class ArticleController {
   @ApiOperation({ summary: 'delete article' })
   @ApiBearerAuth()
   @Delete(':articleId')
-  // @UseGuards(AuthPermissionGuard())
+  // @UseGuards(AuthPermissionGuardV2())
   async deleteById(@Param('articleId') articleId: string): Promise<Object> {
     try {
       const message = await this.articleService.deleteById(articleId);

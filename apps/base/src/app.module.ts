@@ -11,7 +11,6 @@ import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { PermissionModule } from './modules/permission/permission.module';
 import { RoleModule } from '@qbit-tech/libs-role';
 import {
   FeatureConfigModule,
@@ -200,7 +199,6 @@ export const rootImportedModules = [
     TestNotifModule,
     UserModule,
     // TransactionModule,
-    PermissionModule,
     RoleModule,
     ProductsModule,
     FileUploadModule,

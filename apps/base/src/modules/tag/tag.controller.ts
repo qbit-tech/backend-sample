@@ -22,10 +22,15 @@ import {
 } from './tag.contract';
 import { TagService } from './tag.service';
 import { getErrorStatusCode } from '@qbit-tech/libs-utils';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { AuthPermissionGuard } from '@qbit-tech/libs-session';
+import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
 
 @ApiTags('Tags')
 @Controller('tags')
@@ -38,12 +43,7 @@ export class TagController implements TagApiContract {
   @ApiOperation({ summary: 'Find all event tags' })
   @ApiBearerAuth()
   @Get()
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.TAG.__type,
-      FEATURE_PERMISSIONS.TAG.LIST.__type,
-    ),
-  )
+  @UseGuards(AuthPermissionGuardV2(['TAG.LIST']))
   @ApiOkResponse({ type: TagFindAllResponse })
   async findAll(
     @Query() params: TagFindAllRequest,
@@ -61,12 +61,7 @@ export class TagController implements TagApiContract {
 
   @ApiOperation({ summary: 'Find one event tag' })
   @Get(':tagId')
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.TAG.__type,
-      FEATURE_PERMISSIONS.TAG.DETAIL.__type,
-    ),
-  )
+  @UseGuards(AuthPermissionGuardV2(['TAG.DETAIL']))
   @ApiOkResponse({ type: TagFindOneResponse })
   async findOne(@Param('tagId') tagId: string): Promise<TagFindOneResponse> {
     try {
@@ -89,15 +84,9 @@ export class TagController implements TagApiContract {
   }
 
   @ApiOperation({ summary: 'Create new event tag' })
-  // @ApiBearerAuth()
+  @ApiBearerAuth()
   @Post()
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.TAG.__type,
-      FEATURE_PERMISSIONS.TAG.CREATE.__type,
-    ),
-  )
-  // @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuardV2(['TAG.CREATE']))
   @ApiOkResponse({ type: TagFindOneResponse })
   async create(
     // @Req() req: AppRequest,
@@ -138,15 +127,9 @@ export class TagController implements TagApiContract {
   }
 
   @ApiOperation({ summary: 'Update event tag' })
-  // @ApiBearerAuth()
+  @ApiBearerAuth()
   @Patch(':tagId')
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.TAG.__type,
-      FEATURE_PERMISSIONS.TAG.UPDATE.__type,
-    ),
-  )
-  // @UseGuards(AuthPermissionGuard())
+  @UseGuards(AuthPermissionGuardV2(['TAG.UPDATE']))
   @ApiOkResponse({ type: TagFindOneResponse })
   async update(
     // @Req() req: AppRequest,
@@ -187,14 +170,7 @@ export class TagController implements TagApiContract {
   @ApiOperation({ summary: 'Delete single tag' })
   // @ApiBearerAuth()
   @Delete(':tagId')
-  @UseGuards(
-    AuthPermissionGuard(
-      FEATURE_PERMISSIONS.TAG.__type,
-      FEATURE_PERMISSIONS.TAG.DELETE.__type,
-    ),
-  )
-  // @UseGuards(AuthPermissionGuard())
-  // @ApiOkResponse({type: SimpleResponse})
+  @UseGuards(AuthPermissionGuardV2(['TAG.DELETE']))
   async delete(
     // @Req() req: AppRequest,
     @Param('tagId') tagId: string,
