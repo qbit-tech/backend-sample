@@ -1103,10 +1103,10 @@
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
 
-"@qbit-tech/libs-authv3@^1.4.3":
-  version "1.4.3"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.3/49de40589ade7d31ec443ef302dfcd28dcb23c11#49de40589ade7d31ec443ef302dfcd28dcb23c11"
-  integrity sha512-vmV66hS6ZeyJmgEoanJo/AeXsZ/UD5qJM5AnFyqAfhyWtIZGLw0iTzfsa9LLhY5DydbLrNuQ/gcr4TTLAigxyA==
+"@qbit-tech/libs-authv3@^1.4.4":
+  version "1.4.4"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.4/d78c9dbdf7a4ad1631fa238597f84b5d786d8e87#d78c9dbdf7a4ad1631fa238597f84b5d786d8e87"
+  integrity sha512-JWTJbTZCJhlJNEpCVwTXblpQzS8UXAkPoK2Pjd4EcfIVKAYiFSY/JYHjaYSO71x5ZSEgPwhyocpOzFhwY0B2Ig==
   dependencies:
     bcrypt "^5.1.0"
 
