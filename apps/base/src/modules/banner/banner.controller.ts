@@ -145,10 +145,7 @@ export class BannerController implements BannerApiContract {
 
   @Patch(':bannerId')
   @UseGuards(
-    AuthPermissionGuardV2(
-      FEATURE_PERMISSIONS.BANNER.__type,
-      FEATURE_PERMISSIONS.BANNER.LIST.__type,
-    ),
+    AuthPermissionGuardV2(["BANNER.LIST"]),
   )
   @UseInterceptors(FileInterceptor('image'))
   async update(
