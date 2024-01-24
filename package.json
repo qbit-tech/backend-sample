@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start-base": "ENV_PATH=apps/base/.env.local nest start --watch base",
-    "start-base-windows": "set ENV_PATH=apps/base/.env.local nest start --watch base",
+    "start-base-windows": "set ENV_PATH=apps/base/.env.local && nest start --watch base",
     "start-scheduler": "ENV_PATH=apps/scheduler/.env.local nest start --watch scheduler",
     "start-trackme": "ENV_PATH=apps/trackme/.env.local nest start --watch trackme",
     "start:debug": "nest start --debug --watch",
