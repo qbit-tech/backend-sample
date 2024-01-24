@@ -74,12 +74,7 @@ export class BannerController implements BannerApiContract {
 
   @Post()
   @ApiBearerAuth()
-  @UseGuards(
-    AuthPermissionGuardV2(
-      FEATURE_PERMISSIONS.BANNER.__type,
-      FEATURE_PERMISSIONS.BANNER.CREATE.__type,
-    ),
-  )
+  @UseGuards(AuthPermissionGuardV2(['BANNER.CREATE']))
   @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() body: BannerCreateRequest,
