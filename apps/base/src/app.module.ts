@@ -33,6 +33,7 @@ import { BannerModule } from './modules/banner/banner.module';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 import { TestFileUploadModule } from './modules/testFileUpload/testFileUpload.module';
+import { SponsorModule } from './modules/sponsor/sponsor.module';
 
 const notificationOptions = [
   {
@@ -208,6 +209,7 @@ export const rootImportedModules = [
     InitDataModule,
     BannerModule,
     TestFileUploadModule,
+    SponsorModule,
   ],
   controllers: [AppController],
 })
