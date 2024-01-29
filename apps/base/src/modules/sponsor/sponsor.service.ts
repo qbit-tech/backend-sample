@@ -108,7 +108,7 @@ export class SponsorService {
 
   async findOneBySponsorName(sponsorName: string): Promise<SponsorProperties> {
     try {
-      Logger.log('--ENTER FIND ONE BY TAG NAME, TAG SERVICE--');
+      Logger.log('--ENTER FIND ONE BY SPONSOR NAME');
       const result = await this.sponsorRepositories.findOne({
         where: {
           sponsorName: {
@@ -135,7 +135,7 @@ export class SponsorService {
     params: Omit<SponsorProperties, 'createdAt' | 'updatedAt'>,
   ): Promise<SponsorProperties> {
     try {
-      Logger.log('--ENTER CREATE TAG SERVICE--');
+      Logger.log('--ENTER CREATE SPONSOR--');
       // const sponsorId = params.sponsorId ? params.sponsorId : uuidv4();
       const sponsorId = params.sponsorId ? params.sponsorId : uuid.v4();
       const result = await this.sponsorRepositories.create({
@@ -144,11 +144,11 @@ export class SponsorService {
         imgUrl: params.imgUrl,
       });
 
-      Logger.log('tag created: ' + JSON.stringify(result), 'tag.service');
+      Logger.log('sponsor created: ' + JSON.stringify(result), 'sponsor.service');
 
       return result.get();
     } catch (error) {
-      Logger.error('Failed create new tag');
+      Logger.error('Failed create new sponsor');
       Logger.error(error);
       return Promise.reject(error);
     }
@@ -158,7 +158,7 @@ export class SponsorService {
     params: Omit<SponsorProperties, 'createdAt' | 'updatedAt'>,
   ): Promise<SponsorProperties> {
     try {
-      Logger.log('--ENTER UPDATE TAG SERVICE--');
+      Logger.log('--ENTER UPDATE SPONSOR--');
       const [_, results] = await this.sponsorRepositories.update(params, {
         where: {
           sponsorId: params.sponsorId,
