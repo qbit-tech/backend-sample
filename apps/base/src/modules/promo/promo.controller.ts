@@ -52,6 +52,7 @@ export class PromoController {
     ) { }
 
     @Get()
+    @UseGuards()
     async findAll(): Promise<PromoModel[]> {
         try {
             const promos = await this.promoService.findAll()
@@ -85,6 +86,7 @@ export class PromoController {
     // })
     // @ApiConsumes('multipart/form-data')
     @Post()
+    @ApiBearerAuth()
     @UseInterceptors(FileInterceptor('image'))
     async createPromo(
         @Body() body: PromoProperties,
@@ -114,6 +116,7 @@ export class PromoController {
     }
 
     @Patch(':promoId')
+    @ApiBearerAuth()
     async updatePromo(
         @Param('promoId') promoId: string,
         @Body() body: UpdatePromoProperties,
@@ -142,6 +145,7 @@ export class PromoController {
         }
     }
 
+    @ApiBearerAuth()
     @Delete(':promoId')
     async deletePromo(@Param('promoId') promoId: string): Promise<Object> {
         if (!promoId) {
