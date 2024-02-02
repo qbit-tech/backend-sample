@@ -30,7 +30,7 @@ import { verify } from 'jsonwebtoken';
 import { DEFAULT_HASH_TOKEN } from '@qbit-tech/libs-session/dist/session.helper';
 import { CreateUserRequest } from '../user/contract/user.contract';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UserProperties } from '../user/user.entity';
+import { UserModel, UserProperties } from '../user/user.entity';
 import { async as crypt } from 'crypto-random-string';
 @ApiTags('Auth')
 @Controller('auth')
@@ -128,6 +128,10 @@ export class AuthController {
       const user = await this.userService.findOneByUserId(
         authenticateLogin.userId,
       );
+
+      // const user = await this.userService.findOneByEmail(
+      //   authenticateLogin.username
+      // )
 
       const signInResult = await this.sessionService.generateLoginToken(
         {

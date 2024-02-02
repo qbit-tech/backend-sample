@@ -90,12 +90,14 @@ export class PromoController {
     @UseInterceptors(FileInterceptor('image'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() file
+        @UploadedFile() file: Express.Multer.File
     ): Promise<PromoModel> {
-
         try {
+            // const { file, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
+            console.log(file);
+            
             if (file) {
                 Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
                 const uploadResult = await this.uploaderService.fileUploaded({

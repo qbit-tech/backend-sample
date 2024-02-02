@@ -24,7 +24,7 @@ export class PromoService {
     public async createPromo(
         newPromo: PromoProperties
     ): Promise<PromoModel> {
-        if (!newPromo.title || !newPromo.title || !newPromo.endedAt || !newPromo.isPublish) {
+        if (!newPromo.title || !newPromo.startedAt || !newPromo.endedAt || newPromo.isPublish === null) {
             return Promise.reject({
                 statusCode: 400,
                 code: 'failed_to_create',

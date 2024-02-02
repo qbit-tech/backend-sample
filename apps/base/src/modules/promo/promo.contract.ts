@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import multer = require('multer');
 
 // export abstract class PromoApiContract {
 //     abstract findAll(): Promise<
@@ -16,6 +17,9 @@ export class PromoProperties {
 
     @ApiPropertyOptional()
     image?: string;
+
+    // @ApiProperty({ type: 'string', format: 'binary' })
+    // file?: Express.Multer.File;
 
     @ApiProperty()
     isPublish: Boolean;
