@@ -2,6 +2,7 @@ import { IsOptional, IsNotEmpty } from 'class-validator';
 // import { AppRequest } from '@comika/appContract/app.contract';
 // import { PaginationResponse, DefaultFindAllRequest, SimpleResponse } from '@comika/appContract/app.contract';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { extensions } from 'sequelize/types/utils/validator-extras';
 
 export abstract class SponsorApiContract {
   abstract findAll(params: SponsorFindAllRequest): Promise<SponsorFindAllResponse>
@@ -102,4 +103,23 @@ export class SponsorUpdateRequest extends SponsorCreateRequest {
   @ApiProperty()
   @IsNotEmpty()
   readonly sponsorId: string;
+  readonly sponsorImageUrl: string;
+}
+
+export class SponsorUpdateResponse extends SponsorFindOneResponse {}
+
+export class UpdateImageResponse {
+  readonly isSuccess: boolean;
+  readonly payload: {
+    tableName: string;
+    tableId: string;
+    filePath: string;
+    metadata?: object;
+    fileLinkCache?: string;
+  };
+}
+
+export class UpdateImageRequest {
+  readonly sponsorId: string;
+  readonly file: Express.Multer.File;
 }

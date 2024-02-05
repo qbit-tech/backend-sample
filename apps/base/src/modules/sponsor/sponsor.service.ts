@@ -5,7 +5,7 @@ import * as uuid from 'uuid';
 import { Op } from 'sequelize';
 import { ERRORS } from '../../core/error.constant';
 import { generateResultPagination } from '@qbit-tech/libs-utils';
-import { SponsorUpdateImageRequest } from './sponsor.contract';
+import { SponsorUpdateImageRequest, SponsorUpdateRequest, SponsorUpdateResponse } from './sponsor.contract';
 
 @Injectable()
 export class SponsorService {
@@ -159,8 +159,8 @@ export class SponsorService {
   }
 
   async update(
-    params: Omit<SponsorProperties, 'createdAt' | 'updatedAt'>,
-  ): Promise<SponsorProperties> {
+    params: SponsorUpdateRequest,
+  ): Promise<SponsorUpdateResponse> {
     try {
       Logger.log('--ENTER UPDATE SPONSOR--');
       const [_, results] = await this.sponsorRepositories.update(params, {

@@ -20,6 +20,8 @@ import {
     SponsorFindOneResponse,
     SponsorCreateRequest,
     SponsorUpdateRequest,
+    UpdateImageRequest,
+    UpdateImageResponse,
   } from './sponsor.contract';
   import { SponsorService } from './sponsor.service';
   import { getErrorStatusCode } from '@qbit-tech/libs-utils';
@@ -29,6 +31,7 @@ import {
     ApiOkResponse,
     ApiBearerAuth,
     ApiConsumes,
+    ApiBody,
   } from '@nestjs/swagger';
   import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
   import { CacheInterceptor } from '@nestjs/cache-manager';
@@ -94,6 +97,19 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
     @ApiConsumes('multipart/form-data')
     // @UseGuards(AuthPermissionGuardV2(['SPONSOR.CREATE']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
+    @ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          sponsorName: { type:'string' },
+          sponsorUrl: { type:'string' },
+          image: {
+            type: 'string',
+            format: 'binary'
+          }
+        }
+      }
+    })
     @UseInterceptors(FileInterceptor('image'))
     async create(
       // @Req() req: AppRequest,
@@ -148,31 +164,49 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
         const findDataBefore = await this.sponsorService.findOne(sponsorId);
 
         if(file){
-          const imageResult = await this.update
+          const imageResult = await this.updateImage({
+            file,
+            sponsorId,
+          });
+          return this.sponsorService.update({
+            ...params,
+            sponsorId,
+            sponsorImageUrl: imageResult.payload.fileLinkCache
+          })
         }
-  
-        const res = await this.sponsorService.update({
+        return this.sponsorService.update({
           ...params,
           sponsorId,
         });
-  
-        // await this.eventLogService.create({
-        //   userId: req.user.userId,
-        //   dataId: sponsorId,
-        //   action: ELogAction.UPDATE_TAG,
-        //   metaUser: req.user,
-        //   dataBefore: findDataBefore,
-        //   dataAfter: res,
-        //   note: `${req.user.name} update tag ${res.tagName}`
-        // })
-  
-        return res;
       } catch (error) {
-        // throw new HttpException(
-        //   { message: error.errors },
-        //   HttpStatus.BAD_REQUEST,
-        // );
         throw new HttpException(error, getErrorStatusCode(error));
+      }
+    }
+
+    async updateImage(request: UpdateImageRequest): Promise<UpdateImageResponse> {
+      try {
+        const fileSearchResult = await this.uploaderService.fileSearchByTable(
+          'sponsors',
+          [request.sponsorId],
+        );
+  
+        const uploadResult = await this.uploaderService.fileUploaded({
+          tableName: 'sponsors',
+          tableId: request.sponsorId,
+          filePath: request.file['key'],
+          metadata: {},
+        });
+  
+        if (fileSearchResult.has(request.sponsorId)) {
+          await this.uploaderService.deleteFileById(
+            fileSearchResult.get(request.sponsorId)[0].fileId,
+          );
+        }
+  
+        return { isSuccess: true, payload: uploadResult };
+      } catch (err) {
+        console.log('err_sponsor: updateImage', err);
+        return { isSuccess: false, payload: null };
       }
     }
   
