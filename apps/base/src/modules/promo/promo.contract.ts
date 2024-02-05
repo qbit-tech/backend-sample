@@ -16,10 +16,10 @@ export class PromoProperties {
     description?: string;
 
     // @ApiPropertyOptional()
-    // image?: string;
+    // image?: Express.Multer.File;
 
     @ApiProperty({ type: 'string', format: 'binary' })
-    fileImage?: Express.Multer.File;
+    image: Express.Multer.File;
 
     @ApiProperty()
     isPublish: Boolean;

@@ -15,6 +15,10 @@ import { v4 as uuidv4 } from 'uuid';
 @Module({
   imports: [
     SequelizeModule.forFeature([PromoModel]),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: process.env.ENV_PATH,
+    }),
     UploaderModule.forRoot({
       cacheTimeout: -1,
       defaultMetadata: {
@@ -39,7 +43,11 @@ import { v4 as uuidv4 } from 'uuid';
           cb(null, { fieldname: file.fieldname })
         },
         key: function (req, file, cb) {
-          cb(null, `${process.env.PROJECT_ID}/promo/${uuidv4()}`);
+          // cb(null, `${process.env.PROJECT_ID}/test-file-upload/${uuidv4()}`);
+          cb(
+            null,
+            `${process.env.PROJECT_ID}/promo/${file.originalname}`,
+          );
         }
       })
     }),

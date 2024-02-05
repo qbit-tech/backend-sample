@@ -49,7 +49,7 @@ import { PromoService } from './promo.service';
 export class PromoController {
     constructor(
         private promoService: PromoService,
-        private uploaderService: UploaderService
+        private uploaderService: UploaderService,
     ) { }
 
     @Get()
@@ -83,31 +83,45 @@ export class PromoController {
 
     @Post()
     @ApiBearerAuth()
-    @UseInterceptors(FileInterceptor('fileImage'))
+    @ApiBody({
+        schema: {
+          type: 'object',
+          properties: {
+            image: {
+              type: 'string',
+              format: 'binary',
+            },
+          },
+        },
+      })
+    @UseInterceptors(FileInterceptor('image'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() fileImage: Express.Multer.File
+        @UploadedFile() file
     ): Promise<PromoModel> {
         try {
             // const { fileImage, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
-            // console.log(body.fileImage);   
-            console.log(fileImage);
-                     
-
-            if (fileImage) {
-                Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
-                const uploadResult = await this.uploaderService.fileUploaded({
-                    tableName: 'promos',
-                    tableId: promo.promoId,
-                    filePath: fileImage['key'],
-                    metadata: {}
-                })
-                console.log(uploadResult);
+            console.log(file);
+            
+        
+            // if (body.fileImage) {
+            //     Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
+            //     const uploadResult = await this.uploaderService.fileUploaded({
+            //         tableName: 'promos',
+            //         tableId: promo.promoId,
+            //         filePath: body.fileImage[0].path,
+            //         metadata: {}
+            //     })
+            //     Logger.log(
+            //         'file uploaded: ' + JSON.stringify(body.fileImage),
+            //         'promo.controller',
+            //       );
+            //     console.log(uploadResult);
                 
-                // await this.promoService.updatedPromoImage(promo.promoId, fileImage ? uploadResult.fileLinkCache : null)
-            }
+            //     // await this.promoService.updatedPromoImage(promo.promoId, fileImage ? uploadResult.fileLinkCache : null)
+            // }
             return promo
         } catch (error) {
             throw new HttpException(
@@ -119,25 +133,25 @@ export class PromoController {
 
     @Patch(':promoId')
     @ApiBearerAuth()
-    @UseInterceptors(FileInterceptor('fileImage'))
+    @UseInterceptors(FileInterceptor('image'))
     async updatePromo(
         @Param('promoId') promoId: string,
         @Body() body: UpdatePromoProperties,
-        @UploadedFile() fileImage: Express.Multer.File
+        @UploadedFile() file
     ) {
         try {
             const promo = await this.promoService.updatePromo(promoId, body)
 
-            if (fileImage) {
-                Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
-                const uploadResult = await this.uploaderService.fileUploaded({
-                    tableName: 'promos',
-                    tableId: promo.promoId,
-                    filePath: fileImage['key'],
-                    metadata: {}
-                })
-                // await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
-            }
+            // if (file {
+            //     Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
+            //     const uploadResult = await this.uploaderService.fileUploaded({
+            //         tableName: 'promos',
+            //         tableId: promo.promoId,
+            //         filePath: fileImage['key'],
+            //         metadata: {}
+            //     })
+            //     // await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
+            // }
 
             return promo
         } catch (error) {
