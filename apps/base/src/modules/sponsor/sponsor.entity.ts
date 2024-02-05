@@ -14,7 +14,7 @@ export class BaseSponsorProperties {
   sponsorName: string;
 
   @ApiProperty()
-  imgUrl: string;
+  sponsorUrl: string;
 
   @ApiProperty()
   createdAt: Date;
@@ -42,7 +42,7 @@ export class SponsorModel extends Model {
   sponsorName: string;
 
   @Column
-  imgUrl: string;
+  sponsorUrl: string;
 
   @UpdatedAt
   updatedAt: Date;

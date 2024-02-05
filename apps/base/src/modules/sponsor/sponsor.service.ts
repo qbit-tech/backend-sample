@@ -5,6 +5,7 @@ import * as uuid from 'uuid';
 import { Op } from 'sequelize';
 import { ERRORS } from '../../core/error.constant';
 import { generateResultPagination } from '@qbit-tech/libs-utils';
+import { SponsorUpdateImageRequest } from './sponsor.contract';
 
 @Injectable()
 export class SponsorService {
@@ -37,12 +38,6 @@ export class SponsorService {
 
       const options: any = {
         where,
-        // include: [
-        //   {
-        //     model: EventModel,
-        //     as: 'events',
-        //   },
-        // ],
         distinct: true,
         col: 'sponsorId',
       };
@@ -141,7 +136,7 @@ export class SponsorService {
       const result = await this.sponsorRepositories.create({
         sponsorId: sponsorId,
         sponsorName: params.sponsorName,
-        imgUrl: params.imgUrl,
+        sponsorUrl: params.sponsorUrl,
       });
 
       Logger.log('sponsor created: ' + JSON.stringify(result), 'sponsor.service');
@@ -152,6 +147,15 @@ export class SponsorService {
       Logger.error(error);
       return Promise.reject(error);
     }
+  }
+
+  async updateSponsorImage(
+    params: SponsorUpdateImageRequest,
+  ): Promise<SponsorUpdateImageRequest>{
+    await this.sponsorRepositories.update(params, {
+      where: { sponsorId: params.sponsorId }, 
+    });
+    return this.findOne(params.sponsorId);
   }
 
   async update(

@@ -11,6 +11,7 @@ import {
     HttpException,
     UseGuards,
     UseInterceptors,
+    UploadedFile,
   } from '@nestjs/common';
   import {
     SponsorApiContract,
@@ -27,16 +28,20 @@ import {
     ApiOperation,
     ApiOkResponse,
     ApiBearerAuth,
+    ApiConsumes,
   } from '@nestjs/swagger';
   import { FEATURE_PERMISSIONS } from '../permission/featureAndPermission/featureAndPermission.constant';
   import { CacheInterceptor } from '@nestjs/cache-manager';
   import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploaderService } from '@qbit-tech/libs-uploader';
   
   @ApiTags('Sponsors')
   @Controller('sponsors')
   export class SponsorController implements SponsorApiContract {
     constructor(
-      private readonly sponsorService: SponsorService, // private readonly eventLogService: EventLogService,
+      private sponsorService: SponsorService,
+      private uploaderService: UploaderService,
     ) {}
   
     // @UseInterceptors(CacheInterceptor)
@@ -86,11 +91,14 @@ import {
     @ApiOperation({ summary: 'Create new sponsor' })
     @ApiBearerAuth()
     @Post()
+    @ApiConsumes('multipart/form-data')
     // @UseGuards(AuthPermissionGuardV2(['SPONSOR.CREATE']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
+    @UseInterceptors(FileInterceptor('image'))
     async create(
       // @Req() req: AppRequest,
       @Body() params: SponsorCreateRequest,
+      @UploadedFile() file,
     ): Promise<SponsorFindOneResponse> {
       // try {
       Logger.log('--ENTER CREATE SPONSOR CONTROLLER--');
@@ -100,30 +108,25 @@ import {
         // req,
         params,
       );
-  
-      // await this.eventLogService.create({
-      //   userId: req.user.userId,
-      //   dataId: res.sponsorId,
-      //   action: ELogAction.CREATE_TAG,
-      //   metaUser: req.user,
-      //   dataAfter: res,
-      //   note: `${req.user.name} create tag ${res.tagName}`
-      // })
-  
+
+      if(file){
+        Logger.log('file added: ' + JSON.stringify(params), 'sponsor.controller');
+        const uploadResult = await this.uploaderService.fileUploaded({
+          tableName: 'sponsors',
+          tableId: res.sponsorId,
+          filePath: file['key'],
+          metadata: {},
+        });
+        Logger.log(
+          'file uploaded: ' + JSON.stringify(file), 'sponsor.controller'
+        );
+        Logger.log('--EXIT CREATE SPONSOR CONTROLLER--');
+        await this.sponsorService.updateSponsorImage({
+          sponsorId: res.sponsorId,
+          sponsorImageUrl: file ? uploadResult.fileLinkCache : null,
+        });
+      }
       return res;
-      // } catch (error) {
-      //   Logger.error(error);
-      // throw new HttpException(
-      //   {
-      //     code: 'failed_create_tag',
-      //     message: error,
-      //   },
-      //   422,
-      // );
-      // throw new HttpException(error, getErrorStatusCode(error));
-      // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-      // return Promise.reject(error.message);
-      // }
     }
   
     @ApiOperation({ summary: 'Update sponsor' })
@@ -131,16 +134,22 @@ import {
     @Patch(':sponsorId')
     // @UseGuards(AuthPermissionGuardV2(['SPONSOR.UPDATE']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
+    @UseInterceptors(FileInterceptor('image'))
     async update(
       // @Req() req: AppRequest,
       @Param('sponsorId') sponsorId: string,
       @Body() params: Omit<SponsorUpdateRequest, 'sponsorId'>,
+      @UploadedFile() file,
     ): Promise<SponsorFindOneResponse> {
       try {
         Logger.log('--ENTER UPDATE SPONSOR CONTROLLER--');
         Logger.log('sponsor : ' + JSON.stringify(sponsorId), 'sponsor.controller');
   
         const findDataBefore = await this.sponsorService.findOne(sponsorId);
+
+        if(file){
+          const imageResult = await this.update
+        }
   
         const res = await this.sponsorService.update({
           ...params,

@@ -7,11 +7,16 @@ export abstract class SponsorApiContract {
   abstract findAll(params: SponsorFindAllRequest): Promise<SponsorFindAllResponse>
   abstract findOne(sponsorId: string): Promise<SponsorFindOneResponse>
   // abstract create(req: AppRequest, params: TagCreateRequest): Promise<TagFindOneResponse>
-  abstract create(req: any, params: SponsorCreateRequest): Promise<SponsorFindOneResponse>
+  abstract create(
+    req: any, 
+    params: SponsorCreateRequest,
+    file: Express.Multer.File,
+  ): Promise<SponsorFindOneResponse>
   abstract update(
     // req: AppRequest, 
-    tagId: string,
-    params: SponsorUpdateRequest
+    sponsorId: string,
+    params: SponsorUpdateRequest,
+    file: Express.Multer.File,
   ): Promise<SponsorFindOneResponse>
   // abstract delete(req: AppRequest, tagId: string): Promise<SimpleResponse>
   abstract delete(sponsorId: string): Promise<any>
@@ -57,7 +62,7 @@ export class SponsorFindOneResponse {
   readonly sponsorName: string;
 
   @ApiProperty()
-  readonly imgUrl: string;
+  readonly sponsorUrl: string;
 
   @ApiProperty()
   readonly updatedAt?: Date;
@@ -76,11 +81,16 @@ export class SponsorCreateRequest {
   @IsNotEmpty()
   readonly sponsorName: string;
   
-  @ApiProperty()
-  readonly status: string;
-  
   @ApiPropertyOptional()
-  readonly imgUrl: string;
+  readonly sponsorUrl: string;
+
+  @ApiProperty({ type: 'string', format: 'binary' })
+  file?: Express.Multer.File;
+}
+
+export class SponsorUpdateImageRequest {
+  readonly sponsorId: string;
+  readonly sponsorImageUrl?: string;
 }
 
 export class CreateResponseBulk {
