@@ -49,7 +49,7 @@ export class PromoService {
 
     public async findAll(): Promise<PromoModel[]> {
         try {
-            const promos = await this.promoRepository.findAll()
+            const promos = await this.promoRepository.findAll({ order: [["createdAt", 'ASC']]})
 
             if (!promos) {
                 return Promise.reject({

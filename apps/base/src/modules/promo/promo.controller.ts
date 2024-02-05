@@ -55,7 +55,7 @@ export class PromoController {
     @UseGuards()
     async findAll(): Promise<PromoModel[]> {
         try {
-            const promos = await this.promoService.findAll()
+            const promos = (await this.promoService.findAll())
 
             return promos
         } catch (error) {
