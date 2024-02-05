@@ -15,6 +15,7 @@ import {
     Post,
     HttpException,
     HttpStatus,
+    ParseFilePipeBuilder,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppRequest, SimpleResponse } from '@qbit-tech/libs-utils';
@@ -87,17 +88,35 @@ export class PromoController {
     // @ApiConsumes('multipart/form-data')
     @Post()
     @ApiBearerAuth()
+    @ApiHeader({
+        name: 'Content-Type',
+        description: 'multipart/form-data',
+    })
     @UseInterceptors(FileInterceptor('fileImage'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() fileImage: File
+        // @UploadedFile(
+        //     new ParseFilePipeBuilder()
+        //       .addFileTypeValidator({
+        //         fileType: /(jpg|jpeg|png)$/,
+        //       })
+        //       .addMaxSizeValidator({
+        //         maxSize: 200000,
+        //         message: 'Max 2 mb',
+        //       })
+        //       .build({
+        //         fileIsRequired: false,
+        //         errorHttpStatusCode: HttpStatus.BAD_REQUEST,
+        //       }),
+        //   ) fileImage: Express.Multer.File
+        @UploadedFile() fileImage: Express.Multer.File
     ): Promise<PromoModel> {
         try {
             // const { fileImage, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
-            console.log(fileImage);
-            
+            console.log(fileImage);            
+
             if (fileImage) {
                 Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
                 const uploadResult = await this.uploaderService.fileUploaded({

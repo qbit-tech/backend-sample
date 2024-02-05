@@ -32,12 +32,15 @@ export class PromoService {
             });
         }
 
+
+        const {fileImage, ...newBody} = newPromo 
+
         const [promo, created] = await this.promoRepository.findOrCreate({
             where: {
                 title: newPromo.title
             },
             defaults: {
-                ...newPromo
+                ...newBody
             }
         })
 
