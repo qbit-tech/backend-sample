@@ -87,13 +87,13 @@ export class PromoController {
     // @ApiConsumes('multipart/form-data')
     @Post()
     @ApiBearerAuth()
-    @UseInterceptors(FileInterceptor('image'))
+    @UseInterceptors(FileInterceptor('fileImage'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() file: Express.Multer.File
+        @UploadedFile() file: File
     ): Promise<PromoModel> {
         try {
-            // const { file, ...newBody} = body
+            // const { fileImage, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
             console.log(file);
