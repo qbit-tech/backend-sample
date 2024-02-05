@@ -33,7 +33,7 @@ export class PromoService {
         }
 
 
-        const {image, ...newBody} = newPromo 
+        const {file, ...newBody} = newPromo 
 
         const [promo, created] = await this.promoRepository.findOrCreate({
             where: {
@@ -113,16 +113,16 @@ export class PromoService {
         return this.findById(promoId)
     }
 
-    // public async updatedPromoImage(
-    //     promoId: string,
-    //     image?: string
-    // ): Promise<PromoModel> {
-    //     await this.promoRepository.update({promoId, image}, {
-    //         where: { promoId: promoId}
-    //     });
+    public async updatedPromoImage(
+        promoId: string,
+        image?: string
+    ): Promise<PromoModel> {
+        await this.promoRepository.update({promoId, image}, {
+            where: { promoId: promoId}
+        });
 
-    //     return this.findById(promoId)
-    // }
+        return this.findById(promoId)
+    }
 
 
 }
