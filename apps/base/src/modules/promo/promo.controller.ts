@@ -90,23 +90,23 @@ export class PromoController {
     @UseInterceptors(FileInterceptor('fileImage'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() file: File
+        @UploadedFile() fileImage: File
     ): Promise<PromoModel> {
         try {
             // const { fileImage, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
-            console.log(file);
+            console.log(fileImage);
             
-            if (file) {
+            if (fileImage) {
                 Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
                 const uploadResult = await this.uploaderService.fileUploaded({
                     tableName: 'promos',
                     tableId: promo.promoId,
-                    filePath: file['key'],
+                    filePath: fileImage['key'],
                     metadata: {}
                 })
-                await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
+                await this.promoService.updatedPromoImage(promo.promoId, fileImage ? uploadResult.fileLinkCache : null)
             }
             return promo
         } catch (error) {
