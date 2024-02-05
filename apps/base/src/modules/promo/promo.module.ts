@@ -8,23 +8,43 @@ import { UploaderModule } from '@qbit-tech/libs-uploader';
 import { ConfigModule } from '@nestjs/config';
 import { S3Downloader } from '@qbit-tech/libs-uploader';
 import { Endpoint, S3 } from 'aws-sdk';
+import { MulterModule } from '@nestjs/platform-express';
+import * as MulterS3 from 'multer-s3';
+import { v4 as uuidv4 } from 'uuid';
 
 @Module({
-    imports: [
-        SequelizeModule.forFeature([PromoModel]),
-        UploaderModule.forRoot({
-            cacheTimeout: -1,
-            defaultMetadata: {
-              Bucket: process.env.STORAGE_BUCKET,
-            },
-            downloader: new S3Downloader({
-              endpoint: new Endpoint(process.env.STORAGE_ENDPOINT),
-              accessKeyId: process.env.STORAGE_KEY_ID,
-              secretAccessKey: process.env.STORAGE_SECRET_KEY,
-            }),
-          }),
-    ],
-    providers: [PromoService],
-    controllers: [PromoController],
+  imports: [
+    SequelizeModule.forFeature([PromoModel]),
+    UploaderModule.forRoot({
+      cacheTimeout: -1,
+      defaultMetadata: {
+        Bucket: process.env.STORAGE_BUCKET,
+      },
+      downloader: new S3Downloader({
+        endpoint: new Endpoint(process.env.STORAGE_ENDPOINT),
+        accessKeyId: process.env.STORAGE_KEY_ID,
+        secretAccessKey: process.env.STORAGE_SECRET_KEY,
+      }),
+    }),
+    MulterModule.register({
+      storage: MulterS3({
+        s3: new S3({
+          endpoint: new Endpoint(process.env.STORAGE_ENDPOINT),
+          accessKeyId: process.env.STORAGE_KEY_ID,
+          secretAccessKey: process.env.STORAGE_SECRET_KEY,
+        }),
+        acl: 'public-read',
+        bucket: process.env.STORAGE_BUCKET,
+        metadata: function (req, file, cb) {
+          cb(null, { fieldname: file.fieldname })
+        },
+        key: function (req, file, cb) {
+          cb(null, `${process.env.PROJECT_ID}/promo/${uuidv4()}`);
+        }
+      })
+    }),
+  ],
+  providers: [PromoService],
+  controllers: [PromoController],
 })
-export class PromoModule {}
+export class PromoModule { }

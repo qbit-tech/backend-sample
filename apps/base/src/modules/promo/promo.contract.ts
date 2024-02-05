@@ -15,8 +15,8 @@ export class PromoProperties {
     @ApiPropertyOptional()
     description?: string;
 
-    @ApiPropertyOptional()
-    image?: string;
+    // @ApiPropertyOptional()
+    // image?: string;
 
     @ApiProperty({ type: 'string', format: 'binary' })
     fileImage?: Express.Multer.File;

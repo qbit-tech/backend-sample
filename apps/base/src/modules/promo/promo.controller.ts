@@ -81,41 +81,20 @@ export class PromoController {
         }
     }
 
-    // @ApiHeader({
-    //     name: 'Content-Type',
-    //     description: 'multipart/form-data'
-    // })
-    // @ApiConsumes('multipart/form-data')
     @Post()
     @ApiBearerAuth()
-    @ApiHeader({
-        name: 'Content-Type',
-        description: 'multipart/form-data',
-    })
     @UseInterceptors(FileInterceptor('fileImage'))
     async createPromo(
         @Body() body: PromoProperties,
-        // @UploadedFile(
-        //     new ParseFilePipeBuilder()
-        //       .addFileTypeValidator({
-        //         fileType: /(jpg|jpeg|png)$/,
-        //       })
-        //       .addMaxSizeValidator({
-        //         maxSize: 200000,
-        //         message: 'Max 2 mb',
-        //       })
-        //       .build({
-        //         fileIsRequired: false,
-        //         errorHttpStatusCode: HttpStatus.BAD_REQUEST,
-        //       }),
-        //   ) fileImage: Express.Multer.File
         @UploadedFile() fileImage: Express.Multer.File
     ): Promise<PromoModel> {
         try {
             // const { fileImage, ...newBody} = body
             const promo = await this.promoService.createPromo(body);
 
-            console.log(fileImage);            
+            // console.log(body.fileImage);   
+            console.log(fileImage);
+                     
 
             if (fileImage) {
                 Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
@@ -125,7 +104,9 @@ export class PromoController {
                     filePath: fileImage['key'],
                     metadata: {}
                 })
-                await this.promoService.updatedPromoImage(promo.promoId, fileImage ? uploadResult.fileLinkCache : null)
+                console.log(uploadResult);
+                
+                // await this.promoService.updatedPromoImage(promo.promoId, fileImage ? uploadResult.fileLinkCache : null)
             }
             return promo
         } catch (error) {
@@ -138,23 +119,24 @@ export class PromoController {
 
     @Patch(':promoId')
     @ApiBearerAuth()
+    @UseInterceptors(FileInterceptor('fileImage'))
     async updatePromo(
         @Param('promoId') promoId: string,
         @Body() body: UpdatePromoProperties,
-        @UploadedFile() file
+        @UploadedFile() fileImage: Express.Multer.File
     ) {
         try {
             const promo = await this.promoService.updatePromo(promoId, body)
 
-            if (file) {
+            if (fileImage) {
                 Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
                 const uploadResult = await this.uploaderService.fileUploaded({
                     tableName: 'promos',
                     tableId: promo.promoId,
-                    filePath: file['key'],
+                    filePath: fileImage['key'],
                     metadata: {}
                 })
-                await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
+                // await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
             }
 
             return promo

@@ -55,8 +55,8 @@ export class PromoModel extends Model {
     @Column
     description?: string;
 
-    @Column
-    image?: string;
+    // @Column
+    // image?: string;
 
     @Column
     isPublish: Boolean;
