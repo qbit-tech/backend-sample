@@ -117,9 +117,9 @@ export class PromoService {
         promoId: string,
         image?: string
     ): Promise<PromoModel> {
-        await this.promoRepository.update({promoId, image}, {
-            where: { promoId: promoId}
-        });
+        // await this.promoRepository.update({promoId, image}, {
+        //     where: { promoId: promoId}
+        // });
 
         return this.findById(promoId)
     }

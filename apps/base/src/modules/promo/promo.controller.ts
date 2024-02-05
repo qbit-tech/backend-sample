@@ -4,6 +4,7 @@ import {
     Put,
     UseInterceptors,
     UploadedFile,
+    UploadedFiles,
     Req,
     UseGuards,
     Get,
