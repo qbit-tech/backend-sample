@@ -30,7 +30,7 @@ import {
     ApiHeader,
 } from '@nestjs/swagger';
 import { PromoModel } from './promo.entity';
-import { PromoProperties, UpdatePromoProperties } from './promo.contract';
+import { PromoProperties, RespondPromoProperties, UpdatePromoProperties } from './promo.contract';
 // import { AuthService } from '../auth/auth.service';
 import { async as crypt } from 'crypto-random-string';
 import { AuthService } from '@qbit-tech/libs-authv3';
@@ -42,11 +42,11 @@ import {
 } from '@qbit-tech/libs-session';
 import { NotificationService } from '@qbit-tech/libs-notification';
 import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
-import { UploaderService } from '@qbit-tech/libs-uploader';
+import { FileProperties, UploaderService } from '@qbit-tech/libs-uploader';
 import { PromoService } from './promo.service';
 
-@ApiTags('Promo')
-@Controller('promo')
+@ApiTags('Promotion')
+@Controller('promotions')
 export class PromoController {
     constructor(
         private promoService: PromoService,
@@ -55,11 +55,37 @@ export class PromoController {
 
     @Get()
     @UseGuards()
-    async findAll(): Promise<PromoModel[]> {
+    async findAll(): Promise<any> {
         try {
             const promos = (await this.promoService.findAll())
 
-            return promos
+            // const images  = await Promise.all(
+            //     await Promise.all(
+            //         promos.map((it) => {
+            //             this.uploaderService.fileSearchByTable(
+            //                 'promos',
+            //                 [it.promoId]
+            //             );
+            //         })
+            //     )
+            // )
+
+            // console.log(images.map((it) => it));
+            
+
+            // const imgFiles =  await Promise.all(
+            //     promos.map((it) => this.uploaderService.fileSearchByTable(
+            //         'promos',
+            //         [it.promoId]
+            //     ))
+            // )
+
+            // console.log(imgFiles);
+
+
+            return {
+                results: promos
+            }
         } catch (error) {
             throw new HttpException(
                 error,
@@ -69,11 +95,19 @@ export class PromoController {
     }
 
     @Get(':promoId')
-    async findById(@Param('promoId') promoId: string): Promise<PromoModel> {
+    async findById(@Param('promoId') promoId: string): Promise<any> {
         try {
             const promo = await this.promoService.findById(promoId)
+            const fileSearchResult = await this.uploaderService.fileSearchByTable(
+                'promos',
+                [promoId]
+            );
+            console.log(fileSearchResult.get(promoId));
 
-            return promo
+            return {
+                ...promo,
+                imgUrl: fileSearchResult.get(promoId)
+            }
         } catch (error) {
             throw new HttpException(
                 error,
@@ -84,38 +118,13 @@ export class PromoController {
 
     @Post()
     @ApiBearerAuth()
-    @UseInterceptors(FileInterceptor('image'))
     async createPromo(
         @Body() body: PromoProperties,
-        @UploadedFile() file
-    ): Promise<PromoModel> {
+    ): Promise<any> {
         try {
-            // const { fileImage, ...newBody} = body
-            Logger.log('--ENTER CREATE PROMO CONTROLLER--');
-
             const promo = await this.promoService.createPromo(body);
 
-            console.log(file);
-            
-            if (file) {
-                Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
-                const uploadResult = await this.uploaderService.fileUploaded({
-                    tableName: 'promos',
-                    tableId: promo.promoId,
-                    filePath: body.file['key'],
-                    metadata: {}
-                })
-                Logger.log(
-                    'file uploaded: ' + JSON.stringify(file),
-                    'promo.controller',
-                  );
-                console.log(uploadResult);
-                
-                Logger.log('--EXIT CREATE PROMO CONTROLLER--');
-
-                await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
-            }
-            return promo
+            return promo.promoId
         } catch (error) {
             throw new HttpException(
                 error,
@@ -126,26 +135,12 @@ export class PromoController {
 
     @Patch(':promoId')
     @ApiBearerAuth()
-    @UseInterceptors(FileInterceptor('image'))
     async updatePromo(
         @Param('promoId') promoId: string,
-        @Body() body: UpdatePromoProperties,
-        @UploadedFile() file
+        @Body() body: UpdatePromoProperties
     ) {
         try {
             const promo = await this.promoService.updatePromo(promoId, body)
-
-            // if (file {
-            //     Logger.log('file added: ' + JSON.stringify(body), 'promo.controller');
-            //     const uploadResult = await this.uploaderService.fileUploaded({
-            //         tableName: 'promos',
-            //         tableId: promo.promoId,
-            //         filePath: fileImage['key'],
-            //         metadata: {}
-            //     })
-            //     // await this.promoService.updatedPromoImage(promo.promoId, file ? uploadResult.fileLinkCache : null)
-            // }
-
             return promo
         } catch (error) {
             throw new HttpException(
@@ -171,6 +166,65 @@ export class PromoController {
                 error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
+    }
+
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                image: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @Put('/upload-image/:promoId')
+    @UseInterceptors(FileInterceptor('image'))
+    async uploadImage(
+        @Param('promoId') promoId: string,
+        @UploadedFile() file
+    ): Promise<any> {
+        try {
+            const fileSearchResult = await this.uploaderService.fileSearchByTable(
+                'promos',
+                [promoId],
+            );
+
+            console.log(file);
+            
+
+            console.log(fileSearchResult);
+
+            if (fileSearchResult.has(promoId)) {
+                await this.uploaderService.deleteFileById(
+                    fileSearchResult.get(promoId)[0].fileId,
+                );
+            }
+
+
+            const uploadResult = await this.uploaderService.fileUploaded({
+                tableName: 'promos',
+                tableId: promoId,
+                filePath: file['key'],
+                metadata: {}
+            })
+
+            return { isSuccess: true, payload: uploadResult };
+        } catch (error) {
+            console.log('err_promo: ', error);
+            return { isSuccess: false, payload: null };
+        }
+    }
+
+    @Get('/get-image/:promoId')
+    async getImage(@Param('promoId') promoId: string) {
+        const fileSearchResult = await this.uploaderService.fileSearchByTable(
+            'promos',
+            [promoId],
+        );
+        return fileSearchResult.get(promoId)
     }
 
 

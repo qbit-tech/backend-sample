@@ -33,14 +33,14 @@ export class PromoService {
         }
 
 
-        const {file, ...newBody} = newPromo 
+        // const {image, ...newBody} = newPromo 
 
         const [promo, created] = await this.promoRepository.findOrCreate({
             where: {
                 title: newPromo.title
             },
             defaults: {
-                ...newBody
+                ...newPromo
             }
         })
 
