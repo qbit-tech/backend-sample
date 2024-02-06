@@ -13,6 +13,10 @@ export abstract class SponsorApiContract {
     params: SponsorCreateRequest,
     file: Express.Multer.File,
   ): Promise<SponsorFindOneResponse>
+  abstract uploadSponsorImage(
+    params: SponsorFindOneResponse, 
+    file: Express.Multer.File
+  ): Promise<SponsorFindOneResponse>
   abstract update(
     // req: AppRequest, 
     sponsorId: string,
@@ -84,9 +88,6 @@ export class SponsorCreateRequest {
   
   @ApiPropertyOptional()
   readonly sponsorUrl: string;
-
-  @ApiProperty({ type: 'string', format: 'binary' })
-  file?: Express.Multer.File;
 }
 
 export class SponsorUpdateImageRequest {

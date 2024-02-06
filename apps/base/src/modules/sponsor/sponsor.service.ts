@@ -68,7 +68,7 @@ export class SponsorService {
 
   async findOne(sponsorId: string): Promise<any> {
     try {
-      Logger.log('--ENTER FIND ONE TAG SERVICE--');
+      Logger.log('--ENTER FIND ONE SPONSOR SERVICE--');
       const result = await this.sponsorRepositories.findOne({
         where: { sponsorId },
         // include: [
@@ -196,10 +196,6 @@ export class SponsorService {
     try {
       Logger.log('--ENTER DELETE SPONSOR SERVICE--');
       const findTag = await this.findOne(sponsorId);
-
-      // if (findTag.events?.length > 0) {
-      //   await this.eventTagService.deleteBysponsorId(sponsorId);
-      // }
 
       const result = await this.sponsorRepositories.destroy({ where: { sponsorId } });
 

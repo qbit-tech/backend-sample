@@ -1,6 +1,7 @@
 import {
     Controller,
     Get,
+    Put,
     Query,
     Param,
     Logger,
@@ -71,22 +72,18 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
     @Get(':sponsorId')
     // @UseGuards(AuthPermissionGuardV2(['SPONSOR.DETAIL']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
-    async findOne(@Param('sponsorId') sponsorId: string): Promise<SponsorFindOneResponse> {
+    async findOne(@Param('sponsorId') sponsorId: string): Promise<any> {
       try {
         Logger.log('--ENTER FIND ONE SPONSOR CONTROLLER--');
         Logger.log('sponsor : ' + JSON.stringify(sponsorId), 'sponsor.controller');
         const result = await this.sponsorService.findOne(sponsorId);
-        return result.sponsorName;
+        const fileSearchResult = await this.uploaderService.fileSearchByIds(
+          [sponsorId],
+        );
+        Logger.log('sponsorImage : ' + JSON.stringify(fileSearchResult));
+        return (result.sponsorName + " " + JSON.stringify(fileSearchResult)).toString();
       } catch (error) {
         Logger.log('find one sponsor error: ' + JSON.stringify(error));
-        // throw new HttpException(error, error.code);
-        // throw new HttpException(
-        //   {
-        //     code: 'failed_create_tag',
-        //     message: error,
-        //   },
-        //   422,
-        // );
         throw new HttpException(error, getErrorStatusCode(error));
       }
     }
@@ -95,18 +92,13 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
     @ApiBearerAuth()
     @Post()
     @ApiConsumes('multipart/form-data')
-    // @UseGuards(AuthPermissionGuardV2(['SPONSOR.CREATE']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
     @ApiBody({
       schema: {
         type: 'object',
         properties: {
           sponsorName: { type:'string' },
-          sponsorUrl: { type:'string' },
-          image: {
-            type: 'string',
-            format: 'binary'
-          }
+          sponsorUrl: { type:'string' }
         }
       }
     })
@@ -114,35 +106,65 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
     async create(
       // @Req() req: AppRequest,
       @Body() params: SponsorCreateRequest,
-      @UploadedFile() file,
     ): Promise<SponsorFindOneResponse> {
       // try {
       Logger.log('--ENTER CREATE SPONSOR CONTROLLER--');
       Logger.log('sponsor : ' + JSON.stringify(params), 'sponsor.controller');
-  
+
       const res = await this.sponsorService.create(
         // req,
         params,
       );
+      return res;
+    }
 
+    @ApiOperation({ summary: 'Upload sponsor image' })
+    @ApiBearerAuth()
+    @Put()
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          sponsorId: { type:'string' },
+          image: {
+            type: 'string',
+            format: 'binary'
+          }
+        }
+      }
+    })
+    @ApiOkResponse({ type: SponsorFindOneResponse })
+    @UseInterceptors(FileInterceptor('image'))
+    async uploadSponsorImage(
+      @Body() params: SponsorFindOneResponse,
+      @UploadedFile() file
+    ): Promise<any>{
+      Logger.log('--UPLOAD SPONSOR IMAGE--');
+      Logger.log('sponsor : ' + JSON.stringify(params.sponsorId), 'sponsor.controller');
       if(file){
-        Logger.log('file added: ' + JSON.stringify(params), 'sponsor.controller');
-        const uploadResult = await this.uploaderService.fileUploaded({
-          tableName: 'sponsors',
-          tableId: res.sponsorId,
-          filePath: file['key'],
-          metadata: {},
-        });
+        // const fileSearchResult = await this.uploaderService.fileSearchByTable(
+        //   'sponsors',
+        //   [params.sponsorId],
+        // );
+        // if (fileSearchResult.has(params.sponsorId)) {
+        //   await this.uploaderService.deleteFileById(
+        //     fileSearchResult.get(params.sponsorId)[0].fileId,
+        //   );
+        // }
+        Logger.log('file added: ' + JSON.stringify(params.sponsorId), 'sponsor.controller');
+        const uploadResult = await this.uploaderService.updateImage(
+          'sponsors',
+          params.sponsorId,
+          file,
+          {},
+        );
         Logger.log(
           'file uploaded: ' + JSON.stringify(file), 'sponsor.controller'
         );
-        Logger.log('--EXIT CREATE SPONSOR CONTROLLER--');
-        await this.sponsorService.updateSponsorImage({
-          sponsorId: res.sponsorId,
-          sponsorImageUrl: file ? uploadResult.fileLinkCache : null,
-        });
+
+        Logger.log('--EXIT UPLOAD SPONSOR IMAGE--');
       }
-      return res;
     }
   
     @ApiOperation({ summary: 'Update sponsor' })
@@ -150,63 +172,22 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
     @Patch(':sponsorId')
     // @UseGuards(AuthPermissionGuardV2(['SPONSOR.UPDATE']))
     @ApiOkResponse({ type: SponsorFindOneResponse })
-    @UseInterceptors(FileInterceptor('image'))
     async update(
       // @Req() req: AppRequest,
       @Param('sponsorId') sponsorId: string,
       @Body() params: Omit<SponsorUpdateRequest, 'sponsorId'>,
-      @UploadedFile() file,
     ): Promise<SponsorFindOneResponse> {
       try {
         Logger.log('--ENTER UPDATE SPONSOR CONTROLLER--');
         Logger.log('sponsor : ' + JSON.stringify(sponsorId), 'sponsor.controller');
   
         const findDataBefore = await this.sponsorService.findOne(sponsorId);
-
-        if(file){
-          const imageResult = await this.updateImage({
-            file,
-            sponsorId,
-          });
-          return this.sponsorService.update({
-            ...params,
-            sponsorId,
-            sponsorImageUrl: imageResult.payload.fileLinkCache
-          })
-        }
         return this.sponsorService.update({
           ...params,
           sponsorId,
         });
       } catch (error) {
         throw new HttpException(error, getErrorStatusCode(error));
-      }
-    }
-
-    async updateImage(request: UpdateImageRequest): Promise<UpdateImageResponse> {
-      try {
-        const fileSearchResult = await this.uploaderService.fileSearchByTable(
-          'sponsors',
-          [request.sponsorId],
-        );
-  
-        const uploadResult = await this.uploaderService.fileUploaded({
-          tableName: 'sponsors',
-          tableId: request.sponsorId,
-          filePath: request.file['key'],
-          metadata: {},
-        });
-  
-        if (fileSearchResult.has(request.sponsorId)) {
-          await this.uploaderService.deleteFileById(
-            fileSearchResult.get(request.sponsorId)[0].fileId,
-          );
-        }
-  
-        return { isSuccess: true, payload: uploadResult };
-      } catch (err) {
-        console.log('err_sponsor: updateImage', err);
-        return { isSuccess: false, payload: null };
       }
     }
   
@@ -221,23 +202,21 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
       try {
         Logger.log('--ENTER DELETE SPONSOR CONTROLLER--');
         Logger.log('sponsor : ' + JSON.stringify(sponsorId), 'sponsor.controller');
-  
-        // const findDataBefore = await this.sponsorService.findOne(sponsorId);
-  
-        // await this.eventLogService.create({
-        //   userId: req.user.userId,
-        //   dataId: sponsorId,
-        //   action: ELogAction.HARD_DELETE_TAG,
-        //   metaUser: req.user,
-        //   dataBefore: findDataBefore,
-        //   note: `${req.user.name} delete tag ${findDataBefore.tagName}`
-        // })
-  
+        const fileSearchResult = await this.uploaderService.fileSearchByTable(
+          'sponsors',
+          [sponsorId],
+        );
+        if (fileSearchResult.has(sponsorId)) {
+          await this.uploaderService.deleteFileById(
+            fileSearchResult.get(sponsorId)[0].fileId,
+          );
+        }
         return await this.sponsorService.delete(sponsorId);
       } catch (error) {
         // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
         throw new HttpException(error, getErrorStatusCode(error));
       }
+      
     }
   }
   
