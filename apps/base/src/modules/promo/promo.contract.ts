@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import multer = require('multer');
 import { PromoModel } from './promo.entity';
+import { FileProperties } from '@qbit-tech/libs-uploader';
 
 // export abstract class PromoApiContract {
 //     abstract findAll(): Promise<
@@ -39,7 +40,7 @@ export class RespondPromoProperties {
     isPublish: Boolean;
     startedAt: Date;
     endedAt: Date;
-    image: Express.Multer.File[];
+    image: Map<string, FileProperties[]>;
 }
 
 export class UpdatePromoProperties {

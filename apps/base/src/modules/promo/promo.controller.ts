@@ -59,30 +59,22 @@ export class PromoController {
         try {
             const promos = (await this.promoService.findAll())
 
-            // const images  = await Promise.all(
-            //     await Promise.all(
-            //         promos.map((it) => {
-            //             this.uploaderService.fileSearchByTable(
-            //                 'promos',
-            //                 [it.promoId]
-            //             );
-            //         })
-            //     )
-            // )
+            const newList: RespondPromoProperties[] = await Promise.all(promos.map(async (item) => (
+                    {
+                        ...item,
+                        image: await this.uploaderService.fileSearchByTable(
+                            'promos',
+                            [item.promoId]
+                        )
+                    }
+                )
+            ))
 
-            // console.log(images.map((it) => it));
-            
+            console.log(newList);
 
-            // const imgFiles =  await Promise.all(
-            //     promos.map((it) => this.uploaderService.fileSearchByTable(
-            //         'promos',
-            //         [it.promoId]
-            //     ))
-            // )
-
-            // console.log(imgFiles);
-
-
+            // return {
+            //     results: newList
+            // }
             return {
                 results: promos
             }
@@ -193,7 +185,7 @@ export class PromoController {
             );
 
             console.log(file);
-            
+
 
             console.log(fileSearchResult);
 
