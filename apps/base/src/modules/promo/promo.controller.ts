@@ -58,25 +58,45 @@ export class PromoController {
     async findAll(): Promise<any> {
         try {
             const promos = (await this.promoService.findAll())
+            const imageList = []
 
-            const newList: RespondPromoProperties[] = await Promise.all(promos.map(async (item) => (
-                    {
-                        ...item,
-                        image: await this.uploaderService.fileSearchByTable(
-                            'promos',
-                            [item.promoId]
-                        )
-                    }
-                )
-            ))
+            for (const promo of promos) {
+                imageList.push(await this.uploaderService.fileSearchByTable(
+                    'promos',
+                    [promo.promoId]
+                ))
+            }
 
-            console.log(newList);
+            // promos.forEach((item) => {
+            //     newList.push({
+                    
+            //             ...item,
+            //             image: await this.uploaderService.fileSearchByTable(
+            //                 'promos',
+            //                 [item.promoId]
+            //             )
+                    
+            //     })
+            // })
+
+            // const newList: ResimageListpondPromoProperties[] = await Promise.all(promos.map(async (item) => (
+            //         {
+            //             ...item,
+            //             image: await this.uploaderService.fileSearchByTable(
+            //                 'promos',
+            //                 [item.promoId]
+            //             )
+            //         }
+            //     )
+            // ))
+
+            console.log(imageList);
 
             // return {
             //     results: newList
             // }
             return {
-                results: promos
+                results: {promos}
             }
         } catch (error) {
             throw new HttpException(
