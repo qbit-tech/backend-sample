@@ -92,7 +92,7 @@ export class PromoController {
             //     )
             // ))
 
-            console.log(imageList[0].get("6b9b10fb-d65c-4fe8-b4e1-451a1bed14c1"));
+            // console.log(imageList[0].get("6b9b10fb-d65c-4fe8-b4e1-451a1bed14c1"));
 
 
             var i = 0
@@ -101,9 +101,11 @@ export class PromoController {
                     ...promo,
                     image: imageList[i].get(promo.promoId)
                 })
+                i++;
             }
+            
 
-            console.log(newPromos);
+            console.log(imageList);
             
 
             // return {
