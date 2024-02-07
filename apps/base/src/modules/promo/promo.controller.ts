@@ -67,6 +67,8 @@ export class PromoController {
                 ))
             }
 
+            const newPromos = []
+
             // promos.forEach((item) => {
             //     newList.push({
                     
@@ -90,14 +92,24 @@ export class PromoController {
             //     )
             // ))
 
-            console.log(imageList);
+            console.log(imageList[0].get("6b9b10fb-d65c-4fe8-b4e1-451a1bed14c1"));
+
+
+            var i = 0
+            for (const promo of promos) {
+                newPromos.push({
+                    ...promo,
+                    image: imageList[i].get(promo.promoId)
+                })
+            }
+
+            console.log(newPromos);
+            
 
             // return {
             //     results: newList
             // }
-            return {
-                results: {promos}
-            }
+            return {results: newPromos}
         } catch (error) {
             throw new HttpException(
                 error,
