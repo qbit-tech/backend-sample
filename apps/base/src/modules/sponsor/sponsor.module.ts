@@ -8,12 +8,11 @@ import { SponsorService } from './sponsor.service';
 // import { EventTagService } from '../event/eventTag.service';
 import { SponsorController } from './sponsor.controller';
 import { AuthSessionModule } from '../authUser/authUser.module';
-import { S3Downloader, UploaderModule } from '@qbit-tech/libs-uploader'; 
+import { S3Downloader, UploaderModule } from '@qbit-tech/libs-uploader';
 import { Endpoint, S3 } from 'aws-sdk';
 import { MulterModule } from '@nestjs/platform-express';
 import * as MulterS3 from 'multer-s3';
 import { v4 as uuidv4 } from 'uuid';
-
 
 @Module({
   imports: [
@@ -29,9 +28,7 @@ import { v4 as uuidv4 } from 'uuid';
         secretAccessKey: process.env.STORAGE_SECRET_KEY,
       }),
     }),
-    SequelizeModule.forFeature([
-      SponsorModel,
-    ]),
+    SequelizeModule.forFeature([SponsorModel]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.ENV_PATH,
@@ -46,23 +43,16 @@ import { v4 as uuidv4 } from 'uuid';
         acl: 'public-read',
         bucket: process.env.STORAGE_BUCKET,
         metadata: function (req, file, cb) {
-          cb(null, { fieldname: file.fieldname })
+          cb(null, { fieldname: file.fieldname });
         },
         key: function (req, file, cb) {
-          cb(null, `${process.env.PROJECT_ID}/banner/${uuidv4()}`);
-        }
-      })
+          cb(null, `${process.env.PROJECT_ID}/sponsors/${uuidv4()}`);
+        },
+      }),
     }),
   ],
-  providers: [
-    SponsorService,
-  ],
-  controllers: [
-    SponsorController,
-  ],
-  exports: [
-    SponsorService,
-  ]
+  providers: [SponsorService],
+  controllers: [SponsorController],
+  exports: [SponsorService],
 })
-
-export class SponsorModule { }
+export class SponsorModule {}

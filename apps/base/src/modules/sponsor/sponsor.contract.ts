@@ -14,7 +14,7 @@ export abstract class SponsorApiContract {
     file: Express.Multer.File,
   ): Promise<SponsorFindOneResponse>
   abstract uploadSponsorImage(
-    params: SponsorFindOneResponse, 
+    sponsorId: string, 
     file: Express.Multer.File
   ): Promise<SponsorFindOneResponse>
   abstract update(
