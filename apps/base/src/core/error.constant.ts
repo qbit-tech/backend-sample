@@ -10,6 +10,9 @@ enum EErrorCode {
   //tag
   tag_not_found = 'tag_not_found',
 
+  //sponsor
+  sponsor_not_found = 'sponsor_not_found',
+
   //login
   email_not_found = 'email_not_found',
   username_not_found = 'username_not_found',
@@ -50,6 +53,14 @@ export const ERRORS = {
       statusCode: 404,
       code: EErrorCode.tag_not_found,
       message: 'Tag not found',
+    },
+  },
+
+  sponsor: {
+    [EErrorCode.sponsor_not_found]: {
+      statusCode: 404,
+      code: EErrorCode.sponsor_not_found,
+      message: 'Sponsor not found',
     },
   },
 

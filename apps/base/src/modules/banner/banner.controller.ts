@@ -29,9 +29,8 @@ import {
   BannerDeleteResponse,
   UpdateImageResponse,
   UpdateImageRequest,
-  BannersUpdateQueue,
-} from './banner.contract';
-import { ApiBearerAuth } from '@nestjs/swagger';
+  BannersUpdateQueue, } from './banner.contract';
+import { ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
 import { BannerService } from './banner.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -72,9 +71,10 @@ export class BannerController implements BannerApiContract {
     return res;
   }
 
-  @Post()
+  @Put()
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
-  @UseGuards(AuthPermissionGuardV2(['BANNER.CREATE']))
+  // @UseGuards(AuthPermissionGuardV2(['BANNER.CREATE']))
   @UseInterceptors(FileInterceptor('image'))
   async create(
     @Body() body: BannerCreateRequest,
