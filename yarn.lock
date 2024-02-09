@@ -1103,17 +1103,17 @@
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
 
-"@qbit-tech/libs-authv3@^1.4.4":
-  version "1.4.4"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.4/d78c9dbdf7a4ad1631fa238597f84b5d786d8e87#d78c9dbdf7a4ad1631fa238597f84b5d786d8e87"
-  integrity sha512-JWTJbTZCJhlJNEpCVwTXblpQzS8UXAkPoK2Pjd4EcfIVKAYiFSY/JYHjaYSO71x5ZSEgPwhyocpOzFhwY0B2Ig==
+"@qbit-tech/libs-authv3@^1.4.5":
+  version "1.4.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.5/310c018a963d5eb7613154230b0a111d38f66d7e#310c018a963d5eb7613154230b0a111d38f66d7e"
+  integrity sha512-joQ63k4zlnwvAjOWvoc1wb8rRugDJ26rOVCX0Qyt+LoR5Gaxhihv4HkDby/AgUdZ+JptDFOSrQ4Z2Pw9xP1myQ==
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-faq@^1.4.2":
-  version "1.4.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.4.2/80131139106a0408d93eb6463e83c21a2c87fe86#80131139106a0408d93eb6463e83c21a2c87fe86"
-  integrity sha512-LxcrdC0Rda7WejETqCEsNq5FJTSmU0/YOmmGseTqb10wOFjVDhLso5lUTAU46ySf35Q60LxAjO3UqaDf0lecuw==
+"@qbit-tech/libs-faq@^1.5.1":
+  version "1.5.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.5.1/556e9324d853b43666ae1beebfd81ba9e050e926#556e9324d853b43666ae1beebfd81ba9e050e926"
+  integrity sha512-MBDapoiMl9CKbn/lq8NzVnt20o43rO7Ge56PHSqcabd/Y5p4W0gqF4GLu6/wEeFJRpnZZCmwLlqwTrk7nikeag==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1123,38 +1123,26 @@
     "@qbit-tech/libs-utils" "^1.2.5"
     class-validator "^0.14.0"
     sequelize "^6.32.1"
+    sequelize-cli "^6.6.2"
     sequelize-typescript "^2.1.5"
 
-"@qbit-tech/libs-notification-scheduler@^1.0.4":
-  version "1.0.4"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.4/e849f58554bffac8c10a482b245ca168c7e570bf#e849f58554bffac8c10a482b245ca168c7e570bf"
-  integrity sha512-ce7HnAGhSaIL/VPlS7SGPznLVEXAZ2eCTtBjg269BVboj8aXW3CytPQQE/liAtBIpAG/oqyVGtSv/h0P+Ab1Xw==
+"@qbit-tech/libs-notification-scheduler@^1.0.7":
+  version "1.0.7"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.7/b169a9cedfab55bda0fdc85893faad0dd4a9f146#b169a9cedfab55bda0fdc85893faad0dd4a9f146"
+  integrity sha512-WKjGFekUqOXifGYk4kz0OyIF7hy+ZxZFN+RI3AFwgSCUoiLFjvZcglTwENR4rBbexNwQs5kUPZMki2HlSTYr5Q==
   dependencies:
     "@nestjs/schedule" "^3.0.1"
-    "@qbit-tech/libs-notification" "^1.4.1"
+    "@qbit-tech/libs-notification" "^1.7.1"
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
     class-validator "^0.14.0"
     postmark "^3.0.18"
     uuid "9.0.0"
 
-"@qbit-tech/libs-notification@^1.4.1":
-  version "1.4.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.4.1/39e9dd65416d47acca27a6eaaa90b0645c63fda5"
-  integrity sha512-piTchP6iseyRI/xalDIyhB4PTXs/fCBkIBvu/IrCeGU6XsQ1CVXoZXEerVYnaCndHVLKvvSc5bLn0ieXlaYx6w==
-  dependencies:
-    "@nestjs/axios" "^3.0.0"
-    "@nestjs/schedule" "^3.0.1"
-    "@sendgrid/mail" "^7.7.0"
-    "@sendinblue/client" "^3.3.1"
-    base-64 "^1.0.0"
-    firebase-admin "^11.9.0"
-    postmark "^3.0.18"
-
-"@qbit-tech/libs-notification@^1.7.0":
-  version "1.7.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.0/884416ac6687a8ffa5a7cf1a1e07dca1707c56c9#884416ac6687a8ffa5a7cf1a1e07dca1707c56c9"
-  integrity sha512-NiZSUqLiCn9cBu7RW11gUVTB5Fvca1P/jq8R2MuPON/hW5++SHQjKz5zjbmo1GUJxWIbm4m25re/u2exsCwSHw==
+"@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
+  version "1.7.4"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.4/0426952a23f8fa4a3b09ff29b66d992bd5345821#0426952a23f8fa4a3b09ff29b66d992bd5345821"
+  integrity sha512-qNM6Mw4WURYtPhmkpESfWRsB7OCqoukn8yIUVxmCqSthpTAxmcgUaEY0mz3mzpZUy5/uJLCEYhYXNPbBGdV0WQ==
   dependencies:
     "@getbrevo/brevo" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1198,10 +1186,10 @@
     sequelize-typescript "^2.1.5"
     uuid "^9.0.0"
 
-"@qbit-tech/libs-products@^1.5.2":
-  version "1.5.3"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.3/62f65dcfd7e0146a51b82f017cbc0e72f501717e#62f65dcfd7e0146a51b82f017cbc0e72f501717e"
-  integrity sha512-sTZ7tlbRXbizr5vEl+Yx1YDwm5+5jVN6WYVLCL9mh0A0CV/EiB1hM32+ss0WGIz9XcM40xs0X+MEm1Su/37tcQ==
+"@qbit-tech/libs-products@^1.5.7":
+  version "1.5.7"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.7/f40629658b76340549612abe6f8fea6e07758d57#f40629658b76340549612abe6f8fea6e07758d57"
+  integrity sha512-to301gRqwEqf74pX2wJSuZUhP9ctl0pOUAodPYB+fcrWhmYSAHknyyDK98SyCXnOqzv9GPcBb+nosDPitSdDxg==
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/common" "^10.0.0"
@@ -1231,10 +1219,10 @@
     sequelize-typescript "^2.1.5"
     uuid "^9.0.0"
 
-"@qbit-tech/libs-role@^1.2.2":
-  version "1.2.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.2.2/9ffaa859c8976abbac3e6ebc901b5115c5cb4414#9ffaa859c8976abbac3e6ebc901b5115c5cb4414"
-  integrity sha512-Hb+YrZU9B756HLPgQ1wbtTN55dmJcw+o/TILn33YNfRUrjFlwWMFqZ5BM6DEmPe6bE6oH3UHWNVgHTbiVTp9tQ==
+"@qbit-tech/libs-role@^1.2.5":
+  version "1.2.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.2.5/e0244b422943416db8e95a8337350bc8c2434455#e0244b422943416db8e95a8337350bc8c2434455"
+  integrity sha512-qIJFMfQodXDqtC5hTkFdOuHKiv2Ps1lJLA878hzS/Dq4sVZew8Xi+blfL9FR2Sv4SKrrb7I7QL11xeb88+oXaw==
   dependencies:
     "@qbit-tech/libs-utils" "^1.2.5"
 
@@ -1258,10 +1246,10 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.6/4394002d233473272df37d5025fe7ae0e45d9b01#4394002d233473272df37d5025fe7ae0e45d9b01"
   integrity sha512-JWPgwXBQAsaeOTipMX7zoTLWwTKX0F2jx5gKUPo7hyYBdD9E9jcl3rInqfpHuSM21/FmQ0+myFaTqFdfgYHN9g==
 
-"@qbit-tech/libs-session@^1.7.4":
-  version "1.7.4"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.7.4/9fac399b7f55c46e2938b0afbfa4a4ed8eab1e09#9fac399b7f55c46e2938b0afbfa4a4ed8eab1e09"
-  integrity sha512-xwLpDCyseP7HCQb3/9oKILzxsb1va/5pqZimuR45+lc7Fgny+gyA/vfYoIzWiQQCcmBrUZ1HvgwpegMpTTGECw==
+"@qbit-tech/libs-session@^1.7.5":
+  version "1.7.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.7.5/81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc#81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc"
+  integrity sha512-6LMvPg5OZD+4/L5Wt+iXKth7drqJV6EgmsoMXqDGfHnP4mOuOqsK2ULE8obC+GWZ4gk3z+7oN5CxPS/eGvvREg==
 
 "@qbit-tech/libs-subscription@^1.1.0":
   version "1.1.0"
@@ -1283,6 +1271,13 @@
   version "1.3.7"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-uploader/1.3.7/412f973751b27c0eea97167339b70406daf17959#412f973751b27c0eea97167339b70406daf17959"
   integrity sha512-A6TbABnrr1+59fBzckzQKcOK/BFtmlnsA6QzHvOV/ghf683qT2uRKbHQ8j+cPOMm0AH5+flyEE3QxQw038xbwA==
+  dependencies:
+    aws-sdk "^2.868.0"
+
+"@qbit-tech/libs-uploader@^1.4.0":
+  version "1.4.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-uploader/1.4.0/2f375a492199d444f08af0f730b9746efe806f87#2f375a492199d444f08af0f730b9746efe806f87"
+  integrity sha512-UWR2LoU0OucFhtt5HBEyobIC2Ul2hU3Y3rtvoeKnF8ZU1bxvDPrWQIi/LfrMUcr/rCRCW1NFwkaFnF+GfpjPrw==
   dependencies:
     aws-sdk "^2.868.0"
 
@@ -6990,6 +6985,19 @@ sequelize-cli@^6.6.1:
   version "6.6.1"
   resolved "https://registry.npmjs.org/sequelize-cli/-/sequelize-cli-6.6.1.tgz"
   integrity sha512-C3qRpy1twBsFa855qOQFSYWer8ngiaZP05/OAsT1QCUwtc6UxVNNiQ0CGUt98T9T1gi5D3TGWL6le8HWUKELyw==
+  dependencies:
+    cli-color "^2.0.3"
+    fs-extra "^9.1.0"
+    js-beautify "^1.14.5"
+    lodash "^4.17.21"
+    resolve "^1.22.1"
+    umzug "^2.3.0"
+    yargs "^16.2.0"
+
+sequelize-cli@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-6.6.2.tgz#8d838b25c988cf136914cdc3843e19d88c3dcb67"
+  integrity sha512-V8Oh+XMz2+uquLZltZES6MVAD+yEnmMfwfn+gpXcDiwE3jyQygLt4xoI0zG8gKt6cRcs84hsKnXAKDQjG/JAgg==
   dependencies:
     cli-color "^2.0.3"
     fs-extra "^9.1.0"
