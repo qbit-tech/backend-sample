@@ -81,7 +81,7 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
           [sponsorId],
         );
         Logger.log('sponsorImage : ' + JSON.stringify(fileSearchResult));
-        return (result.sponsorName + " " + JSON.stringify(fileSearchResult)).toString();
+        return result;
       } catch (error) {
         Logger.log('find one sponsor error: ' + JSON.stringify(error));
         throw new HttpException(error, getErrorStatusCode(error));
@@ -202,15 +202,15 @@ import { UploaderService } from '@qbit-tech/libs-uploader';
       try {
         Logger.log('--ENTER DELETE SPONSOR CONTROLLER--');
         Logger.log('sponsor : ' + JSON.stringify(sponsorId), 'sponsor.controller');
-        const fileSearchResult = await this.uploaderService.fileSearchByTable(
-          'sponsors',
-          [sponsorId],
-        );
-        if (fileSearchResult.has(sponsorId)) {
-          await this.uploaderService.deleteFileById(
-            fileSearchResult.get(sponsorId)[0].fileId,
-          );
-        }
+        // const fileSearchResult = await this.uploaderService.fileSearchByTable(
+        //   'sponsors',
+        //   [sponsorId],
+        // );
+        // if (fileSearchResult.has(sponsorId)) {
+        //   await this.uploaderService.deleteFileById(
+        //     fileSearchResult.get(sponsorId)[0].fileId,
+        //   );
+        // }
         return await this.sponsorService.delete(sponsorId);
       } catch (error) {
         // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);

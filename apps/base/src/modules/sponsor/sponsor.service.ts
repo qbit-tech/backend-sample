@@ -71,14 +71,7 @@ export class SponsorService {
       Logger.log('--ENTER FIND ONE SPONSOR SERVICE--');
       const result = await this.sponsorRepositories.findOne({
         where: { sponsorId },
-        // include: [
-        //   {
-        //     model: EventModel,
-        //     as: 'events',
-        //   },
-        // ],
       });
-
       Logger.log('file found: ' + JSON.stringify(result), 'sponsor.service');
 
       if (!result) {
@@ -195,11 +188,13 @@ export class SponsorService {
   }> {
     try {
       Logger.log('--ENTER DELETE SPONSOR SERVICE--');
-      const findTag = await this.findOne(sponsorId);
-
+      const find = await this.sponsorRepositories.findOne({
+        where: { sponsorId },
+      });
+      Logger.log('deleting: ' + JSON.stringify(find), 'sponsor.service')
       const result = await this.sponsorRepositories.destroy({ where: { sponsorId } });
 
-      Logger.log('sponsor deleted: ' + JSON.stringify(result), 'tag.service');
+      Logger.log('sponsor deleted: ' + JSON.stringify(result), 'sponsor.service');
 
       return {
         isSuccess: true,
