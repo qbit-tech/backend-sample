@@ -1243,6 +1243,24 @@
     sequelize-typescript "^2.1.5"
     uuid "^9.0.0"
 
+"@qbit-tech/libs-promo@^1.1.0":
+  version "1.1.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-promo/1.1.0/6a84cf1c671556c5cd6723581fe5afab8507d652#6a84cf1c671556c5cd6723581fe5afab8507d652"
+  integrity sha512-e1bOO3l7yGePxXtJ9LvIdHS09f7Id+ModZDl5ajN8hsPgoeIHQWN0Cea6GIcxGcqPhipDo7IgFVyVlJzFmnC8g==
+  dependencies:
+    "@nestjs-modules/ioredis" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/platform-express" "^10.3.2"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.4"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-uploader" "^1.4.0"
+    "@qbit-tech/libs-utils" "^1.2.5"
+    class-validator "^0.14.0"
+    multer-s3 "^3.0.1"
+    sequelize "^6.32.1"
+    sequelize-typescript "^2.1.5"
+
 "@qbit-tech/libs-role@^1.2.5":
   version "1.2.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.2.5/e0244b422943416db8e95a8337350bc8c2434455#e0244b422943416db8e95a8337350bc8c2434455"

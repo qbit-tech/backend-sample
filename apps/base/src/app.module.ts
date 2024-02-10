@@ -33,12 +33,12 @@ import { BannerModule } from './modules/banner/banner.module';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 import { TestFileUploadModule } from './modules/testFileUpload/testFileUpload.module';
-import { PromoModule } from './modules/promo/promo.module';
 import { SponsorModule } from '@qbit-tech/libs-sponsor';
 import { redisOption, sessionOption } from '../config/session';
 import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
+import { PromoModule } from '@qbit-tech/libs-promo';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -83,6 +83,12 @@ export const rootImportedModules = [
     generateMulterOptions('sponsor'),
     redisOption,
   ),
+  PromoModule.forRoot(
+    sessionOption,
+    UPLOADER_OPTIONS,
+    generateMulterOptions('sponsor'),
+    redisOption,
+  ),
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
@@ -118,7 +124,6 @@ export const rootImportedModules = [
     InitDataModule,
     BannerModule,
     TestFileUploadModule,
-    PromoModule,
   ],
   controllers: [AppController],
 })

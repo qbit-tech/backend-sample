@@ -13,6 +13,7 @@ yarn add @qbit-tech/libs-notification
 yarn add @qbit-tech/libs-notification-scheduler
 yarn add @qbit-tech/libs-products
 yarn add @qbit-tech/libs-sponsor
+yarn add @qbit-tech/libs-promo
 yarn add @qbit-tech/libs-role
 yarn add @qbit-tech/libs-session
 yarn add @qbit-tech/libs-transaction

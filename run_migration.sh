@@ -116,6 +116,12 @@ ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env
 cd ../../../..
 
 echo -ne '\n'
+echo "=== MIGRATE DB @qbit-tech/libs-promo ==="
+cd ./node_modules/@qbit-tech/libs-promo/dist
+ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
+cd ../../../..
+
+echo -ne '\n'
 echo "=== MIGRATE DB @qbit-tech/libs-address ==="
 cd ./node_modules/@qbit-tech/libs-address/dist
 ENV_PATH=../../../../apps/$PROJECT/.env.$MODE npx sequelize-cli db:migrate --env $MODE
