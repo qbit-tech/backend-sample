@@ -26,6 +26,7 @@
     "start:dev-windows": "set ENV_PATH=apps/base/.env.local& nest start base --watch"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.511.0",
     "@getbrevo/brevo": "^1.0.1",
     "@nestjs-modules/ioredis": "1.0.0",
     "@nestjs/axios": "^3.0.0",
