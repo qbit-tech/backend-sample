@@ -34,76 +34,11 @@ import { FaqModule } from '@qbit-tech/libs-faq';
 import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 import { TestFileUploadModule } from './modules/testFileUpload/testFileUpload.module';
 import { PromoModule } from './modules/promo/promo.module';
-import { SponsorModule } from './modules/sponsor/sponsor.module';
-
-const notificationOptions = [
-  {
-    name: 'sendinblue' as any,
-    setting: {
-      apiKey: process.env.SENDINBLUE_API_KEY || '-',
-      from: {
-        email: process.env.SENDINBLUE_EMAIL_FROM,
-        name: process.env.SENDINBLUE_EMAIL_FROM_NAME,
-      },
-    },
-  },
-  {
-    name: 'brevo' as any,
-    setting: {
-      apiKey: process.env.BREVO_API_KEY || '-',
-      from: {
-        email: process.env.BREVO_EMAIL_FROM,
-        name: process.env.BREVO_EMAIL_FROM_NAME,
-      },
-    },
-  },
-  {
-    name: 'nodemailer' as any,
-    setting: {
-      apiKey: process.env.NODEMAILER_API_KEY || '-',
-      from: {
-        email: process.env.NODEMAILER_EMAIL_FROM,
-        name: process.env.NODEMAILER_EMAIL_FROM_NAME,
-      },
-      nodemailer: {
-        username: process.env.NODEMAILER_USERNAME,
-        password: process.env.NODEMAILER_PASSWORD,
-        service: process.env.NODEMAILER_SERVICE,
-        host: process.env.NODEMAILER_SMTP_HOST,
-        port: process.env.NODEMAILER_SMTP_PORT,
-        secure: process.env.NODEMAILER_SMTP_SECURE,
-      },
-    },
-  },
-  {
-    name: 'goSMSGateway' as any,
-    setting: {
-      apiKey: process.env.NODE_ENV,
-      goSmsGateway: {
-        username: process.env.GOSMSGATEWAY_USERNAME,
-        password: process.env.GOSMSGATEWAY_PASSWORD,
-      },
-    },
-  },
-];
-
-const sessionOption = {
-  sessionHashToken: process.env.SESSION_HASH_TOKEN,
-  randomSessionIdKey: process.env.RANDOM_SESSIONID_KEY,
-  projectId: process.env.PROJECT_ID,
-  expiredJWTTokenAccessInMinutes: parseInt(
-    process.env.EXPIRED_JWT_TOKEN_ACCESS_IN_MINUTES,
-  ),
-  expiredJWTTokenRefreshInMinutes: parseInt(
-    process.env.EXPIRED_JWT_TOKEN_REFRESH_IN_MINUTES,
-  ),
-};
-
-const redisOption = {
-  config: {
-    url: process.env.REDIS_URL,
-  },
-};
+import { SponsorModule } from '@qbit-tech/libs-sponsor';
+import { redisOption, sessionOption } from '../config/session';
+import { notificationOptions } from '../config/notification';
+import { authenticationOptions } from '../config/authentication';
+import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -134,40 +69,7 @@ export const rootImportedModules = [
     synchronize: false,
   }),
   NotificationModule.forRoot(notificationOptions),
-  AuthenticationModule.forRoot(
-    [
-      {
-        name: 'email',
-        setting: {},
-      },
-      {
-        name: 'apple',
-        setting: {
-          clientId: process.env.APPLE_CLIENT_ID,
-        },
-      },
-      {
-        name: 'google',
-        setting: {
-          appId: process.env.GOOGLE_CLIENT_ID.split(','),
-          appSecret: process.env.GOOGLE_CLIENT_SECRET,
-        },
-      },
-      // {
-      //   name: 'fb',
-      //   setting: {
-      //     appId: process.env.FACEBOOK_CLIENT_ID,
-      //     appSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      //     baseUrl: process.env.FACEBOOK_BASE_URL,
-      //   },
-      // },
-      {
-        name: 'phone',
-        setting: {},
-      },
-    ],
-    notificationOptions,
-  ),
+  AuthenticationModule.forRoot(authenticationOptions, notificationOptions),
   SessionModule.forRoot(sessionOption, redisOption),
   RegionModule.forRoot(sessionOption, redisOption),
   NotificationScheduleModule.forRoot(sessionOption, redisOption),
@@ -175,6 +77,12 @@ export const rootImportedModules = [
   FaqModule.forRoot(sessionOption, redisOption),
   FeatureConfigModule.forRoot(sessionOption, redisOption),
   FeatureVersionModule.forRoot(sessionOption, redisOption),
+  SponsorModule.forRoot(
+    sessionOption,
+    UPLOADER_OPTIONS,
+    generateMulterOptions('sponsor'),
+    redisOption,
+  ),
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
@@ -211,7 +119,6 @@ export const rootImportedModules = [
     BannerModule,
     TestFileUploadModule,
     PromoModule,
-    SponsorModule
   ],
   controllers: [AppController],
 })
