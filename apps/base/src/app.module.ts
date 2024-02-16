@@ -22,7 +22,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
-import { ArticleModule } from './modules/article/article.module';
+import { ArticlesModule } from '@qbit-tech/libs-article';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
@@ -83,6 +83,12 @@ export const rootImportedModules = [
     generateMulterOptions('sponsor'),
     redisOption,
   ),
+  ArticlesModule.forRoot(
+    sessionOption,
+    UPLOADER_OPTIONS,
+    generateMulterOptions('sponsor'),
+    redisOption,
+  ),
   PromoModule.forRoot(
     sessionOption,
     UPLOADER_OPTIONS,
@@ -119,7 +125,6 @@ export const rootImportedModules = [
     ProductsModule,
     FileUploadModule,
     TestMinio2Module,
-    ArticleModule,
     EbookModule,
     InitDataModule,
     BannerModule,
