@@ -11,7 +11,7 @@ import { NotificationModule } from '@qbit-tech/libs-notification';
 import { AuthenticationModule } from '@qbit-tech/libs-authv3';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { RoleModule } from '@qbit-tech/libs-role';
+import { RoleModule } from './modules/role/role.module';
 import {
   FeatureConfigModule,
   FeatureVersionModule,
@@ -22,7 +22,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
-import { ArticlesModule } from '@qbit-tech/libs-article';
+import { ArticlesModule } from './modules/article/articles.module';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
@@ -39,6 +39,9 @@ import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
+
+console.log( "uploaderOption", JSON.stringify(UPLOADER_OPTIONS) );
+console.log( "multerOption", JSON.stringify(generateMulterOptions('sponsor')));
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -86,13 +89,13 @@ export const rootImportedModules = [
   ArticlesModule.forRoot(
     sessionOption,
     UPLOADER_OPTIONS,
-    generateMulterOptions('sponsor'),
+    generateMulterOptions('article'),
     redisOption,
   ),
   PromoModule.forRoot(
     sessionOption,
     UPLOADER_OPTIONS,
-    generateMulterOptions('sponsor'),
+    generateMulterOptions('promo'),
     redisOption,
   ),
 

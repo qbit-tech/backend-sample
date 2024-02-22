@@ -16,8 +16,21 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DataTypes.STRING,
       },
+      titleEn: {
+        allowNull: true,
+        type: Sequelize.DataTypes.STRING,
+      },
+      subtitleEn: {
+        allowNull: true,
+        type: Sequelize.DataTypes.STRING,
+      },
       slug: {
         allowNull: false,
+        unique: true,
+        type: Sequelize.DataTypes.STRING,
+      },
+      slugEn: {
+        allowNull: true,
         unique: true,
         type: Sequelize.DataTypes.STRING,
       },
@@ -26,6 +39,10 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
       },
       body: {
+        allowNull: false,
+        type: Sequelize.DataTypes.TEXT('long'),
+      },
+      bodyEn: {
         allowNull: false,
         type: Sequelize.DataTypes.TEXT('long'),
       },
