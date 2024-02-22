@@ -1733,11 +1733,10 @@
   dependencies:
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
-
-"@qbit-tech/libs-article@^1.5.0":
-  version "1.5.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.0/53ab2fa7c0cf64595ab587aa801efa331212ec04#53ab2fa7c0cf64595ab587aa801efa331212ec04"
-  integrity sha512-eQHI2xfVc633FkXtrpeCTiVLxeUM5h79Ge62RJyBL4QnYCzfAYfN+qj4gumI7BqcSLUEztwYvxVpkDiD+QKgyg==
+"@qbit-tech/libs-article@^1.5.2":
+  version "1.5.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.2/5a362a2d93634333cf814aaeefcd85eb87ccf10e#5a362a2d93634333cf814aaeefcd85eb87ccf10e"
+  integrity sha512-s7N/jODfsGPYM/CiJjh16WINy99kB9rGwVHj/iELEW+SmmTkCr1E5bjSefmXg5y5JVZUlD9G/kE3yXfgwM79Tw==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
