@@ -1734,6 +1734,32 @@
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
 
+"@qbit-tech/libs-article@^1.5.2":
+  version "1.5.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.2/5a362a2d93634333cf814aaeefcd85eb87ccf10e#5a362a2d93634333cf814aaeefcd85eb87ccf10e"
+  integrity sha512-s7N/jODfsGPYM/CiJjh16WINy99kB9rGwVHj/iELEW+SmmTkCr1E5bjSefmXg5y5JVZUlD9G/kE3yXfgwM79Tw==
+  dependencies:
+    "@nestjs-modules/ioredis" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/config" "^3.0.0"
+    "@nestjs/platform-express" "^10.3.2"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.4"
+    "@qbit-tech/libs-authv3" "^1.4.5"
+    "@qbit-tech/libs-notification" "^1.7.0"
+    "@qbit-tech/libs-role" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-uploader" "^1.4.0"
+    "@qbit-tech/libs-utils" "^1.2.5"
+    "@types/multer" "^1.4.7"
+    class-validator "^0.14.0"
+    crypto-random-string "3.3.1"
+    multer-s3 "^3.0.1"
+    sequelize "^6.32.1"
+    sequelize-typescript "^2.1.5"
+    slugify "^1.6.6"
+    ulid "2.3.0"
+
 "@qbit-tech/libs-authv3@^1.4.5":
   version "1.4.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.5/310c018a963d5eb7613154230b0a111d38f66d7e#310c018a963d5eb7613154230b0a111d38f66d7e"
@@ -1770,7 +1796,7 @@
     postmark "^3.0.18"
     uuid "9.0.0"
 
-"@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
+"@qbit-tech/libs-notification@^1.7.0", "@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
   version "1.7.4"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.4/0426952a23f8fa4a3b09ff29b66d992bd5345821#0426952a23f8fa4a3b09ff29b66d992bd5345821"
   integrity sha512-qNM6Mw4WURYtPhmkpESfWRsB7OCqoukn8yIUVxmCqSthpTAxmcgUaEY0mz3mzpZUy5/uJLCEYhYXNPbBGdV0WQ==
@@ -1868,7 +1894,7 @@
     sequelize "^6.32.1"
     sequelize-typescript "^2.1.5"
 
-"@qbit-tech/libs-role@^1.3.0":
+"@qbit-tech/libs-role@^1.2.5":
   version "1.2.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.2.5/e0244b422943416db8e95a8337350bc8c2434455#e0244b422943416db8e95a8337350bc8c2434455"
   integrity sha512-qIJFMfQodXDqtC5hTkFdOuHKiv2Ps1lJLA878hzS/Dq4sVZew8Xi+blfL9FR2Sv4SKrrb7I7QL11xeb88+oXaw==

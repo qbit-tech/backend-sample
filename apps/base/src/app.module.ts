@@ -22,7 +22,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
-import { ArticlesModule } from './modules/article/articles.module';
+import { ArticlesModule } from '@qbit-tech/libs-article';
 import { SessionModule } from '@qbit-tech/libs-session';
 import { RegionModule } from '@qbit-tech/libs-address';
 import { NotificationScheduleModule } from '@qbit-tech/libs-notification-scheduler';
