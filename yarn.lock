@@ -1718,12 +1718,12 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@qbit-tech/feature-utils@^1.9.0":
-  version "1.9.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.9.0/421e54c466db451cde0c646bb463200792d3de98#421e54c466db451cde0c646bb463200792d3de98"
-  integrity sha512-y0siKmL+U3CfzLW/gprun25U/u3154A1JQTEHXfM+h8Q3RseokamfNUSFM8VmqPGJoR3OVil+U17LdmcL1R6ZA==
+"@qbit-tech/feature-utils@^1.9.4":
+  version "1.9.4"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.9.4/99c8d322c9ad7224a6727c9542ae7417684c9448#99c8d322c9ad7224a6727c9542ae7417684c9448"
+  integrity sha512-jo0xUTdgGTKSpxo6MwmRFIh0QoSzDwsT8lfnSv2y3mnVny3W9TzdZrnyOoEOZbrg/JuoAFZOBCC/t33b0RBCmQ==
   dependencies:
-    "@qbit-tech/libs-session" "^1.6.6"
+    "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
 
 "@qbit-tech/libs-address@^1.2.3":
@@ -1733,6 +1733,32 @@
   dependencies:
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
+
+"@qbit-tech/libs-article@^1.5.0":
+  version "1.5.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.0/53ab2fa7c0cf64595ab587aa801efa331212ec04#53ab2fa7c0cf64595ab587aa801efa331212ec04"
+  integrity sha512-eQHI2xfVc633FkXtrpeCTiVLxeUM5h79Ge62RJyBL4QnYCzfAYfN+qj4gumI7BqcSLUEztwYvxVpkDiD+QKgyg==
+  dependencies:
+    "@nestjs-modules/ioredis" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/config" "^3.0.0"
+    "@nestjs/platform-express" "^10.3.2"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.4"
+    "@qbit-tech/libs-authv3" "^1.4.5"
+    "@qbit-tech/libs-notification" "^1.7.0"
+    "@qbit-tech/libs-role" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-uploader" "^1.4.0"
+    "@qbit-tech/libs-utils" "^1.2.5"
+    "@types/multer" "^1.4.7"
+    class-validator "^0.14.0"
+    crypto-random-string "3.3.1"
+    multer-s3 "^3.0.1"
+    sequelize "^6.32.1"
+    sequelize-typescript "^2.1.5"
+    slugify "^1.6.6"
+    ulid "2.3.0"
 
 "@qbit-tech/libs-authv3@^1.4.5":
   version "1.4.5"
@@ -1770,7 +1796,7 @@
     postmark "^3.0.18"
     uuid "9.0.0"
 
-"@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
+"@qbit-tech/libs-notification@^1.7.0", "@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
   version "1.7.4"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.4/0426952a23f8fa4a3b09ff29b66d992bd5345821#0426952a23f8fa4a3b09ff29b66d992bd5345821"
   integrity sha512-qNM6Mw4WURYtPhmkpESfWRsB7OCqoukn8yIUVxmCqSthpTAxmcgUaEY0mz3mzpZUy5/uJLCEYhYXNPbBGdV0WQ==
@@ -1900,10 +1926,10 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.7.5/81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc#81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc"
   integrity sha512-6LMvPg5OZD+4/L5Wt+iXKth7drqJV6EgmsoMXqDGfHnP4mOuOqsK2ULE8obC+GWZ4gk3z+7oN5CxPS/eGvvREg==
 
-"@qbit-tech/libs-sponsor@^1.1.1":
-  version "1.1.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-sponsor/1.1.1/16deef25634cb5864f0f49fd25f6eab902e622a0#16deef25634cb5864f0f49fd25f6eab902e622a0"
-  integrity sha512-wQZo6WZ9h+lb7e3Y9fRBfJqRT+uHd/2x6FITVSgC5+4vMKB0c+8WoxtH0miSdVulOKR1owBecxg0zS+0EThowg==
+"@qbit-tech/libs-sponsor@^1.3.1":
+  version "1.3.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-sponsor/1.3.1/e73fe15cd11de431b232dc29760357d1fbe68ac2#e73fe15cd11de431b232dc29760357d1fbe68ac2"
+  integrity sha512-Mw/dL6ao1GfBHgY3yJbw+6KVfl1feds3EGWyza9wRWbM8NiF3fnN+bWCClvt82P7yJMoOUUYnlLqsKL3o/pOxQ==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -8281,6 +8307,11 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/slash/-/slash-3.0.0.tgz"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
+slugify@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.6.6.tgz#2d4ac0eacb47add6af9e04d3be79319cbcc7924b"
+  integrity sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==
 
 source-map-support@0.5.13:
   version "0.5.13"
