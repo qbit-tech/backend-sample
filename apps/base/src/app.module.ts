@@ -39,6 +39,7 @@ import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
+import { ArticlesModule } from '@qbit-tech/libs-article';
 
 console.log( "uploaderOption", JSON.stringify(UPLOADER_OPTIONS) );
 console.log( "multerOption", JSON.stringify(generateMulterOptions('sponsor')));
@@ -96,6 +97,12 @@ export const rootImportedModules = [
     sessionOption,
     UPLOADER_OPTIONS,
     generateMulterOptions('promo'),
+    redisOption,
+  ),
+  ArticlesModule.forRoot(
+    sessionOption,
+    UPLOADER_OPTIONS,
+    generateMulterOptions('article'),
     redisOption,
   ),
 

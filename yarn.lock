@@ -1718,12 +1718,12 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@qbit-tech/feature-utils@^1.9.0":
-  version "1.9.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.9.0/421e54c466db451cde0c646bb463200792d3de98#421e54c466db451cde0c646bb463200792d3de98"
-  integrity sha512-y0siKmL+U3CfzLW/gprun25U/u3154A1JQTEHXfM+h8Q3RseokamfNUSFM8VmqPGJoR3OVil+U17LdmcL1R6ZA==
+"@qbit-tech/feature-utils@^1.9.4":
+  version "1.9.4"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/feature-utils/1.9.4/99c8d322c9ad7224a6727c9542ae7417684c9448#99c8d322c9ad7224a6727c9542ae7417684c9448"
+  integrity sha512-jo0xUTdgGTKSpxo6MwmRFIh0QoSzDwsT8lfnSv2y3mnVny3W9TzdZrnyOoEOZbrg/JuoAFZOBCC/t33b0RBCmQ==
   dependencies:
-    "@qbit-tech/libs-session" "^1.6.6"
+    "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
 
 "@qbit-tech/libs-address@^1.2.3":
@@ -1733,7 +1733,6 @@
   dependencies:
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
-
 "@qbit-tech/libs-article@^1.5.2":
   version "1.5.2"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.2/5a362a2d93634333cf814aaeefcd85eb87ccf10e#5a362a2d93634333cf814aaeefcd85eb87ccf10e"
@@ -1926,10 +1925,10 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.7.5/81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc#81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc"
   integrity sha512-6LMvPg5OZD+4/L5Wt+iXKth7drqJV6EgmsoMXqDGfHnP4mOuOqsK2ULE8obC+GWZ4gk3z+7oN5CxPS/eGvvREg==
 
-"@qbit-tech/libs-sponsor@^1.1.1":
-  version "1.1.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-sponsor/1.1.1/16deef25634cb5864f0f49fd25f6eab902e622a0#16deef25634cb5864f0f49fd25f6eab902e622a0"
-  integrity sha512-wQZo6WZ9h+lb7e3Y9fRBfJqRT+uHd/2x6FITVSgC5+4vMKB0c+8WoxtH0miSdVulOKR1owBecxg0zS+0EThowg==
+"@qbit-tech/libs-sponsor@^1.3.1":
+  version "1.3.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-sponsor/1.3.1/e73fe15cd11de431b232dc29760357d1fbe68ac2#e73fe15cd11de431b232dc29760357d1fbe68ac2"
+  integrity sha512-Mw/dL6ao1GfBHgY3yJbw+6KVfl1feds3EGWyza9wRWbM8NiF3fnN+bWCClvt82P7yJMoOUUYnlLqsKL3o/pOxQ==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"

@@ -17,10 +17,11 @@
     "paths": {
       // "@qbit-tech/feature-utils": ["../feature-utils/src"],
       // "@qbit-tech/libs-faq": ["../libs-faq/src"],
-      // "@qbit-tech/libs-session": ["../libs-session/src"]
-      "@qbit-tech/feature-utils": [
-        "../feature-utils/src"
-      ],
+      // "@qbit-tech/libs-session": ["../libs-session/src"],
+      // "@qbit-tech/libs-article": ["../libs-article/src"],
+      // "@qbit-tech/feature-utils": [
+      //   "../feature-utils/src"
+      // ],
     }
   },
   "exclude": [
