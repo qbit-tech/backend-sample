@@ -1733,10 +1733,11 @@
   dependencies:
     "@qbit-tech/libs-session" "^1.4.1"
     "@qbit-tech/libs-utils" "^1.2.5"
-"@qbit-tech/libs-article@^1.5.2":
-  version "1.5.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.5.2/5a362a2d93634333cf814aaeefcd85eb87ccf10e#5a362a2d93634333cf814aaeefcd85eb87ccf10e"
-  integrity sha512-s7N/jODfsGPYM/CiJjh16WINy99kB9rGwVHj/iELEW+SmmTkCr1E5bjSefmXg5y5JVZUlD9G/kE3yXfgwM79Tw==
+
+"@qbit-tech/libs-article@^1.6.0":
+  version "1.6.0"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.6.0/c33b66f4fa72f3edd3018cfe452beb1c8585fdd1#c33b66f4fa72f3edd3018cfe452beb1c8585fdd1"
+  integrity sha512-xyVPa79q6/utilnzEzz8PlwYr8jnPzIrObwKs3wQdnutRqEYMzTp16iG4C71A2vO2jhXXplyU488Y9NwGast9A==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1753,7 +1754,7 @@
     "@types/multer" "^1.4.7"
     class-validator "^0.14.0"
     crypto-random-string "3.3.1"
-    multer-s3 "^3.0.1"
+    multer-s3 "2.10.0"
     sequelize "^6.32.1"
     sequelize-typescript "^2.1.5"
     slugify "^1.6.6"
@@ -1842,10 +1843,10 @@
     sequelize-typescript "^2.1.5"
     uuid "^9.0.0"
 
-"@qbit-tech/libs-products@^1.5.7":
-  version "1.5.7"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.7/f40629658b76340549612abe6f8fea6e07758d57#f40629658b76340549612abe6f8fea6e07758d57"
-  integrity sha512-to301gRqwEqf74pX2wJSuZUhP9ctl0pOUAodPYB+fcrWhmYSAHknyyDK98SyCXnOqzv9GPcBb+nosDPitSdDxg==
+"@qbit-tech/libs-products@^1.5.9":
+  version "1.5.9"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.9/36ba8f1f62d815fc1d779f91848d3b212d882202#36ba8f1f62d815fc1d779f91848d3b212d882202"
+  integrity sha512-nKilJCmPxZlgBpzr+QXPYSeZmH1P42i68GqDKu/BaEHYyrE71CfslUnnomsItbGeqKFZzO8/dGjGcoakS4JSow==
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/common" "^10.0.0"
@@ -1854,7 +1855,7 @@
     "@nestjs/platform-express" "^10.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.8"
-    "@qbit-tech/libs-session" "^1.6.6"
+    "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-uploader" "^1.3.7"
     "@qbit-tech/libs-utils" "^1.2.7"
     axios "^1.4.0"
@@ -1914,11 +1915,6 @@
   version "1.6.2"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.2/2a42f978cb47fc923f8d26bf92aa46798e716543#2a42f978cb47fc923f8d26bf92aa46798e716543"
   integrity sha512-VjkuKNum2esuoFumPc0/n8iH7CgMukpXMiWUcggkldGm7WF0I/g6ZS7WtDC9ESQy5GvB7ExBrB//BsBrohaP1Q==
-
-"@qbit-tech/libs-session@^1.6.6":
-  version "1.6.6"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.6/4394002d233473272df37d5025fe7ae0e45d9b01#4394002d233473272df37d5025fe7ae0e45d9b01"
-  integrity sha512-JWPgwXBQAsaeOTipMX7zoTLWwTKX0F2jx5gKUPo7hyYBdD9E9jcl3rInqfpHuSM21/FmQ0+myFaTqFdfgYHN9g==
 
 "@qbit-tech/libs-session@^1.7.5":
   version "1.7.5"
