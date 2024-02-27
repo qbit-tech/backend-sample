@@ -48,7 +48,7 @@ jobs:
           dot-npmrc: ${{ secrets.DOT_NPMRC }}
 
       - name: yarn install
-        run: yarn install
+        run: yarn cache clean @qbit-tech/libs-products && yarn install
 
       - name: yarn global add sequelize-cli@6.2.0
         run: yarn global add sequelize-cli@6.2.0
