@@ -19,7 +19,7 @@ import {
 // import { TransactionModule } from '@qbit-tech/libs-transaction';
 import { TagModule } from './modules/tag/tag.module';
 // import { PaymentModule } from '@qbit-tech/libs-payments/dist/payment.module';
-import { ProductsModule } from '@qbit-tech/libs-products/dist/products.module';
+import { ProductsModule } from '@qbit-tech/libs-products';
 import { FileUploadModule } from './modules/testMinio/fileUpload/fileUpload.module';
 import { TestMinio2Module } from './modules/testMinio2/minioWithLibsUploader.module';
 import { ArticlesModule } from '@qbit-tech/libs-article';
@@ -77,6 +77,12 @@ export const rootImportedModules = [
   FaqModule.forRoot(sessionOption, redisOption),
   FeatureConfigModule.forRoot(sessionOption, redisOption),
   FeatureVersionModule.forRoot(sessionOption, redisOption),
+  ProductsModule.forRoot(
+    sessionOption,
+    UPLOADER_OPTIONS,
+    generateMulterOptions('sponsor'),
+    redisOption,
+  ),
   SponsorModule.forRoot(
     sessionOption,
     UPLOADER_OPTIONS,
@@ -128,7 +134,6 @@ export const rootImportedModules = [
     UserModule,
     // TransactionModule,
     RoleModule,
-    ProductsModule,
     FileUploadModule,
     TestMinio2Module,
     EbookModule,

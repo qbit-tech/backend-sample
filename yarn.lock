@@ -1843,10 +1843,10 @@
     sequelize-typescript "^2.1.5"
     uuid "^9.0.0"
 
-"@qbit-tech/libs-products@^1.5.9":
-  version "1.5.9"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.9/36ba8f1f62d815fc1d779f91848d3b212d882202#36ba8f1f62d815fc1d779f91848d3b212d882202"
-  integrity sha512-nKilJCmPxZlgBpzr+QXPYSeZmH1P42i68GqDKu/BaEHYyrE71CfslUnnomsItbGeqKFZzO8/dGjGcoakS4JSow==
+"@qbit-tech/libs-products@^1.5.10":
+  version "1.5.10"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-products/1.5.10/0a1d20e6f74026bd51dff28f6c8e8331dbdedcbe#0a1d20e6f74026bd51dff28f6c8e8331dbdedcbe"
+  integrity sha512-VtuF3Vj1XGbY72cmqR+9BgSjJXR/waGnNAUbtn+LCff3s2iuNfcUzF2lD6654FJVKLRZsZ3j7w8bALjfI0N06Q==
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/common" "^10.0.0"
