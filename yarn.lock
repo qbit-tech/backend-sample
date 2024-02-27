@@ -1586,6 +1586,17 @@
     multer "1.4.4-lts.1"
     tslib "2.6.2"
 
+"@nestjs/platform-express@^10.3.3":
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-10.3.3.tgz#c1484d30d1e7666c4c8d0d7cde31cfc0b9d166d7"
+  integrity sha512-GGKSEU48Os7nYFIsUM0nutuFUGn5AbeP8gzFBiBCAtiuJWrXZXpZ58pMBYxAbMf7IrcOZFInHEukjHGAQU0OZw==
+  dependencies:
+    body-parser "1.20.2"
+    cors "2.8.5"
+    express "4.18.2"
+    multer "1.4.4-lts.1"
+    tslib "2.6.2"
+
 "@nestjs/schedule@^3.0.1":
   version "3.0.3"
   resolved "https://registry.npmjs.org/@nestjs/schedule/-/schedule-3.0.3.tgz"
@@ -1726,13 +1737,13 @@
     "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
 
-"@qbit-tech/libs-address@^1.2.3":
-  version "1.2.3"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-address/1.2.3/c5b8c1c338f0b03176eddb48aac5494117cc0c3d#c5b8c1c338f0b03176eddb48aac5494117cc0c3d"
-  integrity sha512-9t/NwbJbtTgqzOEEulTTTRBAWukPcet4up4t0UjR8ngns5kYYQiy0IIq672w3BWwydnj6vIIxEriC6bgnZX6iw==
+"@qbit-tech/libs-address@^1.2.6":
+  version "1.2.6"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-address/1.2.6/d3eb3eb9e580cb3989dde118374eda0fd32867a1#d3eb3eb9e580cb3989dde118374eda0fd32867a1"
+  integrity sha512-oDfRRY3UVplH24+2nTFPvuL1NgefYtX700kN7JOykVWfe1IZRHM6OussoysqB95VkLVnV/r1Z/W1ES13ExlxSw==
   dependencies:
-    "@qbit-tech/libs-session" "^1.4.1"
-    "@qbit-tech/libs-utils" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.7"
 
 "@qbit-tech/libs-article@^1.6.2":
   version "1.6.2"
@@ -1767,31 +1778,31 @@
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-faq@^1.5.1":
-  version "1.5.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.5.1/556e9324d853b43666ae1beebfd81ba9e050e926#556e9324d853b43666ae1beebfd81ba9e050e926"
-  integrity sha512-MBDapoiMl9CKbn/lq8NzVnt20o43rO7Ge56PHSqcabd/Y5p4W0gqF4GLu6/wEeFJRpnZZCmwLlqwTrk7nikeag==
+"@qbit-tech/libs-faq@^1.5.2":
+  version "1.5.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.5.2/f6357b7b9e642ddccc30be78af031f374026ee71#f6357b7b9e642ddccc30be78af031f374026ee71"
+  integrity sha512-bxPL6pUgQu0Q9jbJWniPF8WOXrlCydzbsg95jL8gc+9E89stOWhN8z4TQPHpryHpKNgIUcriWsAvhe32qPAnng==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.4"
-    "@qbit-tech/libs-session" "^1.6.2"
-    "@qbit-tech/libs-utils" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.7"
     class-validator "^0.14.0"
     sequelize "^6.32.1"
     sequelize-cli "^6.6.2"
     sequelize-typescript "^2.1.5"
 
-"@qbit-tech/libs-notification-scheduler@^1.0.7":
-  version "1.0.7"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.7/b169a9cedfab55bda0fdc85893faad0dd4a9f146#b169a9cedfab55bda0fdc85893faad0dd4a9f146"
-  integrity sha512-WKjGFekUqOXifGYk4kz0OyIF7hy+ZxZFN+RI3AFwgSCUoiLFjvZcglTwENR4rBbexNwQs5kUPZMki2HlSTYr5Q==
+"@qbit-tech/libs-notification-scheduler@^1.0.8":
+  version "1.0.8"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.8/c5673f6e4a7d93da28460424f3cbd38e13a21b67#c5673f6e4a7d93da28460424f3cbd38e13a21b67"
+  integrity sha512-gxYr1/aJVtfbWxoy3VwscNEe9BgxnTg7y/3hk75swZqtOoejJ7KZcnD+niS6WEH498vW/NVzsJ64kIdlWjTGFA==
   dependencies:
     "@nestjs/schedule" "^3.0.1"
     "@qbit-tech/libs-notification" "^1.7.1"
-    "@qbit-tech/libs-session" "^1.4.1"
-    "@qbit-tech/libs-utils" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.7"
     class-validator "^0.14.0"
     postmark "^3.0.18"
     uuid "9.0.0"
@@ -1812,10 +1823,10 @@
     nodemailer "^6.9.5"
     postmark "^3.0.18"
 
-"@qbit-tech/libs-payments@^1.1.8":
-  version "1.1.8"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-payments/1.1.8/774a3e06f69d613c679208f3c071e2b20a23c2a6#774a3e06f69d613c679208f3c071e2b20a23c2a6"
-  integrity sha512-Nc3IMlKI9LUbv00dLd9g/N1Rj5TyHGpekZ8DLw7MH/CcE3JasviQsSeWHwPNqHCjR8I20nchGVzuxzPjyQEPqQ==
+"@qbit-tech/libs-payments@^1.1.9":
+  version "1.1.9"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-payments/1.1.9/4ca93f9fe06ef2ed8e9e24267214464c519ff0fd#4ca93f9fe06ef2ed8e9e24267214464c519ff0fd"
+  integrity sha512-F1QVKQVMaYlgqBxNLV7ARDlDLQziIqYDsS5PYby0/xhopMoLDZZKXVGFYS0SGOqp84OkTWkeAC30WCXJjzIFRw==
   dependencies:
     "@nestjs/axios" "^3.0.0"
     "@nestjs/common" "^10.0.0"
@@ -1824,8 +1835,8 @@
     "@nestjs/platform-express" "^10.0.0"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.8"
-    "@qbit-tech/libs-session" "^1.6.2"
-    "@qbit-tech/libs-utils" "^1.2.5"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.7"
     axios "^1.4.0"
     base-64 "^1.0.0"
     class-transformer "^0.5.1"
@@ -1901,16 +1912,6 @@
   dependencies:
     "@qbit-tech/libs-utils" "^1.2.5"
 
-"@qbit-tech/libs-session@^1.4.1":
-  version "1.4.1"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.4.1/89f2033f44603c1221c077110b9a5d77bcdd7a49"
-  integrity sha512-B0B7ymlOAJM3DDl3Mou1s2uW3eIZfQJ8TM5Wr9Du8mjBbYTubc3tF9H73qtQWY3aKIrMQcZzebBnmtJN2yQRLw==
-
-"@qbit-tech/libs-session@^1.4.2":
-  version "1.4.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.4.2/f2893ea039702ca13dddf93d5fc96d078bf5662e"
-  integrity sha512-+V/jCa5ryUxOZWwvErq7GkinhNlJ+RtqJpsC4bxxhdwpX4ZmN10gO4eDST9j50mJL+77iuI8d670kVcEagSHxg==
-
 "@qbit-tech/libs-session@^1.6.2":
   version "1.6.2"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.2/2a42f978cb47fc923f8d26bf92aa46798e716543#2a42f978cb47fc923f8d26bf92aa46798e716543"
@@ -1947,13 +1948,14 @@
     "@qbit-tech/libs-session" "^1.6.2"
     "@qbit-tech/libs-utils" "^1.2.5"
 
-"@qbit-tech/libs-transaction@^1.3.3":
-  version "1.3.3"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-transaction/1.3.3/8f8b1a3a4b95785b4f9eda849e21c7ed80020c84#8f8b1a3a4b95785b4f9eda849e21c7ed80020c84"
-  integrity sha512-+ZvG4DTdEI7CcMVkf86gMaEUq+w+NcBp32Uao9ZM/bEj5CaZrRhSoF8FtDZn2uz9WHD7VIJo7kth8mHpk9yHXA==
+"@qbit-tech/libs-transaction@^1.3.4":
+  version "1.3.4"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-transaction/1.3.4/9f07be765218a85337bf0791ad7556b598cfa1ea#9f07be765218a85337bf0791ad7556b598cfa1ea"
+  integrity sha512-pOKMa6BGOYyZb93dfY6hBPFAvMqlS2P89qrOUEH/gUGBCGMKPwQeZKdy9NGacxGaAvZ61TSv6AUaG4yty7W0yQ==
   dependencies:
-    "@qbit-tech/libs-session" "^1.4.2"
-    "@qbit-tech/libs-utils" "^1.2.5"
+    "@nestjs/platform-express" "^10.3.3"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.7"
 
 "@qbit-tech/libs-uploader@^1.3.7":
   version "1.3.7"
