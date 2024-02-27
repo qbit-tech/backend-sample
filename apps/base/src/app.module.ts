@@ -80,7 +80,7 @@ export const rootImportedModules = [
   ProductsModule.forRoot(
     sessionOption,
     UPLOADER_OPTIONS,
-    generateMulterOptions('sponsor'),
+    generateMulterOptions('product'),
     redisOption,
   ),
   SponsorModule.forRoot(
