@@ -13,7 +13,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { GameModel } from './game.entity';
+import { GameModel } from './entity/game.entity';
 import { GameService } from './game.service';
 import {
   GameCreateRequest,
@@ -26,8 +26,9 @@ import {
   GameUpdateRequest,
   GameUpdateResponse,
   GameFindOneRequest
-} from './game.contract';
+} from './contract/game.contract';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Game_PlayersCreateRequest, Game_PlayersCreateResponse } from './contract/game_players.contract';
 
 
 @ApiTags('game')
@@ -112,6 +113,56 @@ export class GameController {
 
   async update(params: GameUpdateRequest, id: string): Promise<GameUpdateResponse> {
       return await this.gameService.update(params, id);
+  }
+
+  
+  @ApiOperation({ summary: 'Create Players By Game Id' })
+  @Post(':id/players')
+  // //@UseGuards(AuthPermissionGuard())
+  async createGamePlayers(
+    @Param('id') id: string,
+    @Req() request: any,
+    @Body() body: Game_PlayersCreateRequest,
+  ): Promise<Game_PlayersCreateResponse> {
+    return await this.createPlayer(id,{ ...body });
+  }
+
+  async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+    return await this.gameService.createPlayer(id, params);
+  }
+
+
+
+  @ApiOperation({ summary: 'Get all players by game id' })
+  @Get(':id/players')
+  // //@UseGuards(AuthPermissionGuard())
+  async getGamePlayers(
+    @Param('id') id: string,
+    @Query() query: any,
+  ): Promise<any> {
+    return await this.findAllPlayers(id, query);
+  }
+
+  async findAllPlayers(id: string, params: any): Promise<any> {
+    return await this.gameService.findAllPlayers(id, params);
+  }
+
+
+
+  @ApiOperation({ summary: 'Delete Players By Game Id and Player Id' })
+  @Delete(':id/players/:playerId')
+  // //@UseGuards(AuthPermissionGuard())
+  async deleteGamePlayers(
+    @Param('id') id: string,
+    @Param('playerId') playerId: string,
+    @Req() request: any,
+    @Body() body: any,
+  ): Promise<any> {
+    return await this.deletePlayer(id, playerId);
+  }
+
+  async deletePlayer(id: string, playerId: string): Promise<any> {
+    return await this.gameService.deletePlayer(id, playerId);
   }
 
 

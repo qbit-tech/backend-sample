@@ -1,71 +1,11 @@
-import { Table, Model, PrimaryKey, Column, UpdatedAt, CreatedAt, DataType, Unique, AllowNull, BelongsToMany } from 'sequelize-typescript';
+import { Table, Model, PrimaryKey, Column, UpdatedAt, CreatedAt, DataType, Unique, AllowNull, BelongsToMany, HasMany } from 'sequelize-typescript';
 // import { EventModel, EventProperties } from '../event/event.entity';
 // import { EventTagModel } from '../event/eventTag.entity';
 import {
     ApiProperty,
     ApiPropertyOptional
 } from '@nestjs/swagger';
-
-// id: {
-//     type: Sequelize.UUID,
-//     defaultValue: Sequelize.UUIDV4,
-//     allowNull: false,
-//     primaryKey: true,
-//   },
-
-//   game_code: {
-//     type: Sequelize.STRING,
-//     allowNull: false,
-//     unique: true,
-//   },
-
-//   title: {
-//     type: Sequelize.STRING,
-//     allowNull: false,
-//   },
-
-//   description: {
-//     type: Sequelize.TEXT,
-//     allowNull: true,
-//   },
-
-//   max_gameplay_per_user: {
-//     type: Sequelize.INTEGER,
-//     allowNull: false,
-//   },
-
-//   min_reward_per_gameplay_per_user: {
-//     type: Sequelize.INTEGER,
-//     allowNull: false,
-//   },
-
-//   max_reward_per_gameplay_per_user: {
-//     type: Sequelize.INTEGER,
-//     allowNull: false,
-//   },
-
-//   max_round_per_gameplay_per_user: {
-//     type: Sequelize.INTEGER,
-//     allowNull: false,
-//   },
-
-//   expired_at: {
-//     type: Sequelize.DATE,
-//     allowNull: true,
-//   },
-
-//   status: {
-//     type: Sequelize.STRING,
-//     allowNull: false,
-//   },
-
-//   updatedAt: {
-//     type: Sequelize.DATE
-//   },
-
-//   createdAt: {
-//     type: Sequelize.DATE
-//   }
+import { Game_PlayersModel } from './game_players.entity';
 
 export class BaseGameProperties {
     @ApiProperty()
@@ -153,4 +93,7 @@ export class GameModel extends Model {
 
     @CreatedAt
     createdAt: Date;
+
+    @HasMany(() => Game_PlayersModel, 'gameId')
+    game_players: Game_PlayersModel[];
 }
