@@ -101,12 +101,6 @@ export const rootImportedModules = [
     generateMulterOptions('promo'),
     redisOption,
   ),
-  ArticlesModule.forRoot(
-    sessionOption,
-    UPLOADER_OPTIONS,
-    generateMulterOptions('article'),
-    redisOption,
-  ),
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
