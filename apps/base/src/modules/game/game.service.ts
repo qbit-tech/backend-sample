@@ -22,6 +22,7 @@ import { RoleModel } from '@qbit-tech/libs-role';
 import cryptoRandomString = require('crypto-random-string');
 import { Game_PlayersCreateRequest, Game_PlayersCreateResponse, Game_PlayersDeleteResponse, Game_PlayersFindAllRequest, Game_PlayersFindAllResponse } from './contract/game_players.contract';
 import { Game_PlayersModel } from './entity/game_players.entity';
+import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity';
 
 @Injectable()
 export class GameService {
@@ -35,6 +36,9 @@ export class GameService {
 
     @InjectModel(Game_PlayersModel)
     private readonly gamePlayersModelRepository: typeof Game_PlayersModel,
+
+    @InjectModel(Game_PlayerHistoriesModel)
+    private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
   ) { }
 
   async findAll(params: GameFindAllRequest): Promise<GameFindAllResponse> {
@@ -195,7 +199,7 @@ export class GameService {
 
       await game.destroy();
 
-      return { 
+      return {
         isSuccess: true,
         id: id,
         game_code: game.game_code,
@@ -213,7 +217,7 @@ export class GameService {
     }
   }
 
-  async createPlayer(id: string,params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+  async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
     try {
 
       let user = await this.User.findOne({ where: { phone: params.phone } });
@@ -236,16 +240,146 @@ export class GameService {
 
       const result = await this.gamePlayersModelRepository.create({
         gameId: id,
-        playerId: user.userId
+        playerId: user.userId,
+      });
+
+      const copy = await this.gamePlayerHistoriesModelRepository.create({
+        gameId: id,
+        playerId: user.userId,
+        gameplay: 1,
+        round: 1,
       });
 
       console.log('result', result);
       return result.get();
+      return copy.get();
     } catch (error) {
       throw new HttpException(
         {
           status: 'ERR_COMPANY_REQUEST',
           message: error.message,
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async startGame(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+    try {
+      // Cek apakah game dengan gameCode tersedia
+      const game = await this.gameModelRepository.findOne({ where: { id: id } });
+      if (!game) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game not found.',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      // Cek apakah game telah kedaluwarsa
+      if (game.expired_at && new Date(game.expired_at) < new Date()) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game has expired.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Cari pengguna berdasarkan nomor telepon
+      const user = await this.User.findOne({ where: {phone: params.phone} });
+      if (!user) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'User not registered.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Cek apakah pengguna terdaftar dalam pemain game ini
+      const isUserInGame = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+          gameplay: {
+            [Op.gte]: 1,
+          },
+        },
+        order: [['gameplay', 'DESC']]
+      });
+
+      if (isUserInGame) {
+        // Pengguna telah bermain sebelumnya
+        // Cek apakah masih ada gameplay yang belum selesai
+        if (isUserInGame.gameplay < game.max_gameplay_per_user) {
+          // // Resume gameplay
+          // isUserInGame.gameplay++;
+          // await isUserInGame.save();
+          // return isUserInGame.get();
+          await this.gamePlayerHistoriesModelRepository.create({
+            playerId: user.userId,
+            gameId: game.id,
+            gameplay: isUserInGame.gameplay + 1,
+            round: 1,
+          });
+        } else {
+          throw new HttpException(
+            {
+              status: 'ERROR',
+              message: 'User has reached maximum rounds allowed.',
+              payload: null,
+            },
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      } else {
+        // Pengguna belum pernah bermain game ini
+        // Cek apakah masih boleh bermain
+        const totalGameplay = await this.gamePlayerHistoriesModelRepository.count({
+          where: {
+            playerId: user.userId,
+            createdAt: {
+              [Op.gt]: new Date(new Date().setDate(new Date().getDate() - 1)), // Mencari data dalam 24 jam terakhir
+            },
+          },
+        });
+
+        if (totalGameplay < game.max_gameplay_per_user) {
+          // Memenuhi syarat untuk bermain
+          const result = await this.gamePlayerHistoriesModelRepository.create({
+            userId: user.id,
+            gameId: game.id,
+            gameplay: 1,
+            round: 1,
+          });
+          
+          return result.get();
+
+        } else {
+          throw new HttpException(
+            {
+              status: 'ERROR',
+              message: 'User has reached maximum gameplay allowed per day.',
+              payload: null,
+            },
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERROR',
+          message: [error, error.message],
           payload: null,
         },
         HttpStatus.BAD_REQUEST,
@@ -266,7 +400,7 @@ export class GameService {
         include: [{
           model: UserModel,
           attributes: ['name', 'phone'],
-          as: 'player', 
+          as: 'player',
         }],
         offset: params.offset,
         limit: params.limit || 10,
@@ -297,14 +431,14 @@ export class GameService {
     // delete player by game id and player id
     try {
       const gamePlayer = await this.gamePlayersModelRepository.findOne({
-        where: { 
+        where: {
           gameId: id,
           playerId: playerId
         },
         include: [{
           model: UserModel,
           attributes: ['name', 'phone'],
-          as: 'player', 
+          as: 'player',
         }],
       });
 
@@ -321,7 +455,7 @@ export class GameService {
 
       await gamePlayer.destroy();
 
-      return { 
+      return {
         isSuccess: true,
         id: id,
         gameId: gamePlayer.gameId,

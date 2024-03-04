@@ -20,29 +20,10 @@ export class BaseGame_PlayerHistoriesProperties {
     playerId: string;
 
     @ApiProperty()
-    rewardClaimedAt: Date;
+    gameplay: number;
 
-    // rewardClaimedAt: {
-    //     type: Sequelize.DATE,
-    //     allowNull: true,
-    //   },
-    //   rewardClaimed_AllRounds: {
-    //     type: Sequelize.ARRAY(Sequelize.INTEGER),
-    //     allowNull: true,
-    //   },
-    //   totalRewardClaimed: {
-    //     type: Sequelize.INTEGER,
-    //     allowNull: true,
-    //   },
-    //   createdAt: {
-    //     allowNull: false,
-    //     type: Sequelize.DATE
-    //   },
-    //   updatedAt: {
-    //     allowNull: false,
-    //     type: Sequelize.DATE
-    //   }
-    // });
+    @ApiProperty()
+    rewardClaimedAt: Date;
 
     @ApiProperty()
     rewardClaimed_AllRounds: number[];
@@ -74,6 +55,9 @@ export class Game_PlayerHistoriesModel extends Model {
 
     @Column
     playerId: string;
+
+    @Column
+    gameplay: number;
 
     @Column
     rewardClaimedAt: Date;

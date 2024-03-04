@@ -101,7 +101,7 @@ export class GameController {
 
   @Put(':id')
   //@UseGuards(AuthPermissionGuard())
-  async updateCompany(
+  async updateGame(
       @Param() param: { id: string },
       @Req() request: any,
       @Body() body: GameUpdateRequest,
@@ -129,6 +129,22 @@ export class GameController {
 
   async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
     return await this.gameService.createPlayer(id, params);
+  }
+
+
+  @ApiOperation({ summary: 'Start Game By Game Id' })
+  @Post(':id/start')
+  // //@UseGuards(AuthPermissionGuard())
+  async gameStart(
+    @Param('id') id: string,
+    @Req() request: any,
+    @Body() body: Game_PlayersCreateRequest,
+  ): Promise<Game_PlayersCreateResponse> {
+    return await this.startGame(id,{ ...body });
+  }
+
+  async startGame(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+    return await this.gameService.startGame(id, params);
   }
 
 
