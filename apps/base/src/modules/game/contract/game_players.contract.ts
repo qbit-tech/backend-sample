@@ -19,7 +19,7 @@ export interface Game_PlayersListItem {
 export class Game_PlayersFindAllRequest {
 
     @ApiPropertyOptional()
-    keyword?: string;
+    search?: string;
   
     @ApiPropertyOptional()
     limit?: number;
@@ -78,6 +78,26 @@ export class Game_PlayersCreateRequest {
     readonly phone: string;
 
 
+}
+
+export class Game_ClaimRewardRequest {
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly playerId: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    // json
+    readonly gameplay: object;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly name: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly phone: string;
 }
 
 export class Game_PlayersCreateResponse {

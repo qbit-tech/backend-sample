@@ -20,7 +20,7 @@ export interface GameListItem {
 export class GameFindAllRequest {
 
     @ApiPropertyOptional()
-    keyword?: string;
+    search?: string;
   
     @ApiPropertyOptional()
     limit?: number;

@@ -20,7 +20,7 @@ import { Op, Sequelize } from 'sequelize';
 import { GameModel } from './entity/game.entity';
 import { RoleModel } from '@qbit-tech/libs-role';
 import cryptoRandomString = require('crypto-random-string');
-import { Game_PlayersCreateRequest, Game_PlayersCreateResponse, Game_PlayersDeleteResponse, Game_PlayersFindAllRequest, Game_PlayersFindAllResponse } from './contract/game_players.contract';
+import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateResponse, Game_PlayersDeleteResponse, Game_PlayersFindAllRequest, Game_PlayersFindAllResponse } from './contract/game_players.contract';
 import { Game_PlayersModel } from './entity/game_players.entity';
 import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity';
 
@@ -293,7 +293,7 @@ export class GameService {
       }
 
       // Cari pengguna berdasarkan nomor telepon
-      const user = await this.User.findOne({ where: {phone: params.phone} });
+      const user = await this.User.findOne({ where: { phone: params.phone } });
       if (!user) {
         throw new HttpException(
           {
@@ -361,7 +361,7 @@ export class GameService {
             gameplay: 1,
             round: 1,
           });
-          
+
           return result.get();
 
         } else {
@@ -384,6 +384,68 @@ export class GameService {
         },
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async claimReward(id: string, params: Game_ClaimRewardRequest): Promise<Game_PlayersCreateResponse> {
+    try {
+      // Temukan game berdasarkan game code
+      const game = await this.gameModelRepository.findOne({ where: { id: id } });
+      if (!game) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game not found.',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const user = await this.User.findOne({ where: { userId: params.playerId } });
+      if (!user) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'User not registered.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Temukan history gameplay yang belum diklaim
+      const unclaimedGameplay = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+          // claimedReward: false,
+          rewardClaimedAt: null,
+        },
+        order: [['createdAt', 'DESC']],
+      });
+
+      if (!unclaimedGameplay) {
+        throw new Error('Can’t claim this game reward. Please start the game before claim.');
+      }
+
+      // Lakukan update untuk menandai reward telah diklaim
+      await this.gamePlayerHistoriesModelRepository.update(
+        {
+          rewardClaimedAt: new Date(),
+          rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
+          totalRewardClaimed: 1,
+        },
+        {
+          where: {
+            id: unclaimedGameplay.id,
+          },
+        },
+      );
+
+      return unclaimedGameplay.get();
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
