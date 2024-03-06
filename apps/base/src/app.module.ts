@@ -39,6 +39,7 @@ import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
+import {UserAddressModule} from './modules/userAddress/userAddress.module';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -101,12 +102,7 @@ export const rootImportedModules = [
     generateMulterOptions('promo'),
     redisOption,
   ),
-  ArticlesModule.forRoot(
-    sessionOption,
-    UPLOADER_OPTIONS,
-    generateMulterOptions('article'),
-    redisOption,
-  ),
+  
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
@@ -139,6 +135,7 @@ export const rootImportedModules = [
     EbookModule,
     InitDataModule,
     BannerModule,
+    UserAddressModule,
     TestFileUploadModule,
   ],
   controllers: [AppController],
