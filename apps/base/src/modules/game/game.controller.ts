@@ -28,7 +28,7 @@ import {
   GameFindOneRequest
 } from './contract/game.contract';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Game_PlayersCreateRequest, Game_PlayersCreateResponse } from './contract/game_players.contract';
+import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateResponse } from './contract/game_players.contract';
 
 
 @ApiTags('game')
@@ -43,7 +43,7 @@ export class GameController {
     @Query() query: GameFindAllRequest,
   ): Promise<GameFindAllResponse> {
     const params: GameFindAllRequest = {
-      keyword: query.keyword ? query.keyword : "",
+      search: query.search ? query.search : "",
       limit: query.limit ? Number(query.limit) : 10,
       offset: query.offset ? Number(query.offset) : 0,
       game_code: query.game_code ? query.game_code : "",
@@ -148,6 +148,23 @@ export class GameController {
   }
 
 
+  @ApiOperation({ summary: 'Claim Reward By Game Id and Player Id' })
+  @Post(':id/cliam-reward')
+  // //@UseGuards(AuthPermissionGuard())
+  async rewardClaim(
+    @Param('id') id: string,
+    @Req() request: any,
+    @Body() body: Game_ClaimRewardRequest,
+  ): Promise<Game_PlayersCreateResponse> {
+    return await this.claimReward(id,{ ...body });
+  }
+
+  async claimReward(id: string, params: Game_ClaimRewardRequest): Promise<Game_PlayersCreateResponse> {
+    return await this.gameService.claimReward(id, params);
+  }
+
+
+
 
   @ApiOperation({ summary: 'Get all players by game id' })
   @Get(':id/players')
@@ -163,6 +180,7 @@ export class GameController {
     return await this.gameService.findAllPlayers(id, params);
   }
 
+  
 
 
   @ApiOperation({ summary: 'Delete Players By Game Id and Player Id' })
