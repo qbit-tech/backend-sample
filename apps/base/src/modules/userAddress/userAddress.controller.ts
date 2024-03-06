@@ -24,13 +24,14 @@ import {
   import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
   
   @ApiTags('User Addresses')
-  @Controller('user-addresses')
+  @Controller('users/:userId/address')
   export class UserAddressController implements AddressApiContract {
     constructor(private readonly userAddressService: UserAddressService) {}
   
     @Get()
     async findAll(
       @Query() params: AddressFindAllRequest,
+      @Param("userId") userId: string
     ): Promise<AddressFindAllResponse> {
       try {
         Logger.log('--ENTER FIND ALL USER ADDRESS, USER ADDRESS CONTROLLER--');
@@ -55,6 +56,7 @@ import {
     @Get(':addressId')
     async findOne(
       @Param('addressId') addressId: string,
+      @Param('userId') userId: string
     ): Promise<UserAddressModel> {
       try {
         Logger.log('--ENTER FIND ONE USER ADDRESS, USER ADDRESS CONTROLLER--');
@@ -76,6 +78,7 @@ import {
     @UseGuards(AuthPermissionGuardV2())
     async create(
       @Body() params: AddressCreateRequest,
+      @Param('userId') userId: string
     ): Promise<UserAddressModel> {
       try {
         Logger.log('--ENTER CREATE USER ADDRESS, USER ADDRESS CONTROLLER--');
@@ -89,7 +92,7 @@ import {
           ...data,
         });
   
-        return this.findOne(address.addressId);
+        return this.findOne(address.addressId, userId);
       } catch (error) {
         Logger.error('create error ::: ' + error, 'address.controller');
         return Promise.reject(error);
@@ -101,6 +104,7 @@ import {
     @UseGuards(AuthPermissionGuardV2())
     async update(
       @Param('addressId') addressId: string,
+      @Param('userId') userId: string,
       @Body() data: AddressUpdateRequest,
     ): Promise<UserAddressModel> {
       try {
@@ -124,7 +128,9 @@ import {
     @ApiBearerAuth()
     @Delete(':addressId')
     @UseGuards(AuthPermissionGuardV2())
-    async delete(@Param('addressId') addressId: string): Promise<SimpleResponse> {
+    async delete(
+      @Param('addressId') addressId: string,
+      @Param('userId') userId: string): Promise<SimpleResponse> {
       try {
         Logger.log('--ENTER DELETE USER ADDRESS, USER ADDRESS CONTROLLER--');
         Logger.log(

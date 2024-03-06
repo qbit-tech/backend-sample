@@ -35,18 +35,21 @@ export class SimpleResponse {
 export abstract class AddressApiContract {
   abstract findAll(
     params: AddressFindAllRequest,
+    userId: string
   ): Promise<AddressFindAllResponse>;
-  abstract findOne(addressId: string): Promise<UserAddressModel>;
+  abstract findOne(addressId: string, userId: string): Promise<UserAddressModel>;
   abstract create(
     data: AddressCreateRequest,
+    userId: string,
     files: any[],
   ): Promise<UserAddressModel>;
   abstract update(
     addressId: string,
+    userId: string,
     data: AddressUpdateRequest,
     files: any[],
   ): Promise<UserAddressModel>;
-  abstract delete(addressId: string): Promise<SimpleResponse>;
+  abstract delete(addressId: string, userId: string): Promise<SimpleResponse>;
 }
 
 
