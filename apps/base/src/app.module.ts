@@ -30,6 +30,7 @@ import { SubscriptionModule } from '@qbit-tech/libs-subscription';
 import { EbookModule } from './modules/ebook/ebook.module';
 import { InitDataModule } from './modules/initData/initData.module';
 import { BannerModule } from './modules/banner/banner.module';
+import { GameModule } from './modules/game/game.module';
 import { FaqModule } from '@qbit-tech/libs-faq';
 import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 import { TestFileUploadModule } from './modules/testFileUpload/testFileUpload.module';
@@ -102,7 +103,6 @@ export const rootImportedModules = [
     generateMulterOptions('promo'),
     redisOption,
   ),
-  
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
@@ -137,6 +137,7 @@ export const rootImportedModules = [
     BannerModule,
     UserAddressModule,
     TestFileUploadModule,
+    GameModule,
   ],
   controllers: [AppController],
 })

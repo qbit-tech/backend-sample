@@ -14,15 +14,6 @@ registry=https://registry.npmjs.org/
 ```
 *Notes: Replace GITHUB_TOKEN with your token (Generate here -> https://github.com/settings/tokens). Permission: read:packages, write:packages, and delete:packages*
 
-## Cara test libs secara local
-- Di file tsconfig.json, tambahkan code seperti contoh di bawah ini di bagian compilerOptions -> paths
-```
-"@qbit-tech/feature-utils": [
-  "../feature-utils/src"
-],
-```
-- Nama library dan folder bisa disesuaikan
-
 ## Step By Step, How to Install & Start (LINUX / MACOS / Windows WSL)
 1. Enter the folder apps/[project]. Misalnya `cd apps/base`.
 2. Copy file `.env.example` to `.env.local`. Then fill the value.
@@ -51,6 +42,16 @@ Refferences: https://docs.github.com/en/authentication/connecting-to-github-with
 - npx sequelize migration:generate --name [migration_name]
 - write some code in new created file
 - cd ../.. (back to root project)
+
+## Cara test libs secara local
+- Di file tsconfig.json, tambahkan code seperti contoh di bawah ini di bagian compilerOptions -> paths
+```
+"@qbit-tech/feature-utils": [
+  "../feature-utils/src"
+],
+```
+- Nama library dan folder bisa disesuaikan
+
 
 ===
 
