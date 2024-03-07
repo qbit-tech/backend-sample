@@ -29,6 +29,7 @@ import {
 } from './contract/game.contract';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateResponse } from './contract/game_players.contract';
+import { Game_PlayersHistoriesFindAllRequest, Game_PlayersHistoriesFindAllResponse } from './contract/game_player_history.contract';
 
 
 @ApiTags('game')
@@ -60,7 +61,18 @@ export class GameController {
   }
 
 
+  @ApiOperation({ summary: 'Get all game player history' })
+  @Get('/player-history')
+  // //@UseGuards(AuthPermissionGuard())
+  async getGamePlayerHistory(
+    @Query() query: Game_PlayersHistoriesFindAllRequest,
+  ): Promise<Game_PlayersHistoriesFindAllResponse> {
+    return await this.findAllPlayerHistory(query);
+  }
 
+  async findAllPlayerHistory(params: Game_PlayersHistoriesFindAllRequest): Promise<Game_PlayersHistoriesFindAllResponse> {
+    return await this.gameService.getAllPlayers(params);
+  }
 
 
   @ApiOperation({ summary: 'Get game by id' })
@@ -78,9 +90,6 @@ export class GameController {
 
 
 
-
-
-
   @ApiOperation({ summary: 'Create game' })
   @Post()
   // //@UseGuards(AuthPermissionGuard())
@@ -94,9 +103,6 @@ export class GameController {
   async create(params: GameCreateRequest): Promise<GameCreateResponse> {
     return await this.gameService.create(params);
   }
-
-
-
 
 
   @Put(':id')
@@ -218,6 +224,7 @@ export class GameController {
   async delete(id: string): Promise<GameDeleteResponse> {
     return await this.gameService.delete(id);
   }
+
 
 
 
