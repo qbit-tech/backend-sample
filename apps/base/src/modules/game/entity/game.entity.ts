@@ -6,6 +6,7 @@ import {
     ApiPropertyOptional
 } from '@nestjs/swagger';
 import { Game_PlayersModel } from './game_players.entity';
+import { Game_PlayerHistoriesModel } from './game_player_histories.entity';
 
 export class BaseGameProperties {
     @ApiProperty()
@@ -96,4 +97,7 @@ export class GameModel extends Model {
 
     @HasMany(() => Game_PlayersModel, 'gameId')
     game_players: Game_PlayersModel[];
+
+    @HasMany(() => Game_PlayerHistoriesModel, 'gameId')
+    game_player_histories: Game_PlayerHistoriesModel[];
 }

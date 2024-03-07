@@ -14,7 +14,14 @@ export interface GameListItem {
     game_code: string;
     title: string;
     description: string;
+    max_gameplay_per_user: number;
+    min_reward_per_gameplay_per_user: number;
+    max_reward_per_gameplay_per_user: number;
+    max_round_per_gameplay_per_user: number;
+    expired_at: Date;
     status: string;
+    createdAt: Date;
+    updatedAt: Date;
   }
 
 export class GameFindAllRequest {

@@ -23,6 +23,7 @@ import cryptoRandomString = require('crypto-random-string');
 import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateResponse, Game_PlayersDeleteResponse, Game_PlayersFindAllRequest, Game_PlayersFindAllResponse } from './contract/game_players.contract';
 import { Game_PlayersModel } from './entity/game_players.entity';
 import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity';
+import { Game_PlayersHistoriesFindAllRequest, Game_PlayersHistoriesFindAllResponse } from './contract/game_player_history.contract';
 
 @Injectable()
 export class GameService {
@@ -487,6 +488,52 @@ export class GameService {
       );
     }
 
+  }
+
+  async getAllPlayers(params: Game_PlayersHistoriesFindAllRequest): Promise<Game_PlayersHistoriesFindAllResponse> {
+    try {
+      const where = {};
+
+      const result = await this.gamePlayerHistoriesModelRepository.findAll({
+        where,
+        attributes: [
+          'id',
+          'gameId',
+          'playerId',
+          'gameplay',
+          'rewardClaimedAt',
+          'rewardClaimed_AllRounds',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt',
+        ],
+        include: [{
+          model: UserModel,
+          attributes: ['name', 'phone'],
+          as: 'player',
+        }],
+        offset: params.offset,
+        limit: params.limit || 10,
+      });
+      const count = await this.gamePlayerHistoriesModelRepository.count({ where });
+      return {
+        count: count,
+        next: '',
+        prev: '',
+        ...generateResultPagination(count, params),
+        results: result.map(item => item.get()),
+        // results: result.map(item => item.get()),
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERROR IN FIND ALL',
+          message: [error, error.message],
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async deletePlayer(id: string, playerId: string): Promise<Game_PlayersDeleteResponse> {
