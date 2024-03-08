@@ -89,7 +89,6 @@ import {
       } else {
           throw new Error("Permission denied");
       }
-
       } catch (error) {
         Logger.error('create error ::: ' + error, 'address.controller');
         return Promise.reject(error);
@@ -100,6 +99,7 @@ import {
     @Patch(':addressId')
     @UseGuards(AuthPermissionGuardV2())
     async update(
+      @Req() req: AppRequest,
       @Param('addressId') addressId: string,
       @Param('userId') userId: string,
       @Body() data: AddressUpdateRequest,
@@ -110,13 +110,25 @@ import {
           `file ${addressId} updated: ` + JSON.stringify(data),
           'userAddress.controller',
         );
-        const res = await this.userAddressService.update({
-          ...data,
-          addressId,
-          userId,
-        });
-  
-        return res;
+        const loggedInUser = req.user;
+        const userRole = DEFAULT_ROLES.find(role => role.roleId === loggedInUser.role);
+
+        if (userRole && userRole.roleName === 'Super Admin') {
+          const res = await this.userAddressService.update({            ...data,
+            addressId,
+            userId,
+          });
+          return res;
+        } else if (loggedInUser.userId === userId) {
+          const res = await this.userAddressService.update({
+            ...data,
+            addressId,
+            userId: loggedInUser.userId,
+          });
+          return res;
+        } else{
+          throw new Error("Permission denied");
+        }
       } catch (error) {
         Logger.error('update address error ::: ' + error, 'address.controller');
         return Promise.reject(error);

@@ -53,6 +53,7 @@ export abstract class AddressApiContract {
     files: any[],
   ): Promise<UserAddressModel>;
   abstract update(
+    req: AppRequest,
     addressId: string,
     userId: string,
     data: AddressUpdateRequest,

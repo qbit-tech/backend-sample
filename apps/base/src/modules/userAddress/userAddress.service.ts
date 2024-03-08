@@ -188,20 +188,4 @@ export class UserAddressService {
       return Promise.reject(error);
     }
   }
-
-  async updateUserAddressImage(params: {
-    addressId: string;
-    imageLink?: string;
-  }): Promise<UserAddressModel> {
-    Logger.log('--ENTER UPDATE USER ADDRESS IMAGE, USER ADDRESS SERVICE--');
-    const result = await this.userAddressRepositories.update(params, {
-      where: { addressId: params.addressId },
-    });
-
-    Logger.log(
-      `file updated: ` + JSON.stringify(result),
-      'userAddress.service',
-    );
-    return this.findOne(params.addressId);
-  }
 }
