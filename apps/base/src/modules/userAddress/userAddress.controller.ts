@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    Req,
     Logger,
     Param,
     Patch,
@@ -17,11 +18,13 @@ import {
     AddressFindAllRequest,
     AddressFindAllResponse,
     AddressUpdateRequest,
+    AppRequest,
   } from './userAddress.contract';
   import { UserAddressService } from './userAddress.service';
   import { UserAddressModel } from './userAddress.entity';
   import { SimpleResponse } from './userAddress.contract';
   import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
+  import { DEFAULT_ROLES } from '../../data/role';
   
   @ApiTags('User Addresses')
   @Controller('users/:userId/address')
@@ -41,6 +44,7 @@ import {
         );
         const res = await this.userAddressService.findAll({
           ...params,
+          userId,
         });
   
         const newRes: AddressFindAllResponse = {
@@ -53,30 +57,12 @@ import {
       }
     }
   
-    @Get(':addressId')
-    async findOne(
-      @Param('addressId') addressId: string,
-      @Param('userId') userId: string
-    ): Promise<UserAddressModel> {
-      try {
-        Logger.log('--ENTER FIND ONE USER ADDRESS, USER ADDRESS CONTROLLER--');
-        Logger.log(
-          `file exist: ` + JSON.stringify(addressId),
-          'userAddress.controller',
-        );
-        const res = await this.userAddressService.findOne(addressId);
-  
-        return res;
-      } catch (error) {
-        Logger.error('findOne error ::: ' + error, 'address.controller');
-        return Promise.reject(error);
-      }
-    }
   
     @ApiBearerAuth()
     @Post()
     @UseGuards(AuthPermissionGuardV2())
     async create(
+      @Req() req: AppRequest,
       @Body() params: AddressCreateRequest,
       @Param('userId') userId: string
     ): Promise<UserAddressModel> {
@@ -86,13 +72,24 @@ import {
           `file created: ` + JSON.stringify(params),
           'userAddress.controller',
         );
-        console.info('params', JSON.stringify(params));
-        const data = { ...params };
-        const address = await this.userAddressService.create({
-          ...data,
-        });
-  
-        return this.findOne(address.addressId, userId);
+        const loggedInUser = req.user;
+
+      const userRole = DEFAULT_ROLES.find(role => role.roleId === loggedInUser.role);
+      if (
+        userRole && 
+        (userRole.roleName === 'Super Admin' )
+      ) {     
+          const data = { ...params, userId };
+          const address = await this.userAddressService.create(data);
+          return address;
+      } else if (loggedInUser.userId === userId) {
+          const data = { ...params, userId: loggedInUser.userId };
+          const address = await this.userAddressService.create(data);
+          return address;
+      } else {
+          throw new Error("Permission denied");
+      }
+
       } catch (error) {
         Logger.error('create error ::: ' + error, 'address.controller');
         return Promise.reject(error);
@@ -116,6 +113,7 @@ import {
         const res = await this.userAddressService.update({
           ...data,
           addressId,
+          userId,
         });
   
         return res;
@@ -137,7 +135,7 @@ import {
           `file deleted: ` + JSON.stringify(addressId),
           'userAddress.controller',
         );
-        await this.userAddressService.delete(addressId);
+        await this.userAddressService.delete(addressId, userId);
   
         return {
           isSuccess: true,

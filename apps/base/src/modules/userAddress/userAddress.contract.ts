@@ -2,6 +2,15 @@ import { IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserAddressModel } from './userAddress.entity';
 
+export type AppRequest = {
+    user: {
+        userType: 'admin' | 'customer' | string;
+        userId: string;
+        sessionId: string;
+        name: string;
+        role: string;
+    };
+};
 export class SimpleResponse {
     @ApiProperty()
     isSuccess: boolean;
@@ -37,8 +46,8 @@ export abstract class AddressApiContract {
     params: AddressFindAllRequest,
     userId: string
   ): Promise<AddressFindAllResponse>;
-  abstract findOne(addressId: string, userId: string): Promise<UserAddressModel>;
   abstract create(
+    req: AppRequest,
     data: AddressCreateRequest,
     userId: string,
     files: any[],

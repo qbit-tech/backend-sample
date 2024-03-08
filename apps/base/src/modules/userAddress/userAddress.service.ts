@@ -158,7 +158,7 @@ export class UserAddressService {
     }
   }
 
-  async delete(addressId: string): Promise<{ isSuccess: true }> {
+  async delete(addressId: string, userId: string): Promise<{ isSuccess: true }> {
     try {
       Logger.log('--ENTER DELETE USER ADDRESS, USER ADDRESS SERVICE--');
       const userAddress = await this.findOne(addressId);
@@ -170,7 +170,7 @@ export class UserAddressService {
       }
 
       const result = await this.userAddressRepositories.destroy({
-        where: { addressId },
+        where: { addressId, userId },
       });
 
       Logger.log(
