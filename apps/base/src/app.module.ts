@@ -40,6 +40,7 @@ import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
+import {UserAddressModule} from './modules/userAddress/userAddress.module';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -134,6 +135,7 @@ export const rootImportedModules = [
     EbookModule,
     InitDataModule,
     BannerModule,
+    UserAddressModule,
     TestFileUploadModule,
     GameModule,
   ],
