@@ -24,6 +24,8 @@ import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateR
 import { Game_PlayersModel } from './entity/game_players.entity';
 import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity';
 import { Game_PlayersHistoriesFindAllRequest, Game_PlayersHistoriesFindAllResponse } from './contract/game_player_history.contract';
+import { ulid } from 'ulid';
+import * as _ from 'lodash';
 
 @Injectable()
 export class GameService {
@@ -53,7 +55,14 @@ export class GameService {
           'game_code',
           'title',
           'description',
+          'max_gameplay_per_user',
+          'min_reward_per_gameplay_per_user',
+          'max_reward_per_gameplay_per_user',
+          'max_round_per_gameplay_per_user',
+          'expired_at',
           'status',
+          'updatedAt',
+          'createdAt',
         ],
         offset: params.offset,
         limit: params.limit || 10,
@@ -90,7 +99,14 @@ export class GameService {
           'game_code',
           'title',
           'description',
+          'max_gameplay_per_user',
+          'min_reward_per_gameplay_per_user',
+          'max_reward_per_gameplay_per_user',
+          'max_round_per_gameplay_per_user',
+          'expired_at',
           'status',
+          'updatedAt',
+          'createdAt',
         ],
       });
       return result ? result.get() : null;
@@ -220,8 +236,8 @@ export class GameService {
 
   async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
     try {
-
-      let user = await this.User.findOne({ where: { phone: params.phone } });
+      // find where the params phone and name is exist
+      let user = await this.User.findOne({ where: { phone: params.phone, name: params.name } });
       console.log('user', user);
       // const result = await this.gameModelRepository.create({
       //   id: uuidv4(),
@@ -232,7 +248,7 @@ export class GameService {
 
       if (!user) {
         user = await this.User.create({
-          id: uuidv4(),
+          userId: ulid(),
           name: params.name,
           phone: params.phone,
         });
@@ -294,7 +310,7 @@ export class GameService {
       }
 
       // Cari pengguna berdasarkan nomor telepon
-      const user = await this.User.findOne({ where: { phone: params.phone } });
+      const user = await this.User.findOne({ where: { name: params.name, phone: params.phone } });
       if (!user) {
         throw new HttpException(
           {
@@ -494,6 +510,101 @@ export class GameService {
     try {
       const where = {};
 
+      // Get the latest updatedAt for each playerId and gameId
+      const latestUpdates = await this.gamePlayerHistoriesModelRepository.findAll({
+        where,
+        attributes: [
+          'playerId',
+          'gameId',
+          [Sequelize.fn('max', Sequelize.col('updatedAt')), 'maxUpdatedAt'],
+        ],
+        group: ['playerId', 'gameId'],
+      });
+
+      // Convert the result to a format that can be used in a where condition
+      const latestUpdatesCondition = latestUpdates.map(u => ({
+        playerId: u.playerId,
+        gameId: u.gameId,
+        updatedAt: u.getDataValue('maxUpdatedAt'),
+      }));
+
+      // Get the records that match the latest updatedAt for each playerId and gameId
+      const result = await this.gamePlayerHistoriesModelRepository.findAll({
+        where: {
+          [Op.or]: latestUpdatesCondition,
+        },
+        attributes: [
+          'id',
+          'gameId',
+          'playerId',
+          'gameplay',
+          'rewardClaimedAt',
+          'rewardClaimed_AllRounds',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt',
+        ],
+        include: [{
+          model: UserModel,
+          attributes: ['name', 'phone'],
+          as: 'player',
+        }],
+        offset: params.offset,
+        limit: params.limit || 10,
+      });
+
+      const count = await this.gamePlayerHistoriesModelRepository.count({ where });
+
+      // Group the result by playerId and map to the desired format
+      const groupedResult = _.groupBy(result, 'playerId');
+      const mappedResult = Object.entries(groupedResult).map(([playerId, playerHistories]) => {
+        const player = playerHistories[0].player ? playerHistories[0].player.get() : null;
+        const totalGameplay = _.sumBy(playerHistories, 'gameplay');
+        const totalRewardAllGame = _.sumBy(playerHistories, 'totalRewardClaimed');
+        const detail = playerHistories.map(history => ({
+          gameId: history.gameId,
+          gameplay: history.gameplay,
+          rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
+        }));
+
+        return {
+          id: playerHistories[0].id,
+          playerId,
+          totalGameplay,
+          totalRewardAllGame,
+          totalRewardClaimed: playerHistories[0].totalRewardClaimed,
+          createdAt: playerHistories[0].createdAt,
+          updatedAt: playerHistories[0].updatedAt,
+          name: player ? player.name : null,
+          phone: player ? player.phone : null,
+          detail,
+        };
+      });
+
+      return {
+        ...generateResultPagination(count, params),
+        results: mappedResult.map((item) => ({
+          ...item,
+          id: item.id.toString(),
+        })),
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERROR IN FIND ALL',
+          message: [error, error.message],
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async getAllPlayersByGameId(id: string, params: Game_PlayersHistoriesFindAllRequest): Promise<Game_PlayersHistoriesFindAllResponse> {
+    try {
+      const where = { gameId: id };
+
+      // Get all records for the specified gameId
       const result = await this.gamePlayerHistoriesModelRepository.findAll({
         where,
         attributes: [
@@ -515,14 +626,36 @@ export class GameService {
         offset: params.offset,
         limit: params.limit || 10,
       });
+
       const count = await this.gamePlayerHistoriesModelRepository.count({ where });
+
+      // Group the result by playerId and map to the desired format
+      const groupedResult = _.groupBy(result, 'playerId');
+      const mappedResult = Object.entries(groupedResult).map(([playerId, playerHistories]) => {
+        const player = playerHistories[0].player ? playerHistories[0].player.get() : null;
+        const totalGameplay = _.sumBy(playerHistories, 'gameplay');
+        const totalRewardAllGame = _.sumBy(playerHistories, 'totalRewardClaimed');
+        const detail = playerHistories.map(history => ({
+          gameplay: history.gameplay,
+          rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
+        }));
+
+        return {
+          playerId,
+          totalGameplay,
+          totalRewardAllGame,
+          totalRewardClaimed: playerHistories[0].totalRewardClaimed,
+          createdAt: playerHistories[0].createdAt,
+          updatedAt: playerHistories[0].updatedAt,
+          name: player ? player.name : null,
+          phone: player ? player.phone : null,
+          detail,
+        };
+      });
+
       return {
-        count: count,
-        next: '',
-        prev: '',
         ...generateResultPagination(count, params),
-        results: result.map(item => item.get()),
-        // results: result.map(item => item.get()),
+        results: mappedResult,
       };
     } catch (error) {
       throw new HttpException(

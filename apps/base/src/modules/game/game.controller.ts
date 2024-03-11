@@ -79,7 +79,8 @@ export class GameController {
   @Get(':id')
   // //@UseGuards(AuthPermissionGuard())
   async getGameById(
-    @Param() param: { id: string },
+    // @Param() param: { id: string }
+    @Param() param: GameFindOneRequest,
   ): Promise<GameListItem> {
     return this.findOne({ id: param.id });
   }
@@ -108,20 +109,20 @@ export class GameController {
   @Put(':id')
   //@UseGuards(AuthPermissionGuard())
   async updateGame(
-      @Param() param: { id: string },
-      @Req() request: any,
-      @Body() body: GameUpdateRequest,
+    @Param() param: { id: string },
+    @Req() request: any,
+    @Body() body: GameUpdateRequest,
   ): Promise<GameUpdateResponse> {
-      return await this.update({
-          ...body,
-      }, param.id);
+    return await this.update({
+      ...body,
+    }, param.id);
   }
 
   async update(params: GameUpdateRequest, id: string): Promise<GameUpdateResponse> {
-      return await this.gameService.update(params, id);
+    return await this.gameService.update(params, id);
   }
 
-  
+
   @ApiOperation({ summary: 'Create Players By Game Id' })
   @Post(':id/players')
   // //@UseGuards(AuthPermissionGuard())
@@ -130,7 +131,7 @@ export class GameController {
     @Req() request: any,
     @Body() body: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
-    return await this.createPlayer(id,{ ...body });
+    return await this.createPlayer(id, { ...body });
   }
 
   async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
@@ -146,7 +147,7 @@ export class GameController {
     @Req() request: any,
     @Body() body: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
-    return await this.startGame(id,{ ...body });
+    return await this.startGame(id, { ...body });
   }
 
   async startGame(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
@@ -162,7 +163,7 @@ export class GameController {
     @Req() request: any,
     @Body() body: Game_ClaimRewardRequest,
   ): Promise<Game_PlayersCreateResponse> {
-    return await this.claimReward(id,{ ...body });
+    return await this.claimReward(id, { ...body });
   }
 
   async claimReward(id: string, params: Game_ClaimRewardRequest): Promise<Game_PlayersCreateResponse> {
@@ -171,6 +172,20 @@ export class GameController {
 
 
 
+
+  // @ApiOperation({ summary: 'Get all players by game id' })
+  // @Get(':id/players')
+  // // //@UseGuards(AuthPermissionGuard())
+  // async getGamePlayers(
+  //   @Param('id') id: string,
+  //   @Query() query: any,
+  // ): Promise<any> {
+  //   return await this.findAllPlayers(id, query);
+  // }
+
+  // async findAllPlayers(id: string, params: any): Promise<any> {
+  //   return await this.gameService.findAllPlayers(id, params);
+  // }
 
   @ApiOperation({ summary: 'Get all players by game id' })
   @Get(':id/players')
@@ -183,10 +198,10 @@ export class GameController {
   }
 
   async findAllPlayers(id: string, params: any): Promise<any> {
-    return await this.gameService.findAllPlayers(id, params);
+    return await this.gameService.getAllPlayersByGameId(id, params);
   }
 
-  
+
 
 
   @ApiOperation({ summary: 'Delete Players By Game Id and Player Id' })
