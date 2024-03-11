@@ -7,12 +7,12 @@ export abstract class Game_PlayersHistoriesApiContract {
 }
 
 export interface Game_PlayersHistoriesListItem {
-    id: string;
-    gameId: string;
+    // id: string;
+    // gameId: string;
     playerId: string;
-    gameplay: number;
-    rewardClaimedAt: Date;
-    rewardClaimed_AllRounds: number[];
+    // gameplay: number;
+    // rewardClaimedAt: Date;
+    // rewardClaimed_AllRounds: number[];
     totalRewardClaimed: number;
     createdAt: Date;
     updatedAt: Date;
