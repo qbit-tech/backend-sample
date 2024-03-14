@@ -1745,10 +1745,10 @@
     "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
 
-"@qbit-tech/libs-article@^1.6.3":
-  version "1.6.3"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.6.3/afd8970ce315c67226066a8bda71d5f391f39101#afd8970ce315c67226066a8bda71d5f391f39101"
-  integrity sha512-qwJDOTzRAeg1iWF6jkKSS5RjhT/Y1r8YFO4oJaqTMhPFD1+AL230D8DgLfgkp8aDUsYHZieLj4lxVlVzQCKDtg==
+"@qbit-tech/libs-article@^1.6.5":
+  version "1.6.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-article/1.6.5/55dbaab97bc12df0d4b81806fd41e42b417c0d38#55dbaab97bc12df0d4b81806fd41e42b417c0d38"
+  integrity sha512-n2WfF0/5cUE24lPIbLQt9q35hU12fYn9ZyfSdcHRQxEEcte/n5WfjDR+Wmheq1iHcthYUlg6IQ7ew6/Jo5p+0g==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1793,6 +1793,28 @@
     sequelize "^6.32.1"
     sequelize-cli "^6.6.2"
     sequelize-typescript "^2.1.5"
+
+"@qbit-tech/libs-monitor-api@^1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-monitor-api/1.0.2/2790fd920822ec8c828f816b720dedfe0a63fe60#2790fd920822ec8c828f816b720dedfe0a63fe60"
+  integrity sha512-DryFY+hMV/Vki3Fj+U1Ime4hebY3PiQFKcW13rUI+tiogmT+GQZgJiwCKSWvBi5fp4GjAVQk3CHar7kaSqf9Zw==
+  dependencies:
+    "@nestjs-modules/ioredis" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/config" "^3.0.0"
+    "@nestjs/platform-express" "^10.3.2"
+    "@nestjs/sequelize" "^10.0.0"
+    "@nestjs/swagger" "^7.1.4"
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.5"
+    "@types/multer" "^1.4.7"
+    class-validator "^0.14.0"
+    crypto-random-string "3.3.1"
+    multer-s3 "2.10.0"
+    sequelize "^6.32.1"
+    sequelize-typescript "^2.1.5"
+    slugify "^1.6.6"
+    ulid "2.3.0"
 
 "@qbit-tech/libs-notification-scheduler@^1.0.8":
   version "1.0.8"

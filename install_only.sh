@@ -22,4 +22,6 @@ yarn add @qbit-tech/libs-payments
 yarn add @qbit-tech/libs-uploader
 yarn add @qbit-tech/libs-utils
 
+yarn add @qbit-tech/libs-monitor-api
+
 echo "==== Install End Successfully ===="

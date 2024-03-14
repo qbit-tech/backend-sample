@@ -41,6 +41,7 @@ import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
 import {UserAddressModule} from './modules/userAddress/userAddress.module';
+import { MonitorApiModule } from '@qbit-tech/libs-monitor-api';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -103,6 +104,7 @@ export const rootImportedModules = [
     generateMulterOptions('promo'),
     redisOption,
   ),
+  MonitorApiModule.forRoot(sessionOption, redisOption),
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
