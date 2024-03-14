@@ -320,6 +320,14 @@ export class UserService {
     return result ? result : null;
   }
 
+  async findOneByuserIdWithouRole(userId: string): Promise<UserProperties> {
+    let result: any = await this.userRepositories.findOne({
+      where: { userId },
+    });
+
+    return result ? result.get() : null;
+  }
+
   async update(
     user: Partial<Omit<UserProperties, 'createdAt' | 'updatedAt'>>,
     userId: string,

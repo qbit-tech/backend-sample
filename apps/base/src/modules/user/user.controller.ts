@@ -325,6 +325,30 @@ export class UserController implements UserApiContract {
 
   @ApiOperation({
     summary:
+      'Get user data by userId without role, set userId to "me" to get current login user data',
+  })
+  // @ApiBearerAuth()
+  @Get(':userId/restricted')
+  // @UseGuards(AuthPermissionGuardV2())
+  @ApiOkResponse({ type: UserProperties })
+  async getMyProfileRestricted(
+    @Param('userId') userId: string,
+    @Req() req: AppRequest,
+  ): Promise<UserProperties> {
+    let uid = userId;
+    if (userId === 'me') {
+      Logger.log('get my profile');
+      console.log(req.user);
+      uid = req.user.userId;
+    }
+    Logger.log('req.user', req.user);
+    Logger.log('userId', userId);
+    Logger.log('uid', uid);
+    return this.getProfileWithoutRole(uid);
+  }
+
+  @ApiOperation({
+    summary:
       'Change user photo by userId, set userId to "me" to change current login user data',
   })
   @ApiConsumes('multipart/form-data')
@@ -429,6 +453,20 @@ export class UserController implements UserApiContract {
 
   async getProfile(userId: string): Promise<UserProperties> {
     const userData = await this.userService.findOneByUserId(userId);
+    const verifiedStatus = await this.getVerifiedStatus({
+      email: userData.email,
+    });
+
+    const res: UserProperties = {
+      ...userData,
+      ...verifiedStatus,
+    };
+
+    return res;
+  }
+
+  async getProfileWithoutRole(userId: string): Promise<UserProperties> {
+    const userData = await this.userService.findOneByuserIdWithouRole(userId);
     const verifiedStatus = await this.getVerifiedStatus({
       email: userData.email,
     });

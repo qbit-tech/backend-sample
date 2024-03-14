@@ -270,6 +270,7 @@ export class GameService {
       console.log('result', result);
       return result.get();
       return copy.get();
+      
     } catch (error) {
       throw new HttpException(
         {
