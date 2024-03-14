@@ -68,31 +68,6 @@ jobs:
         run: |
           ./run_migration.sh base development
 
-      # - name: run migration (libs/auth)
-      #   run: |
-      #     cd libs/auth
-      #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
-
-      # - name: run migration (libs/uploader)
-      #   run: |
-      #     cd libs/uploader
-      #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
-
-      # - name: run migration (libs/appVersion)
-      #   run: |
-      #     cd libs/appVersion
-      #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
-
-      # - name: run migration (libs/appConfig)
-      #   run: |
-      #     cd libs/appConfig
-      #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
-
-      # - name: run migration project
-      #   run: |
-      #     cd apps/base
-      #     ENV_PATH=../../apps/base/.env.development sequelize-cli db:migrate --env development
-
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -110,6 +85,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: 'Automated Version Bump'
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          minor-wording: 'add,Adds,new,feat,feature'
+          major-wording: 'MAJOR,cut-major'
+          patch-wording: 'patch,fixes,fix,adjust'
+          rc-wording: 'RELEASE,alpha'
+          target-branch: 'main'
+          commit-message: 'CI: bumps version to {{version}} [skip ci]'
 
       - uses: culshaw/read-package-node-version-actions@v1
         with:
