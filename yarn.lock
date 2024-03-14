@@ -1605,6 +1605,14 @@
     cron "2.4.1"
     uuid "9.0.0"
 
+"@nestjs/schedule@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/schedule/-/schedule-4.0.1.tgz#beb69f974e7adc96fd799f555ba0121c10d2d61b"
+  integrity sha512-cz2FNjsuoma+aGsG0cMmG6Dqg/BezbBWet1UTHtAuu6d2mXNTVcmoEQM2DIVG5Lfwb2hfSE2yZt8Moww+7y+mA==
+  dependencies:
+    cron "3.1.6"
+    uuid "9.0.1"
+
 "@nestjs/schematics@^10.0.0", "@nestjs/schematics@^10.0.1":
   version "10.0.2"
   resolved "https://registry.npmjs.org/@nestjs/schematics/-/schematics-10.0.2.tgz"
@@ -1794,15 +1802,16 @@
     sequelize-cli "^6.6.2"
     sequelize-typescript "^2.1.5"
 
-"@qbit-tech/libs-monitor-api@^1.1.0":
-  version "1.1.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-monitor-api/1.1.0/5fc53cd80fa8dbce4bd69c981b86e8b4db4854b0#5fc53cd80fa8dbce4bd69c981b86e8b4db4854b0"
-  integrity sha512-MabD7HCXRi4qE7HqnL7j0JyIZNAsptPdlAgOdzGR9uzjWB2Rag/wYWKkPj3KD0yXH7fhNlbsAthmlL5du0Z2Ow==
+"@qbit-tech/libs-monitor-api@^1.1.2":
+  version "1.1.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-monitor-api/1.1.2/621fc1319c9e75f272f50b38dc85609cbd645c73#621fc1319c9e75f272f50b38dc85609cbd645c73"
+  integrity sha512-KWobeOn95agWN9XvEOjToWNvk4a9Dwqf+hEwEH7AAAVVMt4OtzF59w6CC5aIFfxeL3TXng5IrcdTOpCz8j2Rdw==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
     "@nestjs/config" "^3.0.0"
     "@nestjs/platform-express" "^10.3.2"
+    "@nestjs/schedule" "^4.0.1"
     "@nestjs/sequelize" "^10.0.0"
     "@nestjs/swagger" "^7.1.4"
     "@qbit-tech/libs-session" "^1.7.5"
@@ -2777,6 +2786,11 @@
   version "4.0.2"
   resolved "https://registry.npmjs.org/@types/long/-/long-4.0.2.tgz"
   integrity sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==
+
+"@types/luxon@~3.3.0":
+  version "3.3.8"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.8.tgz#84dbf2d020a9209a272058725e168f21d331a67e"
+  integrity sha512-jYvz8UMLDgy3a5SkGJne8H7VA7zPV2Lwohjx0V8V31+SqAjNmurWMkk9cQhfvlcnXWudBpK9xPM1n4rljOcHYQ==
 
 "@types/markdown-it@^12.2.3":
   version "12.2.3"
@@ -4252,6 +4266,14 @@ cron@2.4.1:
   integrity sha512-ty0hUSPuENwDtIShDFxUxWEIsqiu2vhoFtt6Vwrbg4lHGtJX2/cV2p0hH6/qaEM9Pj+i6mQoau48BO5wBpkP4w==
   dependencies:
     luxon "^3.2.1"
+
+cron@3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/cron/-/cron-3.1.6.tgz#e7e1798a468e017c8d31459ecd7c2d088f97346c"
+  integrity sha512-cvFiQCeVzsA+QPM6fhjBtlKGij7tLLISnTSvFxVdnFGLdz+ZdXN37kNe0i2gefmdD17XuZA6n2uPVwzl4FxW/w==
+  dependencies:
+    "@types/luxon" "~3.3.0"
+    luxon "~3.4.0"
 
 cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
@@ -6766,6 +6788,11 @@ luxon@^3.2.1:
   resolved "https://registry.npmjs.org/luxon/-/luxon-3.4.3.tgz"
   integrity sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==
 
+luxon@~3.4.0:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.4.tgz#cf20dc27dc532ba41a169c43fdcc0063601577af"
+  integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
+
 macos-release@^2.5.0:
   version "2.5.1"
   resolved "https://registry.npmjs.org/macos-release/-/macos-release-2.5.1.tgz"
@@ -9006,6 +9033,11 @@ uuid@9.0.0:
   resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.0.tgz"
   integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
+uuid@9.0.1, uuid@^9.0.0:
+  version "9.0.1"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
+
 uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
@@ -9015,11 +9047,6 @@ uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
-uuid@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
-  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

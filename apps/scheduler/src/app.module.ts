@@ -3,6 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { NotificationSchedulerModule } from '@qbit-tech/libs-notification';
+import { MonitorApiSchedulerModule } from '@qbit-tech/libs-monitor-api';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -68,6 +69,7 @@ export const rootImportedModules = [
       },
     },
   ]),
+  MonitorApiSchedulerModule.forRoot(),
 ];
 @Module({
   imports: [...rootImportedModules],
