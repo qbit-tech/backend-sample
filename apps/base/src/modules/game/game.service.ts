@@ -1,18 +1,10 @@
-import {
-  Injectable,
-  HttpException,
-  HttpStatus,
-  ConsoleLogger,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserModel } from '../user/user.entity';
 import {
-  GameApiContract,
   GameCreateRequest,
   GameCreateResponse,
-  GameDeleteRequest,
   GameDeleteResponse,
-  GameFindAllRequest,
   GameFindAllResponse,
   GameListItem,
   GameUpdateRequest,
@@ -20,10 +12,12 @@ import {
   GameFindOneRequest,
 } from './contract/game.contract';
 import { v4 as uuidv4 } from 'uuid';
-import { generateResultPagination } from '@qbit-tech/libs-utils';
+import {
+  generateResultPagination,
+  cleanPhoneNumber,
+} from '@qbit-tech/libs-utils';
 import { Op, Sequelize } from 'sequelize';
 import { GameModel } from './entity/game.entity';
-import { RoleModel } from '@qbit-tech/libs-role';
 import cryptoRandomString = require('crypto-random-string');
 import {
   Game_ClaimRewardRequest,
@@ -177,6 +171,7 @@ export class GameService {
         expired_at: params.expired_at,
         status: params.status || 'active',
       });
+
       console.log('result', result);
       return result.get();
     } catch (error) {
@@ -281,23 +276,19 @@ export class GameService {
     params: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
     try {
+      const phone = cleanPhoneNumber(params.phone);
+
       // find where the params phone and name is exist
       let user = await this.User.findOne({
-        where: { phone: params.phone, name: params.name },
+        where: { phone },
       });
       console.log('user', user);
-      // const result = await this.gameModelRepository.create({
-      //   id: uuidv4(),
-      //   gameId: id
-      //   playerId: params.playerId,
-      //   availableReward: params.availableReward,
-      // });
 
       if (!user) {
         user = await this.User.create({
           userId: ulid(),
           name: params.name,
-          phone: params.phone,
+          phone,
         });
         console.log('user', user);
       }
@@ -307,16 +298,8 @@ export class GameService {
         playerId: user.userId,
       });
 
-      const copy = await this.gamePlayerHistoriesModelRepository.create({
-        gameId: id,
-        playerId: user.userId,
-        gameplay: 1,
-        round: 1,
-      });
-
       console.log('result', result);
       return result.get();
-      return copy.get();
     } catch (error) {
       throw new HttpException(
         {
