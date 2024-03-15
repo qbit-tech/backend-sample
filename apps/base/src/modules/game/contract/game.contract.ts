@@ -39,15 +39,6 @@ export class GameFindAllRequest {
     order?: string;
 
     @ApiPropertyOptional()
-    game_code?: string;
-
-    @ApiPropertyOptional()
-    title?: string;
-
-    @ApiPropertyOptional()
-    description?: string;
-
-    @ApiPropertyOptional()
     status?: string;
 
 }

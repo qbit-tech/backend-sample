@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus, ConsoleLogger } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  ConsoleLogger,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserModel } from '../user/user.entity';
 import {
@@ -12,7 +17,7 @@ import {
   GameListItem,
   GameUpdateRequest,
   GameUpdateResponse,
-  GameFindOneRequest
+  GameFindOneRequest,
 } from './contract/game.contract';
 import { v4 as uuidv4 } from 'uuid';
 import { generateResultPagination } from '@qbit-tech/libs-utils';
@@ -20,16 +25,25 @@ import { Op, Sequelize } from 'sequelize';
 import { GameModel } from './entity/game.entity';
 import { RoleModel } from '@qbit-tech/libs-role';
 import cryptoRandomString = require('crypto-random-string');
-import { Game_ClaimRewardRequest, Game_PlayersCreateRequest, Game_PlayersCreateResponse, Game_PlayersDeleteResponse, Game_PlayersFindAllRequest, Game_PlayersFindAllResponse } from './contract/game_players.contract';
+import {
+  Game_ClaimRewardRequest,
+  Game_PlayersCreateRequest,
+  Game_PlayersCreateResponse,
+  Game_PlayersDeleteResponse,
+  Game_PlayersFindAllRequest,
+  Game_PlayersFindAllResponse,
+} from './contract/game_players.contract';
 import { Game_PlayersModel } from './entity/game_players.entity';
 import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity';
-import { Game_PlayersHistoriesFindAllRequest, Game_PlayersHistoriesFindAllResponse } from './contract/game_player_history.contract';
+import {
+  Game_PlayersHistoriesFindAllRequest,
+  Game_PlayersHistoriesFindAllResponse,
+} from './contract/game_player_history.contract';
 import { ulid } from 'ulid';
 import * as _ from 'lodash';
 
 @Injectable()
 export class GameService {
-
   constructor(
     @InjectModel(GameModel)
     private readonly gameModelRepository: typeof GameModel,
@@ -42,11 +56,31 @@ export class GameService {
 
     @InjectModel(Game_PlayerHistoriesModel)
     private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
-  ) { }
+  ) {}
 
-  async findAll(params: GameFindAllRequest): Promise<GameFindAllResponse> {
+  async findAll(params: {
+    limit?: number;
+    offset?: number;
+    search?: string;
+    status?: string;
+  }): Promise<GameFindAllResponse> {
     try {
-      const where = {};
+      let where = {};
+
+      if (params.search) {
+        where = {
+          ...where,
+          title: {
+            [Op.iLike]: params.search,
+          },
+        };
+      }
+      if (params.status) {
+        where = {
+          ...where,
+          status: params.status,
+        };
+      }
 
       const result = await this.gameModelRepository.findAll({
         where,
@@ -73,7 +107,7 @@ export class GameService {
         next: '',
         prev: '',
         ...generateResultPagination(count, params),
-        results: result.map(item => item.get()),
+        results: result.map((item) => item.get()),
         // results: result.map(item => item.get()),
       };
     } catch (error) {
@@ -110,7 +144,6 @@ export class GameService {
         ],
       });
       return result ? result.get() : null;
-
     } catch (error) {
       throw new HttpException(
         {
@@ -125,17 +158,21 @@ export class GameService {
 
   async create(params: GameCreateRequest): Promise<GameCreateResponse> {
     try {
-
-      const randomstring = cryptoRandomString({ length: 8, type: 'distinguishable' });
+      const randomstring = cryptoRandomString({
+        length: 8,
+        type: 'distinguishable',
+      });
 
       const result = await this.gameModelRepository.create({
         id: uuidv4(),
         game_code: randomstring,
         title: params.title,
         description: params.description,
-        min_reward_per_gameplay_per_user: params.min_reward_per_gameplay_per_user,
+        min_reward_per_gameplay_per_user:
+          params.min_reward_per_gameplay_per_user,
         max_gameplay_per_user: params.max_gameplay_per_user,
-        max_reward_per_gameplay_per_user: params.max_reward_per_gameplay_per_user,
+        max_reward_per_gameplay_per_user:
+          params.max_reward_per_gameplay_per_user,
         max_round_per_gameplay_per_user: params.max_round_per_gameplay_per_user,
         expired_at: params.expired_at,
         status: params.status || 'active',
@@ -154,7 +191,10 @@ export class GameService {
     }
   }
 
-  async update(params: GameUpdateRequest, id: string): Promise<GameUpdateResponse> {
+  async update(
+    params: GameUpdateRequest,
+    id: string,
+  ): Promise<GameUpdateResponse> {
     try {
       const game = await this.gameModelRepository.findOne({
         where: { id: id },
@@ -175,8 +215,10 @@ export class GameService {
       game.title = params.title;
       game.description = params.description;
       game.max_gameplay_per_user = params.max_gameplay_per_user;
-      game.max_reward_per_gameplay_per_user = params.max_reward_per_gameplay_per_user;
-      game.max_round_per_gameplay_per_user = params.max_round_per_gameplay_per_user;
+      game.max_reward_per_gameplay_per_user =
+        params.max_reward_per_gameplay_per_user;
+      game.max_round_per_gameplay_per_user =
+        params.max_round_per_gameplay_per_user;
       game.expired_at = params.expired_at;
       game.status = params.status || 'active';
       await game.save();
@@ -234,10 +276,15 @@ export class GameService {
     }
   }
 
-  async createPlayer(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+  async createPlayer(
+    id: string,
+    params: Game_PlayersCreateRequest,
+  ): Promise<Game_PlayersCreateResponse> {
     try {
       // find where the params phone and name is exist
-      let user = await this.User.findOne({ where: { phone: params.phone, name: params.name } });
+      let user = await this.User.findOne({
+        where: { phone: params.phone, name: params.name },
+      });
       console.log('user', user);
       // const result = await this.gameModelRepository.create({
       //   id: uuidv4(),
@@ -282,10 +329,15 @@ export class GameService {
     }
   }
 
-  async startGame(id: string, params: Game_PlayersCreateRequest): Promise<Game_PlayersCreateResponse> {
+  async startGame(
+    id: string,
+    params: Game_PlayersCreateRequest,
+  ): Promise<Game_PlayersCreateResponse> {
     try {
       // Cek apakah game dengan gameCode tersedia
-      const game = await this.gameModelRepository.findOne({ where: { id: id } });
+      const game = await this.gameModelRepository.findOne({
+        where: { id: id },
+      });
       if (!game) {
         throw new HttpException(
           {
@@ -310,7 +362,9 @@ export class GameService {
       }
 
       // Cari pengguna berdasarkan nomor telepon
-      const user = await this.User.findOne({ where: { name: params.name, phone: params.phone } });
+      const user = await this.User.findOne({
+        where: { name: params.name, phone: params.phone },
+      });
       if (!user) {
         throw new HttpException(
           {
@@ -323,16 +377,17 @@ export class GameService {
       }
 
       // Cek apakah pengguna terdaftar dalam pemain game ini
-      const isUserInGame = await this.gamePlayerHistoriesModelRepository.findOne({
-        where: {
-          gameId: game.id,
-          playerId: user.userId,
-          gameplay: {
-            [Op.gte]: 1,
+      const isUserInGame =
+        await this.gamePlayerHistoriesModelRepository.findOne({
+          where: {
+            gameId: game.id,
+            playerId: user.userId,
+            gameplay: {
+              [Op.gte]: 1,
+            },
           },
-        },
-        order: [['gameplay', 'DESC']]
-      });
+          order: [['gameplay', 'DESC']],
+        });
 
       if (isUserInGame) {
         // Pengguna telah bermain sebelumnya
@@ -361,14 +416,15 @@ export class GameService {
       } else {
         // Pengguna belum pernah bermain game ini
         // Cek apakah masih boleh bermain
-        const totalGameplay = await this.gamePlayerHistoriesModelRepository.count({
-          where: {
-            playerId: user.userId,
-            createdAt: {
-              [Op.gt]: new Date(new Date().setDate(new Date().getDate() - 1)), // Mencari data dalam 24 jam terakhir
+        const totalGameplay =
+          await this.gamePlayerHistoriesModelRepository.count({
+            where: {
+              playerId: user.userId,
+              createdAt: {
+                [Op.gt]: new Date(new Date().setDate(new Date().getDate() - 1)), // Mencari data dalam 24 jam terakhir
+              },
             },
-          },
-        });
+          });
 
         if (totalGameplay < game.max_gameplay_per_user) {
           // Memenuhi syarat untuk bermain
@@ -380,7 +436,6 @@ export class GameService {
           });
 
           return result.get();
-
         } else {
           throw new HttpException(
             {
@@ -404,10 +459,15 @@ export class GameService {
     }
   }
 
-  async claimReward(id: string, params: Game_ClaimRewardRequest): Promise<Game_PlayersCreateResponse> {
+  async claimReward(
+    id: string,
+    params: Game_ClaimRewardRequest,
+  ): Promise<Game_PlayersCreateResponse> {
     try {
       // Temukan game berdasarkan game code
-      const game = await this.gameModelRepository.findOne({ where: { id: id } });
+      const game = await this.gameModelRepository.findOne({
+        where: { id: id },
+      });
       if (!game) {
         throw new HttpException(
           {
@@ -419,7 +479,9 @@ export class GameService {
         );
       }
 
-      const user = await this.User.findOne({ where: { userId: params.playerId } });
+      const user = await this.User.findOne({
+        where: { userId: params.playerId },
+      });
       if (!user) {
         throw new HttpException(
           {
@@ -432,18 +494,21 @@ export class GameService {
       }
 
       // Temukan history gameplay yang belum diklaim
-      const unclaimedGameplay = await this.gamePlayerHistoriesModelRepository.findOne({
-        where: {
-          gameId: game.id,
-          playerId: user.userId,
-          // claimedReward: false,
-          rewardClaimedAt: null,
-        },
-        order: [['createdAt', 'DESC']],
-      });
+      const unclaimedGameplay =
+        await this.gamePlayerHistoriesModelRepository.findOne({
+          where: {
+            gameId: game.id,
+            playerId: user.userId,
+            // claimedReward: false,
+            rewardClaimedAt: null,
+          },
+          order: [['createdAt', 'DESC']],
+        });
 
       if (!unclaimedGameplay) {
-        throw new Error('Can’t claim this game reward. Please start the game before claim.');
+        throw new Error(
+          'Can’t claim this game reward. Please start the game before claim.',
+        );
       }
 
       // Lakukan update untuk menandai reward telah diklaim
@@ -466,21 +531,26 @@ export class GameService {
     }
   }
 
-  async findAllPlayers(id: string, params: Game_PlayersFindAllRequest): Promise<Game_PlayersFindAllResponse> {
+  async findAllPlayers(
+    id: string,
+    params: Game_PlayersFindAllRequest,
+  ): Promise<Game_PlayersFindAllResponse> {
     // get all players by game id
     try {
       const where = {
-        gameId: id
+        gameId: id,
       };
 
       const result = await this.gamePlayersModelRepository.findAll({
         where,
         attributes: ['playerId'],
-        include: [{
-          model: UserModel,
-          attributes: ['name', 'phone'],
-          as: 'player',
-        }],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
         offset: params.offset,
         limit: params.limit || 10,
       });
@@ -490,7 +560,7 @@ export class GameService {
         next: '',
         prev: '',
         ...generateResultPagination(count, params),
-        results: result.map(item => item.get()),
+        results: result.map((item) => item.get()),
         // results: result.map(item => item.get()),
       };
     } catch (error) {
@@ -503,26 +573,28 @@ export class GameService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
   }
 
-  async getAllPlayers(params: Game_PlayersHistoriesFindAllRequest): Promise<Game_PlayersHistoriesFindAllResponse> {
+  async getAllPlayers(
+    params: Game_PlayersHistoriesFindAllRequest,
+  ): Promise<Game_PlayersHistoriesFindAllResponse> {
     try {
       const where = {};
 
       // Get the latest updatedAt for each playerId and gameId
-      const latestUpdates = await this.gamePlayerHistoriesModelRepository.findAll({
-        where,
-        attributes: [
-          'playerId',
-          'gameId',
-          [Sequelize.fn('max', Sequelize.col('updatedAt')), 'maxUpdatedAt'],
-        ],
-        group: ['playerId', 'gameId'],
-      });
+      const latestUpdates =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where,
+          attributes: [
+            'playerId',
+            'gameId',
+            [Sequelize.fn('max', Sequelize.col('updatedAt')), 'maxUpdatedAt'],
+          ],
+          group: ['playerId', 'gameId'],
+        });
 
       // Convert the result to a format that can be used in a where condition
-      const latestUpdatesCondition = latestUpdates.map(u => ({
+      const latestUpdatesCondition = latestUpdates.map((u) => ({
         playerId: u.playerId,
         gameId: u.gameId,
         updatedAt: u.getDataValue('maxUpdatedAt'),
@@ -544,42 +616,53 @@ export class GameService {
           'createdAt',
           'updatedAt',
         ],
-        include: [{
-          model: UserModel,
-          attributes: ['name', 'phone'],
-          as: 'player',
-        }],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
         offset: params.offset,
         limit: params.limit || 10,
       });
 
-      const count = await this.gamePlayerHistoriesModelRepository.count({ where });
+      const count = await this.gamePlayerHistoriesModelRepository.count({
+        where,
+      });
 
       // Group the result by playerId and map to the desired format
       const groupedResult = _.groupBy(result, 'playerId');
-      const mappedResult = Object.entries(groupedResult).map(([playerId, playerHistories]) => {
-        const player = playerHistories[0].player ? playerHistories[0].player.get() : null;
-        const totalGameplay = _.sumBy(playerHistories, 'gameplay');
-        const totalRewardAllGame = _.sumBy(playerHistories, 'totalRewardClaimed');
-        const detail = playerHistories.map(history => ({
-          gameId: history.gameId,
-          gameplay: history.gameplay,
-          rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
-        }));
+      const mappedResult = Object.entries(groupedResult).map(
+        ([playerId, playerHistories]) => {
+          const player = playerHistories[0].player
+            ? playerHistories[0].player.get()
+            : null;
+          const totalGameplay = _.sumBy(playerHistories, 'gameplay');
+          const totalRewardAllGame = _.sumBy(
+            playerHistories,
+            'totalRewardClaimed',
+          );
+          const detail = playerHistories.map((history) => ({
+            gameId: history.gameId,
+            gameplay: history.gameplay,
+            rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
+          }));
 
-        return {
-          id: playerHistories[0].id,
-          playerId,
-          totalGameplay,
-          totalRewardAllGame,
-          totalRewardClaimed: playerHistories[0].totalRewardClaimed,
-          createdAt: playerHistories[0].createdAt,
-          updatedAt: playerHistories[0].updatedAt,
-          name: player ? player.name : null,
-          phone: player ? player.phone : null,
-          detail,
-        };
-      });
+          return {
+            id: playerHistories[0].id,
+            playerId,
+            totalGameplay,
+            totalRewardAllGame,
+            totalRewardClaimed: playerHistories[0].totalRewardClaimed,
+            createdAt: playerHistories[0].createdAt,
+            updatedAt: playerHistories[0].updatedAt,
+            name: player ? player.name : null,
+            phone: player ? player.phone : null,
+            detail,
+          };
+        },
+      );
 
       return {
         ...generateResultPagination(count, params),
@@ -600,7 +683,10 @@ export class GameService {
     }
   }
 
-  async getAllPlayersByGameId(id: string, params: Game_PlayersHistoriesFindAllRequest): Promise<Game_PlayersHistoriesFindAllResponse> {
+  async getAllPlayersByGameId(
+    id: string,
+    params: Game_PlayersHistoriesFindAllRequest,
+  ): Promise<Game_PlayersHistoriesFindAllResponse> {
     try {
       const where = { gameId: id };
 
@@ -618,40 +704,51 @@ export class GameService {
           'createdAt',
           'updatedAt',
         ],
-        include: [{
-          model: UserModel,
-          attributes: ['name', 'phone'],
-          as: 'player',
-        }],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
         offset: params.offset,
         limit: params.limit || 10,
       });
 
-      const count = await this.gamePlayerHistoriesModelRepository.count({ where });
+      const count = await this.gamePlayerHistoriesModelRepository.count({
+        where,
+      });
 
       // Group the result by playerId and map to the desired format
       const groupedResult = _.groupBy(result, 'playerId');
-      const mappedResult = Object.entries(groupedResult).map(([playerId, playerHistories]) => {
-        const player = playerHistories[0].player ? playerHistories[0].player.get() : null;
-        const totalGameplay = _.sumBy(playerHistories, 'gameplay');
-        const totalRewardAllGame = _.sumBy(playerHistories, 'totalRewardClaimed');
-        const detail = playerHistories.map(history => ({
-          gameplay: history.gameplay,
-          rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
-        }));
+      const mappedResult = Object.entries(groupedResult).map(
+        ([playerId, playerHistories]) => {
+          const player = playerHistories[0].player
+            ? playerHistories[0].player.get()
+            : null;
+          const totalGameplay = _.sumBy(playerHistories, 'gameplay');
+          const totalRewardAllGame = _.sumBy(
+            playerHistories,
+            'totalRewardClaimed',
+          );
+          const detail = playerHistories.map((history) => ({
+            gameplay: history.gameplay,
+            rewardClaimed_AllRounds: history.rewardClaimed_AllRounds,
+          }));
 
-        return {
-          playerId,
-          totalGameplay,
-          totalRewardAllGame,
-          totalRewardClaimed: playerHistories[0].totalRewardClaimed,
-          createdAt: playerHistories[0].createdAt,
-          updatedAt: playerHistories[0].updatedAt,
-          name: player ? player.name : null,
-          phone: player ? player.phone : null,
-          detail,
-        };
-      });
+          return {
+            playerId,
+            totalGameplay,
+            totalRewardAllGame,
+            totalRewardClaimed: playerHistories[0].totalRewardClaimed,
+            createdAt: playerHistories[0].createdAt,
+            updatedAt: playerHistories[0].updatedAt,
+            name: player ? player.name : null,
+            phone: player ? player.phone : null,
+            detail,
+          };
+        },
+      );
 
       return {
         ...generateResultPagination(count, params),
@@ -669,19 +766,24 @@ export class GameService {
     }
   }
 
-  async deletePlayer(id: string, playerId: string): Promise<Game_PlayersDeleteResponse> {
+  async deletePlayer(
+    id: string,
+    playerId: string,
+  ): Promise<Game_PlayersDeleteResponse> {
     // delete player by game id and player id
     try {
       const gamePlayer = await this.gamePlayersModelRepository.findOne({
         where: {
           gameId: id,
-          playerId: playerId
+          playerId: playerId,
         },
-        include: [{
-          model: UserModel,
-          attributes: ['name', 'phone'],
-          as: 'player',
-        }],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
       });
 
       if (gamePlayer === null) {
@@ -716,5 +818,4 @@ export class GameService {
       );
     }
   }
-
 }
