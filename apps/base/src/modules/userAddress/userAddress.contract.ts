@@ -1,50 +1,25 @@
-import { IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserAddressModel } from './userAddress.entity';
+import {
+  DefaultFindAllRequest,
+  PaginationResponse,
+  SimpleResponse,
+} from '@qbit-tech/libs-utils';
 
 export type AppRequest = {
-    user: {
-        userType: 'admin' | 'customer' | string;
-        userId: string;
-        sessionId: string;
-        name: string;
-        role: string;
-    };
+  user: {
+    userType: 'admin' | 'customer' | string;
+    userId: string;
+    sessionId: string;
+    name: string;
+    role: string;
+  };
 };
-export class SimpleResponse {
-    @ApiProperty()
-    isSuccess: boolean;
-  }
 
-  export class PaginationResponse {
-    @ApiProperty()
-    count: number;
-    
-    @ApiProperty()
-    prev: string | null;
-  
-    @ApiProperty()
-    next: string | null;
-  
-    @ApiProperty({example: []})
-    results: any[];
-  }
-
-  export class DefaultFindAllRequest {
-    @ApiPropertyOptional()
-    search?: string;
-  
-    @ApiPropertyOptional()
-    limit?: number;
-  
-    @ApiPropertyOptional()
-    offset?: number;
-  }
-  
 export abstract class AddressApiContract {
   abstract findAll(
     params: AddressFindAllRequest,
-    userId: string
+    userId: string,
   ): Promise<AddressFindAllResponse>;
   abstract create(
     req: AppRequest,
@@ -62,21 +37,13 @@ export abstract class AddressApiContract {
   abstract delete(addressId: string, userId: string): Promise<SimpleResponse>;
 }
 
-
-export class AddressFindAllRequest extends DefaultFindAllRequest {
-  @IsOptional()
-  @ApiPropertyOptional()
-  readonly userId?: string;
-}
+export class AddressFindAllRequest extends DefaultFindAllRequest {}
 
 export class AddressFindAllResponse extends PaginationResponse {
   results: UserAddressModel[];
 }
 
 export class AddressCreateRequest {
-  @ApiProperty()
-  userId: string;
-
   @ApiProperty()
   label: string;
 
@@ -117,9 +84,6 @@ export class AddressCreateRequest {
 }
 
 export class AddressUpdateRequest {
-  @ApiPropertyOptional()
-  userId: string;
-
   @ApiProperty()
   label: string;
 

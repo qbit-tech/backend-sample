@@ -63,7 +63,7 @@ export class UserAddressService {
 
       return {
         ...generateResultPagination(count, params),
-        results: results.map(row => row.get()),
+        results: results.map((row) => row.get()),
       };
     } catch (error) {
       Logger.error(
@@ -158,7 +158,10 @@ export class UserAddressService {
     }
   }
 
-  async delete(addressId: string, userId: string): Promise<{ isSuccess: true }> {
+  async delete(
+    addressId: string,
+    userId: string,
+  ): Promise<{ isSuccess: true }> {
     try {
       Logger.log('--ENTER DELETE USER ADDRESS, USER ADDRESS SERVICE--');
       const userAddress = await this.findOne(addressId);
