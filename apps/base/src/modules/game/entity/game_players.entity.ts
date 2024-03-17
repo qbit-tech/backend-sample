@@ -41,8 +41,11 @@ export class Game_PlayersModel extends Model {
     // @Column
     // playerId: string;
 
-    @Column
-    availableRewards: string;
+    // @Column
+    // availableRewards: JSON;
+
+    @Column(DataType.JSON)
+    availableRewards: any;
 
     @UpdatedAt
     updatedAt: Date;

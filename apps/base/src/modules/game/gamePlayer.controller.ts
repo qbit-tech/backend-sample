@@ -30,7 +30,7 @@ export class GamePlayerController {
     @Req() request: any,
     @Body() body: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
-    return await this.gameService.createPlayer(id, { ...body });
+    return await this.gameService.addPlayerToGame(id, { ...body });
   }
 
   @ApiOperation({ summary: 'Get all players by game id' })
@@ -58,6 +58,6 @@ export class GamePlayerController {
   }
 
   async deletePlayer(id: string, playerId: string): Promise<any> {
-    return await this.gameService.deletePlayer(id, playerId);
+    return await this.gameService.deletePlayerFromGame(id, playerId);
   }
 }
