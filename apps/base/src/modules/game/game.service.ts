@@ -21,6 +21,8 @@ import { GameModel } from './entity/game.entity';
 import cryptoRandomString = require('crypto-random-string');
 import {
   Game_ClaimRewardRequest,
+  Game_LoginRequest,
+  Game_LoginResponse,
   Game_PlayersCreateRequest,
   Game_PlayersCreateResponse,
   Game_PlayersDeleteResponse,
@@ -35,6 +37,9 @@ import {
 } from './contract/game_player_history.contract';
 import { ulid } from 'ulid';
 import * as _ from 'lodash';
+import * as jwt from 'jsonwebtoken';
+import { SessionService } from '@qbit-tech/libs-session';
+import { EAuthMethod } from '@qbit-tech/libs-authv3/dist/authentication.entity';
 
 @Injectable()
 export class GameService {
@@ -50,7 +55,12 @@ export class GameService {
 
     @InjectModel(Game_PlayerHistoriesModel)
     private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
-  ) {}
+
+    private readonly sessionService: SessionService,
+  ) { }
+
+
+  // Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
   async findAll(params: {
     limit?: number;
@@ -271,7 +281,74 @@ export class GameService {
     }
   }
 
-  async createPlayer(
+
+
+
+
+  // Game Players Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
+
+  generateGameRewards(maxRound: number, minTotalReward: number, maxTotalReward: number): number[] {
+    const rewards: number[] = [];
+
+    // Pastikan maxRound minimal 1
+    if (maxRound < 1) {
+      throw new Error('Max round must be at least 1');
+    }
+
+    // Hitung nilai range reward
+    // const rewardRange = maxTotalReward - minTotalReward;
+    // const rewardRange = Math.floor((maxTotalReward - minTotalReward) / maxRound);
+    let rewardRange: number;
+
+    if (maxTotalReward <= 100) {
+      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 10) * 10;
+    } else if (maxTotalReward <= 1000) {
+      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 100) * 100;
+    } else {
+      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 1000) * 1000;
+    }
+
+    console.log('rewardRange', rewardRange);
+
+    let remainingReward = rewardRange;
+
+    for (let i = 0; i < maxRound - 1; i++) {
+      console.log('remainingReward', remainingReward);
+      let randomReward: number;
+      if (i === 0) {
+        // Jika posisi i adalah i[0]
+        const halfRewardRange = rewardRange / 2;
+
+        if (halfRewardRange <= 100) {
+          randomReward = Math.floor(Math.random() * (halfRewardRange / 10)) * 10;
+        } else if (halfRewardRange <= 1000) {
+          randomReward = Math.floor(Math.random() * (halfRewardRange / 100)) * 100;
+        } else {
+          randomReward = Math.floor(Math.random() * (halfRewardRange / 1000)) * 1000;
+        }
+
+      } else {
+        if (remainingReward <= 100) {
+          randomReward = Math.floor(Math.random() * (remainingReward / 10)) * 10;
+        } else if (remainingReward <= 1000) {
+          randomReward = Math.floor(Math.random() * (remainingReward / 100)) * 100;
+        } else {
+          randomReward = Math.floor(Math.random() * (remainingReward / 1000)) * 1000;
+        }
+      }
+      console.log('randomReward', randomReward);
+      remainingReward -= randomReward;
+      rewards.push(randomReward);
+    }
+
+
+    rewards.push(remainingReward);
+
+
+    return rewards;
+  }
+
+  async addPlayerToGame(
     id: string,
     params: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
@@ -293,13 +370,45 @@ export class GameService {
         console.log('user', user);
       }
 
-      const result = await this.gamePlayersModelRepository.create({
-        gameId: id,
-        playerId: user.userId,
+      const game = await this.gameModelRepository.findOne({
+        where: { id: id },
       });
 
-      console.log('result', result);
-      return result.get();
+      const maxGameplay = game.max_gameplay_per_user
+      const availableRewards = {};
+
+      for (let i = 1; i <= maxGameplay; i++) {
+        const rewards = this.generateGameRewards(game.max_round_per_gameplay_per_user, game.min_reward_per_gameplay_per_user, game.max_reward_per_gameplay_per_user);
+        availableRewards[`gameplay_${i}`] = rewards;
+      }
+
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: id,
+          playerId: user.userId,
+        },
+      });
+
+      if (!gamePlayer) {
+        const result = await this.gamePlayersModelRepository.create({
+          gameId: id,
+          playerId: user.userId,
+          availableRewards,
+        });
+
+        console.log('result', result);
+        return result.get();
+      } else {
+        return {
+          isSuccess: false,
+          id: gamePlayer.id,
+          message: {
+            catch: 'Player already exist in this game.',
+            playerId: gamePlayer.playerId,
+            gameId: gamePlayer.gameId,
+          },
+        }
+      };
     } catch (error) {
       throw new HttpException(
         {
@@ -312,14 +421,116 @@ export class GameService {
     }
   }
 
-  async startGame(
+  async getListPlayerByGame(
     id: string,
+    params: Game_PlayersFindAllRequest,
+  ): Promise<Game_PlayersFindAllResponse> {
+    // get all players by game id
+    try {
+      const where = {
+        gameId: id,
+      };
+
+      const result = await this.gamePlayersModelRepository.findAll({
+        where,
+        attributes: ['playerId'],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
+        offset: params.offset,
+        limit: params.limit || 10,
+      });
+      const count = await this.gamePlayersModelRepository.count({ where });
+      return {
+        count: count,
+        next: '',
+        prev: '',
+        ...generateResultPagination(count, params),
+        results: result.map((item) => item.get()),
+        // results: result.map(item => item.get()),
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERROR IN FIND ALL',
+          message: [error, error.message],
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async deletePlayerFromGame(
+    id: string,
+    playerId: string,
+  ): Promise<Game_PlayersDeleteResponse> {
+    // delete player by game id and player id
+    try {
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: id,
+          playerId: playerId,
+        },
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
+      });
+
+      if (gamePlayer === null) {
+        throw new HttpException(
+          {
+            code: 'ERR_COMPANY_NOT_FOUND',
+            message: 'company tidak tersedia',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await gamePlayer.destroy();
+
+      return {
+        isSuccess: true,
+        id: id,
+        gameId: gamePlayer.gameId,
+        playerId: playerId,
+        name: gamePlayer.player.name,
+        phone: gamePlayer.player.phone,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERR_COMPANY_UPDATE',
+          message: error.message,
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+
+
+
+  // Game Start Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
+
+  async startGame(
+    code: string,
     params: Game_PlayersCreateRequest,
   ): Promise<Game_PlayersCreateResponse> {
     try {
       // Cek apakah game dengan gameCode tersedia
       const game = await this.gameModelRepository.findOne({
-        where: { id: id },
+        where: { game_code: code },
       });
       if (!game) {
         throw new HttpException(
@@ -348,6 +559,7 @@ export class GameService {
       const user = await this.User.findOne({
         where: { name: params.name, phone: params.phone },
       });
+      console.log('user', user.userId);
       if (!user) {
         throw new HttpException(
           {
@@ -376,10 +588,6 @@ export class GameService {
         // Pengguna telah bermain sebelumnya
         // Cek apakah masih ada gameplay yang belum selesai
         if (isUserInGame.gameplay < game.max_gameplay_per_user) {
-          // // Resume gameplay
-          // isUserInGame.gameplay++;
-          // await isUserInGame.save();
-          // return isUserInGame.get();
           await this.gamePlayerHistoriesModelRepository.create({
             playerId: user.userId,
             gameId: game.id,
@@ -404,7 +612,7 @@ export class GameService {
             where: {
               playerId: user.userId,
               createdAt: {
-                [Op.gt]: new Date(new Date().setDate(new Date().getDate() - 1)), // Mencari data dalam 24 jam terakhir
+                [Op.gt]: new Date(new Date().setDate(new Date().getDate() - 1)),
               },
             },
           });
@@ -412,7 +620,7 @@ export class GameService {
         if (totalGameplay < game.max_gameplay_per_user) {
           // Memenuhi syarat untuk bermain
           const result = await this.gamePlayerHistoriesModelRepository.create({
-            userId: user.id,
+            playerId: user.userId,
             gameId: game.id,
             gameplay: 1,
             round: 1,
@@ -442,14 +650,16 @@ export class GameService {
     }
   }
 
+  // Game Claim Reward Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
+
   async claimReward(
-    id: string,
+    code: string,
     params: Game_ClaimRewardRequest,
   ): Promise<Game_PlayersCreateResponse> {
     try {
       // Temukan game berdasarkan game code
       const game = await this.gameModelRepository.findOne({
-        where: { id: id },
+        where: { game_code: code },
       });
       if (!game) {
         throw new HttpException(
@@ -514,43 +724,108 @@ export class GameService {
     }
   }
 
-  async findAllPlayers(
-    id: string,
-    params: Game_PlayersFindAllRequest,
-  ): Promise<Game_PlayersFindAllResponse> {
-    // get all players by game id
-    try {
-      const where = {
-        gameId: id,
-      };
 
-      const result = await this.gamePlayersModelRepository.findAll({
-        where,
-        attributes: ['playerId'],
-        include: [
-          {
-            model: UserModel,
-            attributes: ['name', 'phone'],
-            as: 'player',
-          },
-        ],
-        offset: params.offset,
-        limit: params.limit || 10,
+
+
+
+
+  // For Web Game App
+  async gameLogin(
+    code: string,
+    params: Game_LoginRequest,
+  ): Promise<any> {
+    try {
+      const name = params.name;
+      const phone = cleanPhoneNumber(params.phone);
+
+      const gameCodeExtract = await this.gameModelRepository.findOne({
+        where: { game_code: code },
       });
-      const count = await this.gamePlayersModelRepository.count({ where });
+
+      const gameId = gameCodeExtract.get().id;
+      console.log('gameId', gameId);
+
+      let user = await this.User.findOne({
+        where: { name, phone },
+      });
+
+      console.log('user', user)
+
+      if (!user) {
+        return {
+          code: 'failed',
+          message: 'User not found',
+          payload: null,
+        };
+      }
+
+      let gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId,
+          playerId: user.userId,
+        },
+      });
+
+      /// session dari qbit (puyeng njir :v)
+      const signInResult = await this.sessionService.generateLoginToken(
+        {
+          method: EAuthMethod.emailPassword,
+          username: user.name,
+          userId: user.userId,
+        },
+        user,
+      );
+
+      if (signInResult.access_token === null) {
+        throw new HttpException(
+          {
+            code: 401,
+            message: 'Failed to sign in',
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      // return {
+      //   access_token: signInResult.access_token,
+      //   refresh_token: signInResult.refresh_token,
+      //   userId: authenticateLogin.userId,
+      //   isVerified: authenticateLogin.isVerified,
+      //   isPasswordExpired: authenticateLogin.isPasswordExpired,
+      //   passwordExpiredAt: authenticateLogin.passwordExpiredAt,
+      //   isBlocked: authenticateLogin.isBlocked,
+      //   blockedAt: authenticateLogin.blockedAt,
+      // };
+
+      ////
+      // const userId = user.get().id;
+      // const sessionId = uuidv4();
+      // const access_token = jwt.sign({ sessionId, userId }, process.env.SESSION_HASH_TOKEN, { expiresIn: '1h' });
+      // const refresh_token = jwt.sign({ sessionId, userId }, process.env.RANDOM_SESSIONID_KEY, { expiresIn: '30d' });
+
+      // const userId = user.get().userId;
+      const gamePlayerIdSession = gamePlayer.get().id;
+      // const sessionId = uuidv4();
+      // const access_token = jwt.sign({ sessionId, userId }, process.env.SESSION_HASH_TOKEN, { expiresIn : '1h' });
+      // const refresh_token = jwt.sign({ sessionId, userId }, process.env.RANDOM_SESSIONID_KEY, { expiresIn : '30d' });
+
       return {
-        count: count,
-        next: '',
-        prev: '',
-        ...generateResultPagination(count, params),
-        results: result.map((item) => item.get()),
-        // results: result.map(item => item.get()),
-      };
+        access_token: signInResult.access_token,
+        refresh_token: signInResult.refresh_token,
+        userId: user.userId,
+        gamePlayerId: gamePlayerIdSession,
+        isVerified: 'true',
+        isPasswordExpired: 'false',
+        passwordExpiredAt: null,
+        isBlocked: 'false',
+        blockedAt: null,
+      }
+
     } catch (error) {
       throw new HttpException(
         {
-          status: 'ERROR IN FIND ALL',
-          message: [error, error.message],
+          status: 'ERR_COMPANY_REQUEST',
+          message: error.message,
           payload: null,
         },
         HttpStatus.BAD_REQUEST,
@@ -558,6 +833,151 @@ export class GameService {
     }
   }
 
+  async gameCodeCheck(
+    code: string,
+  ): Promise<any> {
+    try {
+      console.log('code', code);
+      const gameCodeExtract = await this.gameModelRepository.findOne({
+        where: { game_code: code },
+      });
+
+      if (!gameCodeExtract) {
+        // throw new HttpException {
+        //   code: 'failed',
+        //   message: 'Game code not found',
+        //   payload: null,
+        // };
+        // HttpStatus.BAD_REQUEST
+        throw new HttpException(
+          {
+            status: 'failed',
+            message: 'Game code not found',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return {
+        code: 'success',
+        message: 'Game code found',
+        payload: gameCodeExtract.get(),
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERR_COMPANY_REQUEST',
+          message: error.message,
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async startRound(
+    code: string, playerId: string
+  ): Promise<any> {
+    try {
+
+      const gameCodeExtract = await this.gameModelRepository.findOne({
+        where: { game_code: code },
+      });
+
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: gameCodeExtract.id,
+          playerId,
+        },
+      });
+
+      // const gamePlayer = await this.gamePlayersModelRepository.findOne({ where: { gameId, playerId } });
+      // if (!gamePlayer) {
+      //   throw new Error('Game player not found');
+      // }
+
+      const gameplays = Object.keys(gamePlayer.availableRewards);
+      const latestGameplay = gameplays.sort((a, b) => parseInt(b.split('_')[1]) - parseInt(a.split('_')[1]))[0];
+
+      const availableRewards = gamePlayer.availableRewards[latestGameplay];
+      if (!availableRewards || availableRewards.length === 0) {
+        throw new Error('No rewards left for this gameplay');
+      }
+
+      let gamePlayerHistory = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: {
+          gameId: gameCodeExtract.id,
+          playerId,
+        },
+        order: [['createdAt', 'DESC']], 
+      });
+
+      if (!gamePlayerHistory) {
+        throw new Error('Game player history not found');
+      }
+
+      const reward = availableRewards.shift();
+      gamePlayer.availableRewards[latestGameplay] = availableRewards;
+      gamePlayer.updatedAt = new Date();
+      // await this.gamePlayerRepository.save(gamePlayer)
+      await this.gamePlayersModelRepository.update(
+        {
+          availableRewards: gamePlayer.availableRewards,
+          updatedAt: new Date(),
+        },
+        {
+          where: {
+            id: gamePlayer.id,
+          },
+        },
+      );
+
+      gamePlayerHistory.rewardClaimed_AllRounds.push(reward);
+
+      // Save the updated gamePlayerHistory
+      // await this.gamePlayerHistoryRepository.save(gamePlayerHistory);
+      // await this.gamePlayerHistoriesModelRepository.save(gamePlayerHistory);
+      await gamePlayerHistory.save();
+
+      return gamePlayerHistory;
+
+
+      // gamePlayerHistory.rewardClaimed_AllRounds.push(reward);
+      // // gamePlayerHistory.totalRewardClaimed += reward;
+      // await this.gamePlayerHistoriesModelRepository.update(
+      //   {
+      //     // rewardClaimedAt: new Date(),
+      //     rewardClaimed_AllRounds: gamePlayerHistory.rewardClaimed_AllRounds,
+      //     // totalRewardClaimed: gamePlayerHistory.totalRewardClaimed,
+      //   },
+      //   {
+      //     where: {
+      //       gameId: gameCodeExtract.id,
+      //       playerId,
+      //     },
+      //   },
+        
+      // );
+
+      return gamePlayerHistory;
+
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERR_COMPANY_REQUEST',
+          message: error.message,
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+
+
+
+  // For CMS
   async getAllPlayers(
     params: Game_PlayersHistoriesFindAllRequest,
   ): Promise<Game_PlayersHistoriesFindAllResponse> {
@@ -749,56 +1169,5 @@ export class GameService {
     }
   }
 
-  async deletePlayer(
-    id: string,
-    playerId: string,
-  ): Promise<Game_PlayersDeleteResponse> {
-    // delete player by game id and player id
-    try {
-      const gamePlayer = await this.gamePlayersModelRepository.findOne({
-        where: {
-          gameId: id,
-          playerId: playerId,
-        },
-        include: [
-          {
-            model: UserModel,
-            attributes: ['name', 'phone'],
-            as: 'player',
-          },
-        ],
-      });
 
-      if (gamePlayer === null) {
-        throw new HttpException(
-          {
-            code: 'ERR_COMPANY_NOT_FOUND',
-            message: 'company tidak tersedia',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      await gamePlayer.destroy();
-
-      return {
-        isSuccess: true,
-        id: id,
-        gameId: gamePlayer.gameId,
-        playerId: playerId,
-        name: gamePlayer.player.name,
-        phone: gamePlayer.player.phone,
-      };
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_UPDATE',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
 }

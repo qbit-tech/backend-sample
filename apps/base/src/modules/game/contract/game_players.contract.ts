@@ -14,16 +14,16 @@ export interface Game_PlayersListItem {
     gameId: string;
     playerId: string;
     availableRewards: string;
-  }
+}
 
 export class Game_PlayersFindAllRequest {
 
     @ApiPropertyOptional()
     search?: string;
-  
+
     @ApiPropertyOptional()
     limit?: number;
-  
+
     @ApiPropertyOptional()
     offset?: number;
 
@@ -42,17 +42,17 @@ export class Game_PlayersFindAllRequest {
 }
 
 export class Game_PlayersFindAllResponse {
-    
+
     @ApiProperty()
     count: number;
-    
+
     @ApiProperty()
     prev: string | null;
-  
+
     @ApiProperty()
     next: string | null;
-  
-    @ApiProperty({example: []})
+
+    @ApiProperty({ example: [] })
     results: Game_PlayersListItem[];
 
 }
@@ -68,7 +68,7 @@ export class Game_PlayersCreateRequest {
     // @IsNotEmpty()
     // @ApiProperty()
     // readonly id: string;
-  
+
     @IsNotEmpty()
     @ApiProperty()
     readonly name: string;
@@ -100,14 +100,30 @@ export class Game_ClaimRewardRequest {
     readonly phone: string;
 }
 
+
+export class Game_PlayersStartRoundRequest {
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly playerId: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly gameplay: number;
+
+}
+
 export class Game_PlayersCreateResponse {
 
     @ApiProperty()
     readonly isSuccess: boolean;
 
     @ApiProperty()
-    readonly id: string;
-    
+    readonly id: any;
+
+    @ApiProperty()
+    readonly message: any;
+
 }
 
 export class Game_PlayersUpdateRequest {
@@ -164,5 +180,31 @@ export class Game_PlayersDeleteResponse {
 
     @ApiProperty()
     readonly phone: string;
+}
+
+
+export class Game_LoginRequest {
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly name: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly phone: string;
+
+}
+
+export class Game_LoginResponse {
+
+    @ApiProperty()
+    readonly code: string;
+
+    @ApiProperty()
+    readonly payload: object;
+
+    @ApiProperty()
+    readonly message: string;
+
 }
 
