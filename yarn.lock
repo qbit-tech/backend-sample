@@ -1802,10 +1802,10 @@
     sequelize-cli "^6.6.2"
     sequelize-typescript "^2.1.5"
 
-"@qbit-tech/libs-monitor-api@^1.1.5":
-  version "1.1.5"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-monitor-api/1.1.5/d04b4192236e185c3c71b19650234c6d4d8f2c6c#d04b4192236e185c3c71b19650234c6d4d8f2c6c"
-  integrity sha512-orLPMXW09ha/0buc6GU821aX77k9IO5XTmDMzLARWBZwlkxTRUNhbxXBAc5hGAfPAp74FdBgrL9a6UDyCiMV5g==
+"@qbit-tech/libs-monitor-api@^1.1.6":
+  version "1.1.6"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-monitor-api/1.1.6/abc6b38ee8907e882036c68afb291d535232c0c8#abc6b38ee8907e882036c68afb291d535232c0c8"
+  integrity sha512-aI1WSo5vHOASwbeIpgePyQedorrGhcNIZNe5dkA41NMExjv3XZrR6zkhwRh7bB4Jm9ACJj1xIGZ8S24NtukAmQ==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
