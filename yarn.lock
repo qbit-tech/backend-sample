@@ -1825,23 +1825,39 @@
     ulid "2.3.0"
     uuid "^9.0.1"
 
-"@qbit-tech/libs-notification-scheduler@^1.0.9":
-  version "1.0.9"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.9/f4059f023de00b978b5818632191eedc7b53368f#f4059f023de00b978b5818632191eedc7b53368f"
-  integrity sha512-tfnpRO7ixDkJwVP2zeprxGWQ3smLETeLiB4tb/u/PChlB5EHSCc56v/bnMOc66lP2ECBXc5jDOJlfbmZtd6gww==
+"@qbit-tech/libs-notification-scheduler@^1.0.10":
+  version "1.0.10"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.10/ee7337239794ab6174029298ec06ca3bfa9e9fd0#ee7337239794ab6174029298ec06ca3bfa9e9fd0"
+  integrity sha512-JvwvaodXuKFCNWLop3gkd4oQA49QWx+OqqXe+MKXqE9m4l1deGXo68McRcKIs78vaMQ9Zx8629t2drLn840ZSA==
   dependencies:
     "@nestjs/schedule" "^3.0.1"
-    "@qbit-tech/libs-notification" "^1.7.1"
+    "@qbit-tech/libs-notification" "^1.7.5"
     "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
     class-validator "^0.14.0"
     postmark "^3.0.18"
     uuid "9.0.0"
 
-"@qbit-tech/libs-notification@^1.7.0", "@qbit-tech/libs-notification@^1.7.1", "@qbit-tech/libs-notification@^1.7.4":
+"@qbit-tech/libs-notification@^1.7.0":
   version "1.7.4"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.4/0426952a23f8fa4a3b09ff29b66d992bd5345821#0426952a23f8fa4a3b09ff29b66d992bd5345821"
   integrity sha512-qNM6Mw4WURYtPhmkpESfWRsB7OCqoukn8yIUVxmCqSthpTAxmcgUaEY0mz3mzpZUy5/uJLCEYhYXNPbBGdV0WQ==
+  dependencies:
+    "@getbrevo/brevo" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/schedule" "^3.0.1"
+    "@sendgrid/mail" "^7.7.0"
+    "@sendinblue/client" "^3.3.1"
+    base-64 "^1.0.0"
+    firebase-admin "^11.9.0"
+    js-md5 "^0.7.3"
+    nodemailer "^6.9.5"
+    postmark "^3.0.18"
+
+"@qbit-tech/libs-notification@^1.7.5":
+  version "1.7.5"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.5/461d197ccb4159dde18c33d911019ee19dddd08b#461d197ccb4159dde18c33d911019ee19dddd08b"
+  integrity sha512-LIbSS9GtoIUpUK3FYt4tJyA6Zq72NRx2uIzy2xw9Vc0PUM7jeCd1XlEzbjZl4+0+gUjS5FhJfNhaRmuWQZ3u9w==
   dependencies:
     "@getbrevo/brevo" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
