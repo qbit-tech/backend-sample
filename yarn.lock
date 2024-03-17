@@ -1825,10 +1825,10 @@
     ulid "2.3.0"
     uuid "^9.0.1"
 
-"@qbit-tech/libs-notification-scheduler@^1.0.8":
-  version "1.0.8"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.8/c5673f6e4a7d93da28460424f3cbd38e13a21b67#c5673f6e4a7d93da28460424f3cbd38e13a21b67"
-  integrity sha512-gxYr1/aJVtfbWxoy3VwscNEe9BgxnTg7y/3hk75swZqtOoejJ7KZcnD+niS6WEH498vW/NVzsJ64kIdlWjTGFA==
+"@qbit-tech/libs-notification-scheduler@^1.0.9":
+  version "1.0.9"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification-scheduler/1.0.9/f4059f023de00b978b5818632191eedc7b53368f#f4059f023de00b978b5818632191eedc7b53368f"
+  integrity sha512-tfnpRO7ixDkJwVP2zeprxGWQ3smLETeLiB4tb/u/PChlB5EHSCc56v/bnMOc66lP2ECBXc5jDOJlfbmZtd6gww==
   dependencies:
     "@nestjs/schedule" "^3.0.1"
     "@qbit-tech/libs-notification" "^1.7.1"
