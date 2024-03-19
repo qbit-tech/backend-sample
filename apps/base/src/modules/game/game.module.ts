@@ -10,7 +10,6 @@ import { Game_PlayerHistoriesModel } from './entity/game_player_histories.entity
 import { GamePlayerController } from './gamePlayer.controller';
 import { GamePlayerHistoryController } from './gamePlayerHistory.controller';
 import { PlayGameController } from './play.controller';
-import { GameAuthController } from './gameAuth.controller';
 
 @Module({
   imports: [
@@ -30,7 +29,6 @@ import { GameAuthController } from './gameAuth.controller';
     GamePlayerController,
     GamePlayerHistoryController,
     PlayGameController,
-    GameAuthController,
   ],
   providers: [GameService],
 })
