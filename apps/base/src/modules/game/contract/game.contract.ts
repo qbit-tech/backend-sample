@@ -194,3 +194,13 @@ export class GameDeleteResponse {
     readonly title: string;
 }
 
+export class GameRoundStartRequest {
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly code: string;
+
+    @IsNotEmpty()
+    @ApiProperty()
+    readonly playerId: string;
+}
+
