@@ -87,4 +87,15 @@ export class PlayGameController {
   async gameCodeCheck(code: string): Promise<any> {
     return await this.gameService.gameCodeCheck(code);
   }
+
+
+
+  @ApiOperation({ summary: 'Get Game Status By Game Code' })
+  @Get(':code/status/:playerId')
+  async gameStatus(
+    @Param('code') code: string,
+    @Param('playerId') playerId: string,
+  ): Promise<any> {
+    return await this.gameService.getStatusSession(code, playerId);
+  }
 }
