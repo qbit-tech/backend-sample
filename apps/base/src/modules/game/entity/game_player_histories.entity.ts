@@ -68,6 +68,12 @@ export class Game_PlayerHistoriesModel extends Model {
     @Column
     totalRewardClaimed: number;
 
+    @Column
+    currentRound: number;
+
+    @Column(DataType.JSON)
+    roundHistories: any;
+
     @CreatedAt
     createdAt: Date;
 
