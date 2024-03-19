@@ -590,7 +590,7 @@ export class GameService {
 
       const gamePlayerIdSession = gamePlayer.get().id;
 
-      let result = {
+      const result = {
         access_token: signInResult.access_token,
         refresh_token: signInResult.refresh_token,
         userId: user.userId,
@@ -653,10 +653,18 @@ export class GameService {
           });
 
           return {
+            access_token: signInResult.access_token,
+            refresh_token: signInResult.refresh_token,
+            userId: user.userId,
+            gamePlayerId: gamePlayerIdSession,
+            isVerified: 'true',
+            isPasswordExpired: 'false',
+            passwordExpiredAt: null,
+            isBlocked: 'false',
+            blockedAt: null,
             code: 'success',
             message: 'Game started For the first time',
             payload: {
-              result,
               gameId: game.id,
               playerId: user.userId,
               gameplay: 1,
@@ -691,10 +699,18 @@ export class GameService {
           );
 
           return {
+            access_token: signInResult.access_token,
+            refresh_token: signInResult.refresh_token,
+            userId: user.userId,
+            gamePlayerId: gamePlayerIdSession,
+            isVerified: 'true',
+            isPasswordExpired: 'false',
+            passwordExpiredAt: null,
+            isBlocked: 'false',
+            blockedAt: null,
             code: 'success',
             message: `Game started in the ${gamePlayerHistory.currentRound + 1} round.`,
             payload: {
-              result,
               gameId: game.id,
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay,
@@ -712,10 +728,18 @@ export class GameService {
           });
 
           return {
+            access_token: signInResult.access_token,
+            refresh_token: signInResult.refresh_token,
+            userId: user.userId,
+            gamePlayerId: gamePlayerIdSession,
+            isVerified: 'true',
+            isPasswordExpired: 'false',
+            passwordExpiredAt: null,
+            isBlocked: 'false',
+            blockedAt: null,
             code: 'success',
             message: `Game has started in the gameplay ${gamePlayerHistory.gameplay + 1}.`,
             payload: {
-              result,
               gameId: game.id,
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay + 1,
@@ -744,10 +768,18 @@ export class GameService {
         });
 
         return {
+          access_token: signInResult.access_token,
+          refresh_token: signInResult.refresh_token,
+          userId: user.userId,
+          gamePlayerId: gamePlayerIdSession,
+          isVerified: 'true',
+          isPasswordExpired: 'false',
+          passwordExpiredAt: null,
+          isBlocked: 'false',
+          blockedAt: null,
           code: 'success',
           message: `First Time Playing Game Started.`,
           payload: {
-            result,
             newGamePlayer,
           },
         };

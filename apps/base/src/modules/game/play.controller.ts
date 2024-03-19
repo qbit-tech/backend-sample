@@ -54,22 +54,22 @@ export class PlayGameController {
 
 
 
-  @ApiOperation({ summary: 'Start Round By Game Code and Player Id' })
-  @Post(':code/start-round')
-  async startRoundGame(
-    @Param('code') code: string,
-    @Req() request: any,
-    @Body() body: Game_PlayersStartRoundRequest,
-  ): Promise<any> {
-    return await this.startRound(code, { ...body });
-  }
+  // @ApiOperation({ summary: 'Start Round By Game Code and Player Id' })
+  // @Post(':code/start-round')
+  // async startRoundGame(
+  //   @Param('code') code: string,
+  //   @Req() request: any,
+  //   @Body() body: Game_PlayersStartRoundRequest,
+  // ): Promise<any> {
+  //   return await this.startRound(code, { ...body });
+  // }
 
-  async startRound(
-    id: string,
-    params: Game_PlayersStartRoundRequest
-  ): Promise<any> {
-    return await this.gameService.startRound(id, params.playerId);
-  }
+  // async startRound(
+  //   id: string,
+  //   params: Game_PlayersStartRoundRequest
+  // ): Promise<any> {
+  //   return await this.gameService.startRound(id, params.playerId);
+  // }
 
 
 
