@@ -1745,10 +1745,10 @@
     "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
 
-"@qbit-tech/libs-address@^1.2.6":
-  version "1.2.6"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-address/1.2.6/d3eb3eb9e580cb3989dde118374eda0fd32867a1#d3eb3eb9e580cb3989dde118374eda0fd32867a1"
-  integrity sha512-oDfRRY3UVplH24+2nTFPvuL1NgefYtX700kN7JOykVWfe1IZRHM6OussoysqB95VkLVnV/r1Z/W1ES13ExlxSw==
+"@qbit-tech/libs-address@^1.2.7":
+  version "1.2.7"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-address/1.2.7/9efcd32a14faec04e6a8da27564ff6dcf1f26c7f#9efcd32a14faec04e6a8da27564ff6dcf1f26c7f"
+  integrity sha512-SG+VbNCBWPE2U1CYx+if+J7yZXO5uvIvoxZqVg5bByPHi1XcWlfTEB9qPpL5lVg21htPW0L879F+1YqdxK/2/g==
   dependencies:
     "@qbit-tech/libs-session" "^1.7.5"
     "@qbit-tech/libs-utils" "^1.2.7"
@@ -1786,10 +1786,17 @@
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-faq@^1.5.2":
-  version "1.5.2"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.5.2/f6357b7b9e642ddccc30be78af031f374026ee71#f6357b7b9e642ddccc30be78af031f374026ee71"
-  integrity sha512-bxPL6pUgQu0Q9jbJWniPF8WOXrlCydzbsg95jL8gc+9E89stOWhN8z4TQPHpryHpKNgIUcriWsAvhe32qPAnng==
+"@qbit-tech/libs-authv3@^1.4.6":
+  version "1.4.6"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.6/8f536d388987aab270efbc4bae5e01e6a8b11e2c#8f536d388987aab270efbc4bae5e01e6a8b11e2c"
+  integrity sha512-yKBfuS64TWIzolh18/FxMutypme0AcMB3qLUsI0ca5LWV59jL7mNy9xQVK1Kjy+K/mXdKjldWwn0eOMhDnFrPw==
+  dependencies:
+    bcrypt "^5.1.0"
+
+"@qbit-tech/libs-faq@^1.5.3":
+  version "1.5.3"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-faq/1.5.3/15a6124a391f07304b0333477a62e13c60aa55a9#15a6124a391f07304b0333477a62e13c60aa55a9"
+  integrity sha512-HmvQdUmz3dDzUbx46q4F4X/EOoQ3oaA3ZlUB/GWzfutLbF12IcH3YA3ipgXp8l6zLrHvf+NG4DvugDaOqNYpCw==
   dependencies:
     "@nestjs-modules/ioredis" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -1858,6 +1865,22 @@
   version "1.7.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.5/461d197ccb4159dde18c33d911019ee19dddd08b#461d197ccb4159dde18c33d911019ee19dddd08b"
   integrity sha512-LIbSS9GtoIUpUK3FYt4tJyA6Zq72NRx2uIzy2xw9Vc0PUM7jeCd1XlEzbjZl4+0+gUjS5FhJfNhaRmuWQZ3u9w==
+  dependencies:
+    "@getbrevo/brevo" "^1.0.1"
+    "@nestjs/axios" "^3.0.0"
+    "@nestjs/schedule" "^3.0.1"
+    "@sendgrid/mail" "^7.7.0"
+    "@sendinblue/client" "^3.3.1"
+    base-64 "^1.0.0"
+    firebase-admin "^11.9.0"
+    js-md5 "^0.7.3"
+    nodemailer "^6.9.5"
+    postmark "^3.0.18"
+
+"@qbit-tech/libs-notification@^1.7.7":
+  version "1.7.7"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-notification/1.7.7/9439d0f5890e98f35cc6089a0e6e8df6066a862b#9439d0f5890e98f35cc6089a0e6e8df6066a862b"
+  integrity sha512-Ky4LBVbQUqayYJUjSQ/2Ol6UrYiJD72hbNIWSp2W93RHG9Nt3IfmB5MjoD4IvGU8cIV987fd3RwJ1RTso/yWEw==
   dependencies:
     "@getbrevo/brevo" "^1.0.1"
     "@nestjs/axios" "^3.0.0"
@@ -2023,6 +2046,13 @@
   dependencies:
     aws-sdk "^2.868.0"
 
+"@qbit-tech/libs-uploader@^1.4.1":
+  version "1.4.1"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-uploader/1.4.1/6cdb1d17fc6828e0d50362baab6ac5c307867f82#6cdb1d17fc6828e0d50362baab6ac5c307867f82"
+  integrity sha512-5A+yFMQgbfMK1XnZw1LSXniksA3SmoN0oSOR5wvDn7b14Eahk3UOhiqn112YvaeMr91j4HCmJk86jUcrYjQaLA==
+  dependencies:
+    aws-sdk "^2.868.0"
+
 "@qbit-tech/libs-utils@^1.2.5":
   version "1.2.5"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-utils/1.2.5/e3e8873fd2b5ebfd4e846c9c430c837ef1ccbebd#e3e8873fd2b5ebfd4e846c9c430c837ef1ccbebd"
@@ -2034,6 +2064,13 @@
   version "1.2.7"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-utils/1.2.7/079a697b2781b396b9f160b4fd92fef461d9e377#079a697b2781b396b9f160b4fd92fef461d9e377"
   integrity sha512-w6XOo/PncPMsnpEabVYT3OhB0Tp9s9nTY/p9zc5q+N3/875bXBJnHpMwiCYi/VoXeMq6Nfz7cNk9kg4NvRnpnA==
+  dependencies:
+    compare-versions "^6.0.0"
+
+"@qbit-tech/libs-utils@^1.2.8":
+  version "1.2.8"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-utils/1.2.8/06c83d7fb323cbc44ae9c6bfe436a9765091b455#06c83d7fb323cbc44ae9c6bfe436a9765091b455"
+  integrity sha512-t8sdNV9I+WlwxwYsK4YHGfnDmv+O0/lskcbwIo6HiHLrczLEv4rgScNuEZuT+Z9PyIE/B+VGPa2g6NmGONYZ6Q==
   dependencies:
     compare-versions "^6.0.0"
 

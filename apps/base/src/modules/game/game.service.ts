@@ -57,8 +57,7 @@ export class GameService {
     private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
 
     private readonly sessionService: SessionService,
-  ) { }
-
+  ) {}
 
   // Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
@@ -281,69 +280,89 @@ export class GameService {
     }
   }
 
-
-
-
-
   // Game Players Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
-  generateGameRewards(maxRound: number, minTotalReward: number, maxTotalReward: number): number[] {
-    const rewards: number[] = [];
-
+  generateGameRewards(
+    maxRound: number,
+    minTotalReward: number,
+    maxTotalReward: number,
+  ): number[] {
     // Pastikan maxRound minimal 1
     if (maxRound < 1) {
       throw new Error('Max round must be at least 1');
     }
 
-    // Hitung nilai range reward
-    // const rewardRange = maxTotalReward - minTotalReward;
-    // const rewardRange = Math.floor((maxTotalReward - minTotalReward) / maxRound);
-    let rewardRange: number;
+    const rewards = [];
+    let totalReward = 0;
 
-    if (maxTotalReward <= 100) {
-      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 10) * 10;
-    } else if (maxTotalReward <= 1000) {
-      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 100) * 100;
-    } else {
-      rewardRange = Math.floor(Math.random() * (maxTotalReward - minTotalReward) / 1000) * 1000;
+    function randomIntFromInterval(min, max) {
+      // min and max included
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    console.log('rewardRange', rewardRange);
+    // Function to generate a random integer within a range
+    function randomNum(min, max) {
+      return Math.round((Math.random() * (max - min) + min) / 500) * 500;
+    }
 
-    let remainingReward = rewardRange;
+    // Generate rewards for each round
+    for (let i = 0; i < maxRound; i++) {
+      // Generate a random reward for this round
+      let reward = randomNum(1000, 5000);
 
-    for (let i = 0; i < maxRound - 1; i++) {
-      console.log('remainingReward', remainingReward);
-      let randomReward: number;
-      if (i === 0) {
-        // Jika posisi i adalah i[0]
-        const halfRewardRange = rewardRange / 2;
-
-        if (halfRewardRange <= 100) {
-          randomReward = Math.floor(Math.random() * (halfRewardRange / 10)) * 10;
-        } else if (halfRewardRange <= 1000) {
-          randomReward = Math.floor(Math.random() * (halfRewardRange / 100)) * 100;
-        } else {
-          randomReward = Math.floor(Math.random() * (halfRewardRange / 1000)) * 1000;
-        }
-
-      } else {
-        if (remainingReward <= 100) {
-          randomReward = Math.floor(Math.random() * (remainingReward / 10)) * 10;
-        } else if (remainingReward <= 1000) {
-          randomReward = Math.floor(Math.random() * (remainingReward / 100)) * 100;
-        } else {
-          randomReward = Math.floor(Math.random() * (remainingReward / 1000)) * 1000;
+      // Check if all rewards are the same
+      if (i > 0) {
+        while (rewards.every((val) => val === reward)) {
+          reward = randomNum(1000, 5000);
         }
       }
-      console.log('randomReward', randomReward);
-      remainingReward -= randomReward;
-      rewards.push(randomReward);
+
+      rewards.push(reward);
+      totalReward += reward;
     }
 
+    if (minTotalReward === maxTotalReward) {
+      function getRandomInt(max) {
+        return Math.floor((Math.random() * max) / 500) * 500;
+      }
 
-    rewards.push(remainingReward);
+      const rewardWithSameTotalReward = [];
 
+      for (let i = 0; i < maxRound - 1; i++) {
+        const randomValue = getRandomInt(maxTotalReward);
+        rewardWithSameTotalReward.push(randomValue);
+        maxTotalReward -= randomValue;
+      }
+      rewardWithSameTotalReward.push(maxTotalReward);
+
+      rewardWithSameTotalReward.sort(() => Math.random() - 0.5);
+      return rewardWithSameTotalReward;
+    }
+
+    // Check if total reward is within bounds
+    if (totalReward < minTotalReward) {
+      const remainingReward = minTotalReward - totalReward;
+
+      for (let i = 0; i < remainingReward; i++) {
+        if (totalReward < minTotalReward) {
+          const index = randomIntFromInterval(0, maxRound - 1);
+          rewards[index] += 1000;
+          totalReward += 1000;
+        }
+      }
+    } else if (totalReward > maxTotalReward) {
+      const excessReward = totalReward - maxTotalReward;
+
+      for (let i = 0; i < excessReward; i++) {
+        if (totalReward > maxTotalReward) {
+          const index = randomIntFromInterval(0, maxRound - 1);
+          if (rewards[index] > 1000) {
+            rewards[index] -= 1000;
+            totalReward -= 1000;
+          }
+        }
+      }
+    }
 
     return rewards;
   }
@@ -367,18 +386,21 @@ export class GameService {
           name: params.name,
           phone,
         });
-        console.log('user', user);
       }
 
       const game = await this.gameModelRepository.findOne({
         where: { id: id },
       });
 
-      const maxGameplay = game.max_gameplay_per_user
+      const maxGameplay = game.max_gameplay_per_user;
       const availableRewards = {};
 
       for (let i = 1; i <= maxGameplay; i++) {
-        const rewards = this.generateGameRewards(game.max_round_per_gameplay_per_user, game.min_reward_per_gameplay_per_user, game.max_reward_per_gameplay_per_user);
+        const rewards = this.generateGameRewards(
+          game.max_round_per_gameplay_per_user,
+          game.min_reward_per_gameplay_per_user,
+          game.max_reward_per_gameplay_per_user,
+        );
         availableRewards[`gameplay_${i}`] = rewards;
       }
 
@@ -407,8 +429,8 @@ export class GameService {
             playerId: gamePlayer.playerId,
             gameId: gamePlayer.gameId,
           },
-        }
-      };
+        };
+      }
     } catch (error) {
       throw new HttpException(
         {
@@ -518,9 +540,6 @@ export class GameService {
     }
   }
 
-
-
-
   // Game Start Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
   async startGame(
@@ -530,7 +549,7 @@ export class GameService {
     try {
       // Cek apakah game dengan gameCode tersedia
       const game = await this.gameModelRepository.findOne({
-        where: { game_code: code },
+        where: { game_code: code, status: 'active' },
       });
       if (!game) {
         throw new HttpException(
@@ -543,7 +562,41 @@ export class GameService {
         );
       }
 
-      // Cek apakah game telah kedaluwarsa
+      // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
+      const user = await this.User.findOne({
+        where: { phone: params.phone },
+      });
+      // const userInGame = await this.gamePlayersModelRepository.findOne({
+      //   where: {
+      //     gameId: game.id,
+      //     playerId: user.userId,
+      //   },
+      // });
+
+      // Cari pengguna berdasarkan nomor telepon
+      console.log('user', user);
+      if (!user) {
+        throw new HttpException(
+          {
+            message: 'User not registered.',
+            code: 'err_user_not_found',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // if (user && !userInGame) {
+      //   throw new HttpException(
+      //     {
+      //       status: 'ERROR',
+      //       message: 'Game not found.',
+      //       payload: null,
+      //     },
+      //     HttpStatus.NOT_FOUND,
+      //   );
+      // }
+
+      // Cek apakah game sudah expired atau belum, jika sudah expired, tolak.
       if (game.expired_at && new Date(game.expired_at) < new Date()) {
         throw new HttpException(
           {
@@ -555,14 +608,8 @@ export class GameService {
         );
       }
 
-      const user = await this.User.findOne({
-        where: { name: params.name, phone: params.phone },
-      });
-
-
       /// Login
-
-      let gamePlayer = await this.gamePlayersModelRepository.findOne({
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
         where: {
           gameId: game.id,
           playerId: user.userId,
@@ -612,29 +659,36 @@ export class GameService {
       //   throw new Error('No rewards left for this gameplay');
       // }
 
-      // Cari pengguna berdasarkan nomor telepon
-
-      console.log('user', user.userId);
-      if (!user) {
+      // Cek apakah pengguna sudah pernah main dan claim reward
+      const isUserAlreadyClaimReward =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: {
+            gameId: game.id,
+            playerId: user.userId,
+            rewardClaimedAt: {
+              [Op.not]: null,
+            },
+          },
+        });
+      if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
         throw new HttpException(
           {
             status: 'ERROR',
-            message: 'User not registered.',
+            message: 'User has already played.',
             payload: null,
           },
           HttpStatus.BAD_REQUEST,
         );
       }
-
       // Cek apakah pengguna terdaftar dalam pemain game ini
-      const isUserInGame =
-        await this.gamePlayersModelRepository.findOne({
-          where: {
-            gameId: game.id,
-            playerId: user.userId,
-          },
-        });
+      const isUserInGame = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+        },
+      });
 
+      // Jika user ini sudah pernah main game
       const isUserInGameHistory =
         await this.gamePlayerHistoriesModelRepository.findOne({
           where: {
@@ -669,6 +723,8 @@ export class GameService {
             playerId: user.userId,
             gameplay: 1,
             currentRound: 1,
+            maxGameplayPerUser: game.max_gameplay_per_user,
+            maxRoundPerUser: game.max_round_per_gameplay_per_user,
           },
         };
       }
@@ -677,16 +733,18 @@ export class GameService {
         // Pengguna telah bermain sebelumnya
         // Cek apakah masih ada gameplay yang belum selesai
 
-        const gamePlayerHistory = await this.gamePlayerHistoriesModelRepository.findOne({
-          where: {
-            gameId: game.id,
-            playerId: user.userId,
-          },
-          order: [['createdAt', 'DESC']],
-        });
+        const gamePlayerHistory =
+          await this.gamePlayerHistoriesModelRepository.findOne({
+            where: {
+              gameId: game.id,
+              playerId: user.userId,
+            },
+            order: [['createdAt', 'DESC']],
+          });
 
-        if (gamePlayerHistory.currentRound < game.max_round_per_gameplay_per_user) {
-
+        if (
+          gamePlayerHistory.currentRound < game.max_round_per_gameplay_per_user
+        ) {
           // await this.gamePlayerHistoriesModelRepository.update(
           //   {
           //     currentRound: gamePlayerHistory.currentRound + 1,
@@ -698,46 +756,48 @@ export class GameService {
           //   },
           // );
 
-          const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
-          const availableRewards = gamePlayer.availableRewards[gameplayKey];
-          if (!availableRewards || availableRewards.length === 0) {
-            throw new Error('No rewards left for this gameplay');
+          if (!params.initGame) {
+            const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
+            const availableRewards = gamePlayer.availableRewards[gameplayKey];
+            if (!availableRewards || availableRewards.length === 0) {
+              throw new Error('No rewards left for this gameplay');
+            }
+
+            const reward = availableRewards.shift();
+            gamePlayer.availableRewards[gameplayKey] = availableRewards;
+            gamePlayer.updatedAt = new Date();
+            // await this.gamePlayerRepository.save(gamePlayer)
+            await this.gamePlayersModelRepository.update(
+              {
+                availableRewards: gamePlayer.availableRewards,
+                updatedAt: new Date(),
+              },
+              {
+                where: {
+                  id: gamePlayer.id,
+                },
+              },
+            );
+
+            // gamePlayerHistory.rewardClaimed_AllRounds.push(reward);
+            await this.gamePlayerHistoriesModelRepository.update(
+              {
+                currentRound: gamePlayerHistory.currentRound + 1,
+                rewardClaimed_AllRounds: Sequelize.fn(
+                  'array_append',
+                  Sequelize.col('rewardClaimed_AllRounds'),
+                  reward,
+                ),
+                totalRewardClaimed:
+                  gamePlayerHistory.totalRewardClaimed + reward,
+              },
+              {
+                where: {
+                  id: gamePlayerHistory.id,
+                },
+              },
+            );
           }
-
-          const reward = availableRewards.shift();
-          gamePlayer.availableRewards[gameplayKey] = availableRewards;
-          gamePlayer.updatedAt = new Date();
-          // await this.gamePlayerRepository.save(gamePlayer)
-          await this.gamePlayersModelRepository.update(
-            {
-              availableRewards: gamePlayer.availableRewards,
-              updatedAt: new Date(),
-            },
-            {
-              where: {
-                id: gamePlayer.id,
-              },
-            },
-          );
-
-          // gamePlayerHistory.rewardClaimed_AllRounds.push(reward);
-          await this.gamePlayerHistoriesModelRepository.update(
-            {
-              currentRound: gamePlayerHistory.currentRound + 1,
-              rewardClaimed_AllRounds: Sequelize.fn(
-                'array_append',
-                Sequelize.col('rewardClaimed_AllRounds'),
-                reward,
-              ),
-              totalRewardClaimed: gamePlayerHistory.totalRewardClaimed + reward,
-            },
-            {
-              where: {
-                id: gamePlayerHistory.id,
-              },
-            },
-          );
-
 
           return {
             access_token: signInResult.access_token,
@@ -750,34 +810,86 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game started in the ${gamePlayerHistory.currentRound + 1} round.`,
+            message: `Game started in the ${
+              gamePlayerHistory.currentRound + 1
+            } round.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay,
               currentRound: gamePlayerHistory.currentRound + 1,
+              realRound: gamePlayerHistory.currentRound,
+              realGameplay: gamePlayerHistory.gameplay,
+              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };
+        } else if (
+          gamePlayerHistory.currentRound ===
+          game.max_round_per_gameplay_per_user
+        ) {
+          // if (gamePlayerHistory.gameplay == game.max_gameplay_per_user) {
+          //   throw new HttpException(
+          //     {
+          //       status: 'ERROR',
+          //       message: 'User has reached maximum rounds allowed.',
+          //       payload: null,
+          //     },
+          //     HttpStatus.BAD_REQUEST,
+          //   );
+          // }
+          if (!params.initGame) {
+            const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
+            const availableRewards = gamePlayer.availableRewards[gameplayKey];
 
-        } else if (gamePlayerHistory.currentRound = game.max_round_per_gameplay_per_user) {
+            if (availableRewards.length > 0) {
+              const reward = availableRewards.shift();
+              gamePlayer.availableRewards[gameplayKey] = availableRewards;
+              gamePlayer.updatedAt = new Date();
+              // await this.gamePlayerRepository.save(gamePlayer)
+              await this.gamePlayersModelRepository.update(
+                {
+                  availableRewards: gamePlayer.availableRewards,
+                  updatedAt: new Date(),
+                },
+                {
+                  where: {
+                    id: gamePlayer.id,
+                  },
+                },
+              );
 
-          if (gamePlayerHistory.gameplay == game.max_gameplay_per_user) {
-            throw new HttpException(
-              {
-                status: 'ERROR',
-                message: 'User has reached maximum rounds allowed.',
-                payload: null,
-              },
-              HttpStatus.BAD_REQUEST,
-            );
+              // gamePlayerHistory.rewardClaimed_AllRounds.push(reward);
+              await this.gamePlayerHistoriesModelRepository.update(
+                {
+                  currentRound: gamePlayerHistory.currentRound,
+                  rewardClaimed_AllRounds: Sequelize.fn(
+                    'array_append',
+                    Sequelize.col('rewardClaimed_AllRounds'),
+                    reward,
+                  ),
+                  totalRewardClaimed:
+                    gamePlayerHistory.totalRewardClaimed + reward,
+                },
+                {
+                  where: {
+                    id: gamePlayerHistory.id,
+                  },
+                },
+              );
+            }
+
+            if (gamePlayerHistory.gameplay !== game.max_gameplay_per_user) {
+              await this.gamePlayerHistoriesModelRepository.create({
+                playerId: user.userId,
+                gameId: game.id,
+                gameplay: gamePlayerHistory.gameplay + 1,
+                currentRound: 1,
+                realRound: gamePlayerHistory.currentRound,
+                realGameplay: gamePlayerHistory.gameplay,
+              });
+            }
           }
-
-          await this.gamePlayerHistoriesModelRepository.create({
-            playerId: user.userId,
-            gameId: game.id,
-            gameplay: gamePlayerHistory.gameplay + 1,
-            currentRound: 1,
-          });
 
           return {
             access_token: signInResult.access_token,
@@ -790,15 +902,20 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game has started in the gameplay ${gamePlayerHistory.gameplay + 1}.`,
+            message: `Game has started in the gameplay ${
+              gamePlayerHistory.gameplay + 1
+            }.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay + 1,
               currentRound: 1,
+              realRound: gamePlayerHistory.currentRound,
+              realGameplay: gamePlayerHistory.gameplay,
+              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };
-
         } else {
           throw new HttpException(
             {
@@ -812,12 +929,13 @@ export class GameService {
       } else {
         // Pengguna belum pernah bermain game ini
         // Cek apakah masih boleh bermain
-        const newGamePlayer = await this.gamePlayerHistoriesModelRepository.create({
-          playerId: user.userId,
-          gameId: game.id,
-          gameplay: 1,
-          currentRound: 1,
-        });
+        const newGamePlayer =
+          await this.gamePlayerHistoriesModelRepository.create({
+            playerId: user.userId,
+            gameId: game.id,
+            gameplay: 1,
+            currentRound: 1,
+          });
 
         return {
           access_token: signInResult.access_token,
@@ -848,13 +966,14 @@ export class GameService {
     }
   }
 
-
   // Game Claim Reward Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
   async claimReward(
     code: string,
     params: Game_ClaimRewardRequest,
-  ): Promise<Game_PlayersCreateResponse> {
+  ): Promise<{
+    isSuccess: true;
+  }> {
     try {
       // Temukan game berdasarkan game code
       const game = await this.gameModelRepository.findOne({
@@ -885,16 +1004,50 @@ export class GameService {
         );
       }
 
+      // // Temukan history gameplay yang belum diklaim
+      // const unclaimedGameplay =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      // gameId: game.id,
+      // playerId: user.userId,
+      // // claimedReward: false,
+      // rewardClaimedAt: null,
+      //     },
+      //     order: [['createdAt', 'DESC']],
+      //   });
+
+      // const unclaimedGameplayData = unclaimedGameplay.map((item) => item.get());
+      // if (unclaimedGameplayData.length === 0) {
+      //   throw new Error(
+      //     'Can’t claim this game reward. Please start the game before claim.',
+      //   );
+      // }
+
+      // // Lakukan update untuk menandai reward telah diklaim
+      // await this.gamePlayerHistoriesModelRepository.update(
+      //   {
+      //     rewardClaimedAt: new Date(),
+      //     // rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
+      //     // totalRewardClaimed: 1,
+      //   },
+      //   {
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //       rewardClaimedAt: null,
+      //     },
+      //   },
+      // );
+
       // Temukan history gameplay yang belum diklaim
       const unclaimedGameplay =
         await this.gamePlayerHistoriesModelRepository.findOne({
           where: {
             gameId: game.id,
             playerId: user.userId,
-            // claimedReward: false,
+            id: params.playerHistoryId,
             rewardClaimedAt: null,
           },
-          order: [['createdAt', 'DESC']],
         });
 
       if (!unclaimedGameplay) {
@@ -904,34 +1057,22 @@ export class GameService {
       }
 
       // Lakukan update untuk menandai reward telah diklaim
-      await this.gamePlayerHistoriesModelRepository.update(
-        {
-          rewardClaimedAt: new Date(),
-          rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
-          totalRewardClaimed: 1,
-        },
-        {
-          where: {
-            id: unclaimedGameplay.id,
-          },
-        },
-      );
+      await unclaimedGameplay.update({
+        rewardClaimedAt: new Date(),
+      });
 
-      return unclaimedGameplay.get();
+      return {
+        isSuccess: true,
+      };
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-
-
   // For Web Game App
 
-  async gameCodeCheck(
-    code: string,
-  ): Promise<any> {
+  async gameCodeCheck(code: string): Promise<any> {
     try {
-      console.log('code', code);
       const gameCodeExtract = await this.gameModelRepository.findOne({
         where: { game_code: code },
       });
@@ -970,10 +1111,7 @@ export class GameService {
     }
   }
 
-  async getStatusSession(
-    code: string,
-    playerId: string,
-  ): Promise<any> {
+  async getStatusSession(code: string, playerId: string): Promise<any> {
     try {
       const game = await this.gameModelRepository.findOne({
         where: { game_code: code },
@@ -1021,13 +1159,133 @@ export class GameService {
         );
       }
 
-      const gamePlayerHistory = await this.gamePlayerHistoriesModelRepository.findOne({
+      const gamePlayerHistory =
+        await this.gamePlayerHistoriesModelRepository.findOne({
+          where: {
+            gameId: game.id,
+            playerId,
+          },
+          order: [['createdAt', 'DESC']],
+        });
+
+      if (!gamePlayerHistory) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game player history not found.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      // cek kalau user di step claim reward
+      let isClaimPage = false;
+      const currentAvailableRewards = gamePlayer.get()?.availableRewards;
+      if (currentAvailableRewards) {
+        const keys = Object.keys(currentAvailableRewards);
+        const arrReward = [];
+        for (const key of keys) {
+          arrReward.push(...currentAvailableRewards[key]);
+        }
+
+        if (arrReward.length === 0) {
+          isClaimPage = true;
+        }
+      }
+
+      const lastGetReward = gamePlayerHistory.get().rewardClaimed_AllRounds
+        ? gamePlayerHistory.get().rewardClaimed_AllRounds[
+            gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
+          ]
+        : null;
+
+      return {
+        code: 'success',
+        message: 'Game status found',
+        payload: {
+          game: game.get(),
+          user: user.get(),
+          gamePlayer: gamePlayer.get(),
+          gamePlayerHistory: gamePlayerHistory.get(),
+          isClaimPage,
+          lastGetReward,
+        },
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'ERROR',
+          message: [error, 'error get status'],
+          payload: null,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async getDataClaimReward(
+    code: string,
+    playerId: string,
+
+    currentGameplay: number,
+  ): Promise<any> {
+    console.log('currentGameplay', currentGameplay);
+    try {
+      const game = await this.gameModelRepository.findOne({
+        where: { game_code: code },
+      });
+      if (!game) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game not found.',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const user = await this.User.findOne({
+        where: { userId: playerId },
+      });
+      if (!user) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'User not registered.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
         where: {
           gameId: game.id,
           playerId,
         },
-        order: [['createdAt', 'DESC']],
       });
+
+      if (!gamePlayer) {
+        throw new HttpException(
+          {
+            status: 'ERROR',
+            message: 'Game player not found.',
+            payload: null,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const gamePlayerHistory =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: {
+            gameId: game.id,
+            playerId,
+            // rewardClaimedAt: null,
+          },
+          order: [['gameplay', 'ASC']],
+        });
 
       if (!gamePlayerHistory) {
         throw new HttpException(
@@ -1040,14 +1298,28 @@ export class GameService {
         );
       }
 
+      const resGamePlayerHistories = gamePlayerHistory.map((item) =>
+        item.get(),
+      );
+
+      const resGamePlayerHistorySpesificGameplay = resGamePlayerHistories.find(
+        (item2) => item2.gameplay === currentGameplay,
+      );
+      // const totalReward = resGamePlayerHistory.reduce(
+      //   (acc, curr) => acc + (curr?.totalRewardClaimed || 0),
+      //   0,
+      // );
+
       return {
         code: 'success',
         message: 'Game status found',
         payload: {
           game: game.get(),
-          user: user.get(),
+          // user: user.get(),
           gamePlayer: gamePlayer.get(),
-          gamePlayerHistory: gamePlayerHistory.get(),
+          gamePlayerHistory: resGamePlayerHistorySpesificGameplay,
+          gamePlayerHistories: resGamePlayerHistories,
+          // totalReward,
         },
       };
     } catch (error) {
@@ -1061,8 +1333,6 @@ export class GameService {
       );
     }
   }
-
-
 
   // For CMS
   async getAllPlayers(
@@ -1255,6 +1525,4 @@ export class GameService {
       );
     }
   }
-
-
 }
