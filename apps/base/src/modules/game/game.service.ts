@@ -287,7 +287,7 @@ export class GameService {
     minTotalReward: number,
     maxTotalReward: number,
   ): number[] {
-    const rewards: number[] = [];
+    // const rewards: number[] = [];
 
     // Pastikan maxRound minimal 1
     if (maxRound < 1) {
@@ -297,61 +297,136 @@ export class GameService {
     // Hitung nilai range reward
     // const rewardRange = maxTotalReward - minTotalReward;
     // const rewardRange = Math.floor((maxTotalReward - minTotalReward) / maxRound);
-    let rewardRange: number;
+    // let rewardRange: number;
 
-    if (maxTotalReward <= 100) {
-      rewardRange =
-        Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 10) *
-        10;
-    } else if (maxTotalReward <= 1000) {
-      rewardRange =
-        Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 100) *
-        100;
-    } else {
-      rewardRange =
-        Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 1000) *
-        1000;
+    // if (maxTotalReward <= 100) {
+    //   rewardRange =
+    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 10) *
+    //     10;
+    // } else if (maxTotalReward <= 1000) {
+    //   rewardRange =
+    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 100) *
+    //     100;
+    // } else {
+    //   rewardRange =
+    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 1000) *
+    //     1000;
+    // }
+
+    // console.log('rewardRange', rewardRange);
+
+    // let remainingReward = rewardRange;
+
+    // for (let i = 0; i < maxRound - 1; i++) {
+    //   console.log('remainingReward', remainingReward);
+    //   let randomReward: number;
+    //   if (i === 0) {
+    //     // Jika posisi i adalah i[0]
+    //     const halfRewardRange = rewardRange / 2;
+
+    //     if (halfRewardRange <= 100) {
+    //       randomReward =
+    //         Math.floor(Math.random() * (halfRewardRange / 10)) * 10;
+    //     } else if (halfRewardRange <= 1000) {
+    //       randomReward =
+    //         Math.floor(Math.random() * (halfRewardRange / 100)) * 100;
+    //     } else {
+    //       randomReward =
+    //         Math.floor(Math.random() * (halfRewardRange / 1000)) * 1000;
+    //     }
+    //   } else {
+    //     if (remainingReward <= 100) {
+    //       randomReward =
+    //         Math.floor(Math.random() * (remainingReward / 10)) * 10;
+    //     } else if (remainingReward <= 1000) {
+    //       randomReward =
+    //         Math.floor(Math.random() * (remainingReward / 100)) * 100;
+    //     } else {
+    //       randomReward =
+    //         Math.floor(Math.random() * (remainingReward / 1000)) * 1000;
+    //     }
+    //   }
+    //   console.log('randomReward', randomReward);
+    //   remainingReward -= randomReward;
+    //   rewards.push(randomReward);
+    // }
+
+    // rewards.push(remainingReward);
+
+    // return rewards;
+
+    // New
+    const rewards = [];
+    let totalReward = 0;
+
+    function randomIntFromInterval(min, max) {
+      // min and max included
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    console.log('rewardRange', rewardRange);
+    // Function to generate a random integer within a range
+    function randomNum(min, max) {
+      return Math.round((Math.random() * (max - min) + min) / 500) * 500;
+    }
 
-    let remainingReward = rewardRange;
+    // Generate rewards for each round
+    for (let i = 0; i < maxRound; i++) {
+      // Generate a random reward for this round
+      let reward = randomNum(1000, 5000);
 
-    for (let i = 0; i < maxRound - 1; i++) {
-      console.log('remainingReward', remainingReward);
-      let randomReward: number;
-      if (i === 0) {
-        // Jika posisi i adalah i[0]
-        const halfRewardRange = rewardRange / 2;
-
-        if (halfRewardRange <= 100) {
-          randomReward =
-            Math.floor(Math.random() * (halfRewardRange / 10)) * 10;
-        } else if (halfRewardRange <= 1000) {
-          randomReward =
-            Math.floor(Math.random() * (halfRewardRange / 100)) * 100;
-        } else {
-          randomReward =
-            Math.floor(Math.random() * (halfRewardRange / 1000)) * 1000;
-        }
-      } else {
-        if (remainingReward <= 100) {
-          randomReward =
-            Math.floor(Math.random() * (remainingReward / 10)) * 10;
-        } else if (remainingReward <= 1000) {
-          randomReward =
-            Math.floor(Math.random() * (remainingReward / 100)) * 100;
-        } else {
-          randomReward =
-            Math.floor(Math.random() * (remainingReward / 1000)) * 1000;
+      // Check if all rewards are the same
+      if (i > 0) {
+        while (rewards.every((val) => val === reward)) {
+          reward = randomNum(1000, 5000);
         }
       }
-      console.log('randomReward', randomReward);
-      remainingReward -= randomReward;
-      rewards.push(randomReward);
+
+      rewards.push(reward);
+      totalReward += reward;
     }
 
-    rewards.push(remainingReward);
+    if (minTotalReward === maxTotalReward) {
+      function getRandomInt(max) {
+        return Math.floor((Math.random() * max) / 500) * 500;
+      }
+
+      const rewardWithSameTotalReward = [];
+
+      for (let i = 0; i < maxRound - 1; i++) {
+        const randomValue = getRandomInt(maxTotalReward);
+        rewardWithSameTotalReward.push(randomValue);
+        maxTotalReward -= randomValue;
+      }
+      rewardWithSameTotalReward.push(maxTotalReward);
+
+      rewardWithSameTotalReward.sort(() => Math.random() - 0.5);
+      return rewardWithSameTotalReward;
+    }
+
+    // Check if total reward is within bounds
+    if (totalReward < minTotalReward) {
+      const remainingReward = minTotalReward - totalReward;
+
+      for (let i = 0; i < remainingReward; i++) {
+        if (totalReward < minTotalReward) {
+          const index = randomIntFromInterval(0, maxRound - 1);
+          rewards[index] += 1000;
+          totalReward += 1000;
+        }
+      }
+    } else if (totalReward > maxTotalReward) {
+      const excessReward = totalReward - maxTotalReward;
+
+      for (let i = 0; i < excessReward; i++) {
+        if (totalReward > maxTotalReward) {
+          const index = randomIntFromInterval(0, maxRound - 1);
+          if (rewards[index] > 1000) {
+            rewards[index] -= 1000;
+            totalReward -= 1000;
+          }
+        }
+      }
+    }
 
     return rewards;
   }
@@ -375,7 +450,6 @@ export class GameService {
           name: params.name,
           phone,
         });
-        console.log('user', user);
       }
 
       const game = await this.gameModelRepository.findOne({
@@ -830,7 +904,6 @@ export class GameService {
           if (!params.initGame) {
             const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
             const availableRewards = gamePlayer.availableRewards[gameplayKey];
-            console.log('availableRewards', gamePlayer);
 
             if (availableRewards.length > 0) {
               const reward = availableRewards.shift();
@@ -1037,7 +1110,6 @@ export class GameService {
 
   async gameCodeCheck(code: string): Promise<any> {
     try {
-      console.log('code', code);
       const gameCodeExtract = await this.gameModelRepository.findOne({
         where: { game_code: code },
       });
@@ -1143,10 +1215,9 @@ export class GameService {
           HttpStatus.BAD_REQUEST,
         );
       }
-
       // cek kalau user di step claim reward
       let isClaimPage = false;
-      const currentAvailableRewards = gamePlayer?.availableRewards;
+      const currentAvailableRewards = gamePlayer.get()?.availableRewards;
       if (currentAvailableRewards) {
         const keys = Object.keys(currentAvailableRewards);
         const arrReward = [];
@@ -1159,6 +1230,12 @@ export class GameService {
         }
       }
 
+      const lastGetReward = gamePlayerHistory.get().rewardClaimed_AllRounds
+        ? gamePlayerHistory.get().rewardClaimed_AllRounds[
+            gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
+          ]
+        : null;
+
       return {
         code: 'success',
         message: 'Game status found',
@@ -1168,17 +1245,14 @@ export class GameService {
           gamePlayer: gamePlayer.get(),
           gamePlayerHistory: gamePlayerHistory.get(),
           isClaimPage,
-          lastGetReward:
-            gamePlayerHistory.get().rewardClaimed_AllRounds[
-              gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
-            ],
+          lastGetReward,
         },
       };
     } catch (error) {
       throw new HttpException(
         {
           status: 'ERROR',
-          message: [error, error.message],
+          message: [error, 'error get status'],
           payload: null,
         },
         HttpStatus.BAD_REQUEST,
@@ -1257,7 +1331,7 @@ export class GameService {
 
       const gamePlayerHistories = gamePlayerHistory.map((item) => item.get());
       const totalReward = gamePlayerHistories.reduce(
-        (acc, curr) => acc + curr.totalRewardClaimed,
+        (acc, curr) => acc + (curr?.totalRewardClaimed || 0),
         0,
       );
 

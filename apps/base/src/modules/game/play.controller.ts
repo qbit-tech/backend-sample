@@ -43,6 +43,7 @@ export class PlayGameController {
   ): Promise<{
     isSuccess: true;
   }> {
+    console.log('---- RUN CLAIM REWARD ----');
     return await this.claimReward(code, { ...body });
   }
 
@@ -89,6 +90,8 @@ export class PlayGameController {
     @Param('code') code: string,
     @Param('playerId') playerId: string,
   ): Promise<any> {
+    console.log('---- RUN GET STATUS ----');
+
     return await this.gameService.getStatusSession(code, playerId);
   }
 
@@ -98,6 +101,8 @@ export class PlayGameController {
     @Param('code') code: string,
     @Param('playerId') playerId: string,
   ): Promise<any> {
+    console.log('---- RUN CLAIM REWARD STATUS ----');
+
     return await this.gameService.getDataClaimReward(code, playerId);
   }
 }
