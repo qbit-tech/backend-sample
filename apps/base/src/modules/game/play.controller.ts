@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Param, Req, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  Req,
+  Get,
+  Query,
+  HttpException,
+} from '@nestjs/common';
 import { GameService } from './game.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -100,9 +109,17 @@ export class PlayGameController {
   async getDataClaimReward(
     @Param('code') code: string,
     @Param('playerId') playerId: string,
+    @Query()
+    query: {
+      gameplay: string;
+    },
   ): Promise<any> {
     console.log('---- RUN CLAIM REWARD STATUS ----');
 
-    return await this.gameService.getDataClaimReward(code, playerId);
+    return await this.gameService.getDataClaimReward(
+      code,
+      playerId,
+      +query.gameplay,
+    );
   }
 }

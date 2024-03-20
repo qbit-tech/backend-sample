@@ -91,6 +91,10 @@ export class Game_ClaimRewardRequest {
 
   @IsNotEmpty()
   @ApiProperty()
+  readonly playerHistoryId: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
   // json
   readonly gameplay: object;
 

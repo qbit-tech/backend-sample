@@ -287,75 +287,11 @@ export class GameService {
     minTotalReward: number,
     maxTotalReward: number,
   ): number[] {
-    // const rewards: number[] = [];
-
     // Pastikan maxRound minimal 1
     if (maxRound < 1) {
       throw new Error('Max round must be at least 1');
     }
 
-    // Hitung nilai range reward
-    // const rewardRange = maxTotalReward - minTotalReward;
-    // const rewardRange = Math.floor((maxTotalReward - minTotalReward) / maxRound);
-    // let rewardRange: number;
-
-    // if (maxTotalReward <= 100) {
-    //   rewardRange =
-    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 10) *
-    //     10;
-    // } else if (maxTotalReward <= 1000) {
-    //   rewardRange =
-    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 100) *
-    //     100;
-    // } else {
-    //   rewardRange =
-    //     Math.floor((Math.random() * (maxTotalReward - minTotalReward)) / 1000) *
-    //     1000;
-    // }
-
-    // console.log('rewardRange', rewardRange);
-
-    // let remainingReward = rewardRange;
-
-    // for (let i = 0; i < maxRound - 1; i++) {
-    //   console.log('remainingReward', remainingReward);
-    //   let randomReward: number;
-    //   if (i === 0) {
-    //     // Jika posisi i adalah i[0]
-    //     const halfRewardRange = rewardRange / 2;
-
-    //     if (halfRewardRange <= 100) {
-    //       randomReward =
-    //         Math.floor(Math.random() * (halfRewardRange / 10)) * 10;
-    //     } else if (halfRewardRange <= 1000) {
-    //       randomReward =
-    //         Math.floor(Math.random() * (halfRewardRange / 100)) * 100;
-    //     } else {
-    //       randomReward =
-    //         Math.floor(Math.random() * (halfRewardRange / 1000)) * 1000;
-    //     }
-    //   } else {
-    //     if (remainingReward <= 100) {
-    //       randomReward =
-    //         Math.floor(Math.random() * (remainingReward / 10)) * 10;
-    //     } else if (remainingReward <= 1000) {
-    //       randomReward =
-    //         Math.floor(Math.random() * (remainingReward / 100)) * 100;
-    //     } else {
-    //       randomReward =
-    //         Math.floor(Math.random() * (remainingReward / 1000)) * 1000;
-    //     }
-    //   }
-    //   console.log('randomReward', randomReward);
-    //   remainingReward -= randomReward;
-    //   rewards.push(randomReward);
-    // }
-
-    // rewards.push(remainingReward);
-
-    // return rewards;
-
-    // New
     const rewards = [];
     let totalReward = 0;
 
@@ -628,7 +564,7 @@ export class GameService {
 
       // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
       const user = await this.User.findOne({
-        where: { name: params.name, phone: params.phone },
+        where: { phone: params.phone },
       });
       // const userInGame = await this.gamePlayersModelRepository.findOne({
       //   where: {
@@ -642,9 +578,8 @@ export class GameService {
       if (!user) {
         throw new HttpException(
           {
-            status: 'ERROR',
             message: 'User not registered.',
-            payload: null,
+            code: 'err_user_not_found',
           },
           HttpStatus.BAD_REQUEST,
         );
@@ -735,7 +670,7 @@ export class GameService {
             },
           },
         });
-      if (isUserAlreadyClaimReward.length > 0) {
+      if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
         throw new HttpException(
           {
             status: 'ERROR',
@@ -883,6 +818,8 @@ export class GameService {
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay,
               currentRound: gamePlayerHistory.currentRound + 1,
+              realRound: gamePlayerHistory.currentRound,
+              realGameplay: gamePlayerHistory.gameplay,
               maxGameplayPerUser: game.max_gameplay_per_user,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
@@ -948,6 +885,8 @@ export class GameService {
                 gameId: game.id,
                 gameplay: gamePlayerHistory.gameplay + 1,
                 currentRound: 1,
+                realRound: gamePlayerHistory.currentRound,
+                realGameplay: gamePlayerHistory.gameplay,
               });
             }
           }
@@ -971,6 +910,8 @@ export class GameService {
               playerId: user.userId,
               gameplay: gamePlayerHistory.gameplay + 1,
               currentRound: 1,
+              realRound: gamePlayerHistory.currentRound,
+              realGameplay: gamePlayerHistory.gameplay,
               maxGameplayPerUser: game.max_gameplay_per_user,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
@@ -1063,40 +1004,62 @@ export class GameService {
         );
       }
 
+      // // Temukan history gameplay yang belum diklaim
+      // const unclaimedGameplay =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      // gameId: game.id,
+      // playerId: user.userId,
+      // // claimedReward: false,
+      // rewardClaimedAt: null,
+      //     },
+      //     order: [['createdAt', 'DESC']],
+      //   });
+
+      // const unclaimedGameplayData = unclaimedGameplay.map((item) => item.get());
+      // if (unclaimedGameplayData.length === 0) {
+      //   throw new Error(
+      //     'Can’t claim this game reward. Please start the game before claim.',
+      //   );
+      // }
+
+      // // Lakukan update untuk menandai reward telah diklaim
+      // await this.gamePlayerHistoriesModelRepository.update(
+      //   {
+      //     rewardClaimedAt: new Date(),
+      //     // rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
+      //     // totalRewardClaimed: 1,
+      //   },
+      //   {
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //       rewardClaimedAt: null,
+      //     },
+      //   },
+      // );
+
       // Temukan history gameplay yang belum diklaim
       const unclaimedGameplay =
-        await this.gamePlayerHistoriesModelRepository.findAll({
+        await this.gamePlayerHistoriesModelRepository.findOne({
           where: {
             gameId: game.id,
             playerId: user.userId,
-            // claimedReward: false,
+            id: params.playerHistoryId,
             rewardClaimedAt: null,
           },
-          order: [['createdAt', 'DESC']],
         });
 
-      const unclaimedGameplayData = unclaimedGameplay.map((item) => item.get());
-      if (unclaimedGameplayData.length === 0) {
+      if (!unclaimedGameplay) {
         throw new Error(
           'Can’t claim this game reward. Please start the game before claim.',
         );
       }
 
       // Lakukan update untuk menandai reward telah diklaim
-      await this.gamePlayerHistoriesModelRepository.update(
-        {
-          rewardClaimedAt: new Date(),
-          // rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
-          // totalRewardClaimed: 1,
-        },
-        {
-          where: {
-            gameId: game.id,
-            playerId: user.userId,
-            rewardClaimedAt: null,
-          },
-        },
-      );
+      await unclaimedGameplay.update({
+        rewardClaimedAt: new Date(),
+      });
 
       return {
         isSuccess: true,
@@ -1260,7 +1223,13 @@ export class GameService {
     }
   }
 
-  async getDataClaimReward(code: string, playerId: string): Promise<any> {
+  async getDataClaimReward(
+    code: string,
+    playerId: string,
+
+    currentGameplay: number,
+  ): Promise<any> {
+    console.log('currentGameplay', currentGameplay);
     try {
       const game = await this.gameModelRepository.findOne({
         where: { game_code: code },
@@ -1313,7 +1282,7 @@ export class GameService {
           where: {
             gameId: game.id,
             playerId,
-            rewardClaimedAt: null,
+            // rewardClaimedAt: null,
           },
           order: [['gameplay', 'ASC']],
         });
@@ -1329,11 +1298,17 @@ export class GameService {
         );
       }
 
-      const gamePlayerHistories = gamePlayerHistory.map((item) => item.get());
-      const totalReward = gamePlayerHistories.reduce(
-        (acc, curr) => acc + (curr?.totalRewardClaimed || 0),
-        0,
+      const resGamePlayerHistories = gamePlayerHistory.map((item) =>
+        item.get(),
       );
+
+      const resGamePlayerHistorySpesificGameplay = resGamePlayerHistories.find(
+        (item2) => item2.gameplay === currentGameplay,
+      );
+      // const totalReward = resGamePlayerHistory.reduce(
+      //   (acc, curr) => acc + (curr?.totalRewardClaimed || 0),
+      //   0,
+      // );
 
       return {
         code: 'success',
@@ -1342,8 +1317,9 @@ export class GameService {
           game: game.get(),
           // user: user.get(),
           gamePlayer: gamePlayer.get(),
-          gamePlayerHistories,
-          totalReward,
+          gamePlayerHistory: resGamePlayerHistorySpesificGameplay,
+          gamePlayerHistories: resGamePlayerHistories,
+          // totalReward,
         },
       };
     } catch (error) {
