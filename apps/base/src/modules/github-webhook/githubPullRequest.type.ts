@@ -1,9 +1,4 @@
 export type GithubPullRequestPayload = {
-  event: string;
-  payload: Payload;
-};
-
-export type Payload = {
   action: string;
   number: number;
   pull_request: PullRequest;

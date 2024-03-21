@@ -1,9 +1,4 @@
 export type GithubWorkflowRunPayload = {
-  event: string;
-  payload: Payload;
-};
-
-export type Payload = {
   action: string;
   workflow_run: WorkflowRun;
   workflow: Workflow;

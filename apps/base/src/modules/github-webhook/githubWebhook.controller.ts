@@ -6,6 +6,7 @@ import { GithubPushPayload } from './githubPush.type';
 import { AppTelegramService } from './appTelegram.service';
 import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
+import { detectEventAndPayload } from './githubHelper';
 
 @ApiTags('Github Webhook')
 @Controller('github-webhook')
@@ -15,26 +16,27 @@ export class GithubWebhookController {
 
   @ApiOperation({ summary: 'Receive data from github' })
   @Post()
-  async receiveGithubWebhookData(@Body() body: GithubPayload): Promise<any> {
+  async receiveGithubWebhookData(@Body() rawBody: GithubPayload): Promise<any> {
     try {
-      this.logger.log('github-webhook body : ' + JSON.stringify(body));
+      this.logger.log('github-webhook rawBody : ' + JSON.stringify(rawBody));
       const TELEGRAM_TO = process.env.TELEGRAM_TO;
 
       let personName;
       let message;
-      const repoName = body.payload.repository.full_name;
-      const repoUrl = body.payload.repository.html_url;
+      const repoName = rawBody.repository.full_name;
+      const repoUrl = rawBody.repository.html_url;
       let detailUrl = repoUrl;
+      const { event, payload: body } = detectEventAndPayload(rawBody);
 
-      this.logger.log('github event: ' + body.event);
+      this.logger.log('github event: ' + event);
 
-      if (body.event === 'push') {
-        const { payload } = body as GithubPushPayload;
+      if (event === 'push') {
+        const payload = body as GithubPushPayload;
         personName = payload.pusher.name + ' (' + payload.pusher.email + ')';
 
         message = personName + ' <b>push</b> the code to ' + repoName;
-      } else if (body.event === 'pull_request') {
-        const { payload } = body as GithubPullRequestPayload;
+      } else if (event === 'pull_request') {
+        const payload = body as GithubPullRequestPayload;
         personName = payload.sender.login;
 
         const action = payload.action;
@@ -49,8 +51,8 @@ export class GithubWebhookController {
         } else if (action === 'closed') {
           message = `Pull Request <b>[${title}]</b> has been closed by ${personName}`;
         }
-      } else if (body.event === 'workflow_run') {
-        const { payload } = body as GithubWorkflowRunPayload;
+      } else if (event === 'workflow_run') {
+        const payload = body as GithubWorkflowRunPayload;
 
         const action = payload.action;
         if (action === 'in_progress') {

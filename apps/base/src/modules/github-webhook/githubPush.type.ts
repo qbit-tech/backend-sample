@@ -1,9 +1,4 @@
 export type GithubPushPayload = {
-  event: string;
-  payload: Payload;
-};
-
-export type Payload = {
   ref: string;
   before: string;
   after: string;
