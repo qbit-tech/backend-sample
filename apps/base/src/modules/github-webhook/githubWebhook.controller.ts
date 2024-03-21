@@ -7,6 +7,7 @@ import { AppTelegramService } from './appTelegram.service';
 import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
 import { detectEventAndPayload } from './githubHelper';
+import { getRepo } from './github.data';
 
 @ApiTags('Github Webhook')
 @Controller('github-webhook')
@@ -21,9 +22,19 @@ export class GithubWebhookController {
       this.logger.log('github-webhook rawBody : ' + JSON.stringify(rawBody));
       const TELEGRAM_TO = process.env.TELEGRAM_TO;
 
+      if (
+        (rawBody as any).sender?.type === 'Bot' ||
+        (rawBody as any).sender?.login === 'github-actions[bot]' ||
+        (rawBody as any).pusher?.name === 'github-actions[bot]'
+      ) {
+        // ignore
+        return { isSuccess: false };
+      }
+
       let personName;
-      let message;
       const repoName = rawBody.repository.full_name;
+      const { project } = getRepo(repoName);
+      let message = project ? `*${project}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl = repoUrl;
       const { event, payload: body } = detectEventAndPayload(rawBody);
@@ -32,40 +43,51 @@ export class GithubWebhookController {
 
       if (event === 'push') {
         const payload = body as GithubPushPayload;
-        personName = payload.pusher.name + ' (' + payload.pusher.email + ')';
+        personName = payload.pusher.name || payload.pusher.email;
 
-        message = personName + ' <b>push</b> the code to ' + repoName;
+        const commits = payload.commits || [];
+        const commitsMessages = commits.map((com) => '+ ' + com.message + '\n');
+
+        message += `${personName} *push* the code to ${repoName}\n\n${
+          payload.head_commit?.message
+        }\n\nCommits:${commitsMessages || '_empty_'}`;
       } else if (event === 'pull_request') {
         const payload = body as GithubPullRequestPayload;
         personName = payload.sender.login;
 
         const action = payload.action;
         const title = payload.pull_request.title;
+        const prNumber = payload.pull_request.number;
+        const prURL = payload.pull_request.html_url;
         const description = payload.pull_request.body;
 
+        detailUrl = prURL;
+
         if (action === 'opened') {
-          message = `New pull request has been created by ${personName}.\n\nTitle: ${title}\nDescription: ${
-            description ||
-            '<i>empty! please provide description in the next PR</i>\nRepository'
+          message += `📦 ⏱️ New pull request [#${prNumber}](${prURL}) has been created by *${personName}*.\n\nTitle: ${title}\nDescription: ${
+            description || '_empty! please provide description in the next PR_'
           }\nRepository: ${repoName}`;
         } else if (action === 'closed') {
-          message = `Pull Request <b>[${title}]</b> has been closed by ${personName}`;
+          message += `📦 ✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*`;
         }
       } else if (event === 'workflow_run') {
         const payload = body as GithubWorkflowRunPayload;
+        personName = payload.sender.login;
 
         const action = payload.action;
         if (action === 'in_progress') {
-          message = `Deployment started by ${personName}.\n\nRepository: ${repoName}`;
+          message += `🚀 🚀 Deployment started by ${personName}.\n\nRepository: ${repoName}`;
         } else if (action === 'completed') {
-          message = `Deployment has been completed.\n\nRepository: ${repoName}`;
+          message += `🚀 ✅ Deployment has been completed.\n\nRepository: ${repoName}`;
         }
 
         detailUrl = payload.workflow_run.html_url;
+      } else {
+        message = '';
       }
 
       if (message) {
-        message = message + '\n\n' + detailUrl;
+        message += `\n\n👉 [CLICK TO SEE DETAIL](${detailUrl})`;
 
         await this.appTelegramService.sendNotif(TELEGRAM_TO, message);
       }
