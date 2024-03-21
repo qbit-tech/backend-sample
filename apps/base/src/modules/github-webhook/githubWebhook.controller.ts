@@ -49,11 +49,13 @@ export class GithubWebhookController {
         personName = payload.pusher.name || payload.pusher.email;
 
         const commits = payload.commits || [];
-        const commitsMessages = commits.map((com) => '+ ' + com.message + '\n');
+        const commitsMessages = commits
+          .map((com) => '+ ' + com.message + '\n')
+          .join('');
 
         if (payload.head_commit?.message || commits.length > 0) {
           message += `${personName} *push* the code to ${repoName}\n\n${
-            payload.head_commit?.message
+            payload.head_commit?.message || ''
           }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
         }
       } else if (event === 'pull_request') {
