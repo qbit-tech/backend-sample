@@ -564,7 +564,7 @@ export class GameService {
 
       // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
       const user = await this.User.findOne({
-        where: { phone: params.phone },
+        where: { phone: cleanPhoneNumber(params.phone) },
       });
       // const userInGame = await this.gamePlayersModelRepository.findOne({
       //   where: {
