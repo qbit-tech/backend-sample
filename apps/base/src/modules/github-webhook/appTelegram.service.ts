@@ -10,6 +10,7 @@ export class AppTelegramService {
       .sendMessage({
         chat_id: to,
         text: message,
+        parse_mode: 'markdown',
       })
       .toPromise();
   }
