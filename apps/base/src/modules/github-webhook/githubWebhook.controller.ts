@@ -50,7 +50,7 @@ export class GithubWebhookController {
 
         message += `${personName} *push* the code to ${repoName}\n\n${
           payload.head_commit?.message
-        }\n\nCommits:${commitsMessages || '_empty_'}`;
+        }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
       } else if (event === 'pull_request') {
         const payload = body as GithubPullRequestPayload;
         personName = payload.sender.login;
@@ -69,6 +69,8 @@ export class GithubWebhookController {
           }\nRepository: ${repoName}`;
         } else if (action === 'closed') {
           message += `📦 ✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*`;
+        } else {
+          message = '';
         }
       } else if (event === 'workflow_run') {
         const payload = body as GithubWorkflowRunPayload;
@@ -79,6 +81,8 @@ export class GithubWebhookController {
           message += `🚀 🚀 Deployment started by ${personName}.\n\nRepository: ${repoName}`;
         } else if (action === 'completed') {
           message += `🚀 ✅ Deployment has been completed.\n\nRepository: ${repoName}`;
+        } else {
+          message = '';
         }
 
         detailUrl = payload.workflow_run.html_url;
