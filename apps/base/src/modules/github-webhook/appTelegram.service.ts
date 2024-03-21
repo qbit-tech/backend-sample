@@ -11,6 +11,7 @@ export class AppTelegramService {
         chat_id: to,
         text: message,
         parse_mode: 'markdown',
+        disable_web_page_preview: true,
       })
       .toPromise();
   }
