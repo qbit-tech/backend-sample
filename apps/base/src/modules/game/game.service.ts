@@ -57,7 +57,7 @@ export class GameService {
     private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
 
     private readonly sessionService: SessionService,
-  ) {}
+  ) { }
 
   // Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
@@ -114,14 +114,11 @@ export class GameService {
         // results: result.map(item => item.get()),
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR IN FIND ALL',
-          message: [error, error.message],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_find_all',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -148,14 +145,11 @@ export class GameService {
       });
       return result ? result.get() : null;
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR IN FIND ONE',
-          message: error,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_find_one',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -184,14 +178,11 @@ export class GameService {
       console.log('result', result);
       return result.get();
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_REQUEST',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_create',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -205,14 +196,11 @@ export class GameService {
       });
 
       if (game === null) {
-        throw new HttpException(
-          {
-            code: 'ERR_COMPANY_NOT_FOUND',
-            message: 'company tidak tersedia',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_update',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       game.game_code = params.game_code;
@@ -232,14 +220,11 @@ export class GameService {
         id: id,
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_UPDATE',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_update',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -250,14 +235,11 @@ export class GameService {
       });
 
       if (game === null) {
-        throw new HttpException(
-          {
-            code: 'ERR_COMPANY_NOT_FOUND',
-            message: 'company tidak tersedia',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_delete',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       await game.destroy();
@@ -269,14 +251,11 @@ export class GameService {
         title: game.title,
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_UPDATE',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_delete',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -289,28 +268,28 @@ export class GameService {
   ): number[] {
     // Pastikan maxRound minimal 1
     if (maxRound < 1) {
-      throw new Error('Max round must be at least 1');
+      // throw new Error('Max round must be at least 1');
+      Promise.reject({
+        code: 'error_in_generate_game_rewards',
+        message: 'Max round must be at least 1',
+        payload: null,
+      });
     }
 
     const rewards = [];
     let totalReward = 0;
 
     function randomIntFromInterval(min, max) {
-      // min and max included
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Function to generate a random integer within a range
     function randomNum(min, max) {
       return Math.round((Math.random() * (max - min) + min) / 500) * 500;
     }
 
-    // Generate rewards for each round
     for (let i = 0; i < maxRound; i++) {
-      // Generate a random reward for this round
       let reward = randomNum(1000, 5000);
 
-      // Check if all rewards are the same
       if (i > 0) {
         while (rewards.every((val) => val === reward)) {
           reward = randomNum(1000, 5000);
@@ -339,7 +318,7 @@ export class GameService {
       return rewardWithSameTotalReward;
     }
 
-    // Check if total reward is within bounds
+    // Cek apakah total reward kurang dari minTotalReward atau lebih dari maxTotalReward
     if (totalReward < minTotalReward) {
       const remainingReward = minTotalReward - totalReward;
 
@@ -421,25 +400,27 @@ export class GameService {
         console.log('result', result);
         return result.get();
       } else {
-        return {
-          isSuccess: false,
-          id: gamePlayer.id,
-          message: {
-            catch: 'Player already exist in this game.',
-            playerId: gamePlayer.playerId,
-            gameId: gamePlayer.gameId,
-          },
-        };
+        // return {
+        //   isSuccess: false,
+        //   id: gamePlayer.id,
+        //   message: {
+        //     catch: 'Player already exist in this game.',
+        //     playerId: gamePlayer.playerId,
+        //     gameId: gamePlayer.gameId,
+        //   },
+        // };
+        return Promise.reject({
+          code: 'error_in_add_player',
+          message: 'Player already exist in this game.',
+          payload: null,
+        });
       }
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_REQUEST',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_add_player',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -476,14 +457,11 @@ export class GameService {
         // results: result.map(item => item.get()),
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR IN FIND ALL',
-          message: [error, error.message],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_find_all',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -510,8 +488,8 @@ export class GameService {
       if (gamePlayer === null) {
         throw new HttpException(
           {
-            code: 'ERR_COMPANY_NOT_FOUND',
-            message: 'company tidak tersedia',
+            code: 'ERROR WHEN DELETE PLAYER',
+            message: 'Game player not found',
             payload: null,
           },
           HttpStatus.NOT_FOUND,
@@ -529,14 +507,11 @@ export class GameService {
         phone: gamePlayer.player.phone,
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_UPDATE',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_delete_player',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -552,60 +527,35 @@ export class GameService {
         where: { game_code: code, status: 'active' },
       });
       if (!game) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game not found.',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
       const user = await this.User.findOne({
         where: { phone: cleanPhoneNumber(params.phone) },
       });
-      // const userInGame = await this.gamePlayersModelRepository.findOne({
-      //   where: {
-      //     gameId: game.id,
-      //     playerId: user.userId,
-      //   },
-      // });
 
       // Cari pengguna berdasarkan nomor telepon
       console.log('user', user);
       if (!user) {
-        throw new HttpException(
-          {
-            message: 'User not registered.',
-            code: 'err_user_not_found',
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'User not registered.',
+          payload: null,
+        });
       }
-
-      // if (user && !userInGame) {
-      //   throw new HttpException(
-      //     {
-      //       status: 'ERROR',
-      //       message: 'Game not found.',
-      //       payload: null,
-      //     },
-      //     HttpStatus.NOT_FOUND,
-      //   );
-      // }
 
       // Cek apakah game sudah expired atau belum, jika sudah expired, tolak.
       if (game.expired_at && new Date(game.expired_at) < new Date()) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game has expired.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'Game has expired.',
+          payload: null,
+        });
       }
 
       /// Login
@@ -637,28 +587,6 @@ export class GameService {
 
       const gamePlayerIdSession = gamePlayer.get().id;
 
-      // const result = {
-      //   access_token: signInResult.access_token,
-      //   refresh_token: signInResult.refresh_token,
-      //   userId: user.userId,
-      //   gamePlayerId: gamePlayerIdSession,
-      //   isVerified: 'true',
-      //   isPasswordExpired: 'false',
-      //   passwordExpiredAt: null,
-      //   isBlocked: 'false',
-      //   blockedAt: null,
-      // };
-
-      /// Login
-
-      // const gameplays = Object.keys(gamePlayer.availableRewards);
-      // const latestGameplay = gameplays.sort((a, b) => parseInt(b.split('_')[1]) - parseInt(a.split('_')[1]))[0];
-
-      // const availableRewards = gamePlayer.availableRewards[latestGameplay];
-      // if (!availableRewards || availableRewards.length === 0) {
-      //   throw new Error('No rewards left for this gameplay');
-      // }
-
       // Cek apakah pengguna sudah pernah main dan claim reward
       const isUserAlreadyClaimReward =
         await this.gamePlayerHistoriesModelRepository.findAll({
@@ -671,14 +599,11 @@ export class GameService {
           },
         });
       if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'User has already played.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'User has already played.',
+          payload: null,
+        });
       }
       // Cek apakah pengguna terdaftar dalam pemain game ini
       const isUserInGame = await this.gamePlayersModelRepository.findOne({
@@ -745,22 +670,17 @@ export class GameService {
         if (
           gamePlayerHistory.currentRound < game.max_round_per_gameplay_per_user
         ) {
-          // await this.gamePlayerHistoriesModelRepository.update(
-          //   {
-          //     currentRound: gamePlayerHistory.currentRound + 1,
-          //   },
-          //   {
-          //     where: {
-          //       id: gamePlayerHistory.id,
-          //     },
-          //   },
-          // );
 
           if (!params.initGame) {
             const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
             const availableRewards = gamePlayer.availableRewards[gameplayKey];
             if (!availableRewards || availableRewards.length === 0) {
-              throw new Error('No rewards left for this gameplay');
+              // throw new Error('No rewards left for this gameplay');
+              return Promise.reject({
+                code: 'error_in_start_game',
+                message: 'No rewards left for this gameplay',
+                payload: null,
+              });
             }
 
             const reward = availableRewards.shift();
@@ -810,9 +730,8 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game started in the ${
-              gamePlayerHistory.currentRound + 1
-            } round.`,
+            message: `Game started in the ${gamePlayerHistory.currentRound + 1
+              } round.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
@@ -902,9 +821,8 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game has started in the gameplay ${
-              gamePlayerHistory.gameplay + 1
-            }.`,
+            message: `Game has started in the gameplay ${gamePlayerHistory.gameplay + 1
+              }.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
@@ -917,14 +835,11 @@ export class GameService {
             },
           };
         } else {
-          throw new HttpException(
-            {
-              status: 'ERROR',
-              message: 'User has reached maximum rounds allowed.',
-              payload: null,
-            },
-            HttpStatus.BAD_REQUEST,
-          );
+          return Promise.reject({
+            code: 'error_in_start_game',
+            message: 'User has reached maximum rounds allowed.',
+            payload: null,
+          });
         }
       } else {
         // Pengguna belum pernah bermain game ini
@@ -955,14 +870,11 @@ export class GameService {
         };
       }
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR',
-          message: [error, error.message],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_start_game',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -980,64 +892,23 @@ export class GameService {
         where: { game_code: code },
       });
       if (!game) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game not found.',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_claim_reward',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       const user = await this.User.findOne({
         where: { userId: params.playerId },
       });
       if (!user) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'User not registered.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_claim_reward',
+          message: 'User not registered.',
+          payload: null,
+        });
       }
-
-      // // Temukan history gameplay yang belum diklaim
-      // const unclaimedGameplay =
-      //   await this.gamePlayerHistoriesModelRepository.findAll({
-      //     where: {
-      // gameId: game.id,
-      // playerId: user.userId,
-      // // claimedReward: false,
-      // rewardClaimedAt: null,
-      //     },
-      //     order: [['createdAt', 'DESC']],
-      //   });
-
-      // const unclaimedGameplayData = unclaimedGameplay.map((item) => item.get());
-      // if (unclaimedGameplayData.length === 0) {
-      //   throw new Error(
-      //     'Can’t claim this game reward. Please start the game before claim.',
-      //   );
-      // }
-
-      // // Lakukan update untuk menandai reward telah diklaim
-      // await this.gamePlayerHistoriesModelRepository.update(
-      //   {
-      //     rewardClaimedAt: new Date(),
-      //     // rewardClaimed_AllRounds: [unclaimedGameplay.gameplay],
-      //     // totalRewardClaimed: 1,
-      //   },
-      //   {
-      //     where: {
-      //       gameId: game.id,
-      //       playerId: user.userId,
-      //       rewardClaimedAt: null,
-      //     },
-      //   },
-      // );
 
       // Temukan history gameplay yang belum diklaim
       const unclaimedGameplay =
@@ -1051,9 +922,12 @@ export class GameService {
         });
 
       if (!unclaimedGameplay) {
-        throw new Error(
-          'Can’t claim this game reward. Please start the game before claim.',
-        );
+        return Promise.reject({
+          code: 'error_in_claim_reward',
+          message:
+            'Can’t claim this game reward. Please start the game before claim.',
+          payload: null,
+        });
       }
 
       // Lakukan update untuk menandai reward telah diklaim
@@ -1065,7 +939,12 @@ export class GameService {
         isSuccess: true,
       };
     } catch (error) {
-      throw new Error(error.message);
+      // throw new Error(error.message);
+      return Promise.reject({
+        code: 'error_in_claim_reward',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -1078,20 +957,11 @@ export class GameService {
       });
 
       if (!gameCodeExtract) {
-        // throw new HttpException {
-        //   code: 'failed',
-        //   message: 'Game code not found',
-        //   payload: null,
-        // };
-        // HttpStatus.BAD_REQUEST
-        throw new HttpException(
-          {
-            status: 'failed',
-            message: 'Game code not found',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_game_code_check',
+          message: 'Game code not found',
+          payload: null,
+        });
       }
 
       return {
@@ -1100,14 +970,11 @@ export class GameService {
         payload: gameCodeExtract.get(),
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERR_COMPANY_REQUEST',
-          message: error.message,
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_game_code_check',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -1117,28 +984,22 @@ export class GameService {
         where: { game_code: code },
       });
       if (!game) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game not found.',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_get_status',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       const user = await this.User.findOne({
         where: { userId: playerId },
       });
       if (!user) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'User not registered.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_status',
+          message: 'User not registered.',
+          payload: null,
+        });
       }
 
       const gamePlayer = await this.gamePlayersModelRepository.findOne({
@@ -1149,14 +1010,11 @@ export class GameService {
       });
 
       if (!gamePlayer) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game player not found.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_status',
+          message: 'Game player not found.',
+          payload: null,
+        });
       }
 
       const gamePlayerHistory =
@@ -1169,14 +1027,11 @@ export class GameService {
         });
 
       if (!gamePlayerHistory) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game player history not found.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_status',
+          message: 'Game player history not found.',
+          payload: null,
+        });
       }
       // cek kalau user di step claim reward
       let isClaimPage = false;
@@ -1195,8 +1050,8 @@ export class GameService {
 
       const lastGetReward = gamePlayerHistory.get().rewardClaimed_AllRounds
         ? gamePlayerHistory.get().rewardClaimed_AllRounds[
-            gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
-          ]
+        gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
+        ]
         : null;
 
       return {
@@ -1212,14 +1067,11 @@ export class GameService {
         },
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR',
-          message: [error, 'error get status'],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_get_status',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -1235,28 +1087,22 @@ export class GameService {
         where: { game_code: code },
       });
       if (!game) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game not found.',
-            payload: null,
-          },
-          HttpStatus.NOT_FOUND,
-        );
+        return Promise.reject({
+          code: 'error_in_get_data_claim_reward',
+          message: 'Game not found',
+          payload: null,
+        });
       }
 
       const user = await this.User.findOne({
         where: { userId: playerId },
       });
       if (!user) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'User not registered.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_data_claim_reward',
+          message: 'User not registered.',
+          payload: null,
+        });
       }
 
       const gamePlayer = await this.gamePlayersModelRepository.findOne({
@@ -1267,14 +1113,11 @@ export class GameService {
       });
 
       if (!gamePlayer) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game player not found.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_data_claim_reward',
+          message: 'Game player not found.',
+          payload: null,
+        });
       }
 
       const gamePlayerHistory =
@@ -1288,14 +1131,11 @@ export class GameService {
         });
 
       if (!gamePlayerHistory) {
-        throw new HttpException(
-          {
-            status: 'ERROR',
-            message: 'Game player history not found.',
-            payload: null,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+        return Promise.reject({
+          code: 'error_in_get_data_claim_reward',
+          message: 'Game player history not found.',
+          payload: null,
+        });
       }
 
       const resGamePlayerHistories = gamePlayerHistory.map((item) =>
@@ -1432,14 +1272,11 @@ export class GameService {
         })),
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR IN FIND ALL',
-          message: [error, error.message],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_find_all',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 
@@ -1515,14 +1352,11 @@ export class GameService {
         results: mappedResult,
       };
     } catch (error) {
-      throw new HttpException(
-        {
-          status: 'ERROR IN FIND ALL',
-          message: [error, error.message],
-          payload: null,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      return Promise.reject({
+        code: 'error_in_find_all',
+        message: error.message,
+        payload: null,
+      });
     }
   }
 }
