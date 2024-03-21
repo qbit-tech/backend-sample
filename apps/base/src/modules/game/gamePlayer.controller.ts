@@ -44,7 +44,7 @@ export class GamePlayerController {
   }
 
   async findAllPlayers(id: string, params: any): Promise<any> {
-    return await this.gameService.getAllPlayersByGameId(id, params);
+    return await this.gameService.getListPlayerByGame(id, params);
   }
 
   @ApiOperation({ summary: 'Delete Players By Game Id and Player Id' })
