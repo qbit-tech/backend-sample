@@ -20,7 +20,9 @@ export class GithubWebhookController {
   async receiveGithubWebhookData(@Body() rawBody: GithubPayload): Promise<any> {
     try {
       this.logger.log('github-webhook rawBody : ' + JSON.stringify(rawBody));
+      // const TELEGRAM_TO_CHANNEL = process.env.TELEGRAM_TO_CHANNEL;
       const TELEGRAM_TO = process.env.TELEGRAM_TO;
+      let REPLY_TO_MESSAGE_ID;
 
       if (
         (rawBody as any).sender?.type === 'Bot' ||
@@ -42,6 +44,7 @@ export class GithubWebhookController {
       this.logger.log('github event: ' + event);
 
       if (event === 'push') {
+        REPLY_TO_MESSAGE_ID = 3;
         const payload = body as GithubPushPayload;
         personName = payload.pusher.name || payload.pusher.email;
 
@@ -52,6 +55,7 @@ export class GithubWebhookController {
           payload.head_commit?.message
         }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
       } else if (event === 'pull_request') {
+        REPLY_TO_MESSAGE_ID = 3;
         const payload = body as GithubPullRequestPayload;
         personName = payload.sender.login;
 
@@ -73,6 +77,7 @@ export class GithubWebhookController {
           message = '';
         }
       } else if (event === 'workflow_run') {
+        REPLY_TO_MESSAGE_ID = 2;
         const payload = body as GithubWorkflowRunPayload;
         personName = payload.sender.login;
 
@@ -93,7 +98,11 @@ export class GithubWebhookController {
       if (message) {
         message += `\n\n👉 [CLICK TO SEE DETAIL](${detailUrl})`;
 
-        await this.appTelegramService.sendNotif(TELEGRAM_TO, message);
+        await this.appTelegramService.sendNotif(
+          TELEGRAM_TO,
+          message,
+          REPLY_TO_MESSAGE_ID,
+        );
       }
 
       return { isSuccess: true };
