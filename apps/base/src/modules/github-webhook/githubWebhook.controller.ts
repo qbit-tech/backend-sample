@@ -51,9 +51,11 @@ export class GithubWebhookController {
         const commits = payload.commits || [];
         const commitsMessages = commits.map((com) => '+ ' + com.message + '\n');
 
-        message += `${personName} *push* the code to ${repoName}\n\n${
-          payload.head_commit?.message
-        }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
+        if (payload.head_commit?.message || commits.length > 0) {
+          message += `${personName} *push* the code to ${repoName}\n\n${
+            payload.head_commit?.message
+          }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
+        }
       } else if (event === 'pull_request') {
         REPLY_TO_MESSAGE_ID = 3;
         const payload = body as GithubPullRequestPayload;
