@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GithubWebhookController } from './githubWebhook.controller';
 import { TelegramModule } from 'nestjs-telegram';
+import { AppTelegramService } from './appTelegram.service';
 
 @Module({
   imports: [
@@ -13,8 +14,8 @@ import { TelegramModule } from 'nestjs-telegram';
       botKey: process.env.TELEGRAM_TOKEN,
     }),
   ],
-  providers: [],
+  providers: [AppTelegramService],
   controllers: [GithubWebhookController],
-  exports: [],
+  exports: [AppTelegramService],
 })
 export class GithubWebhookModule {}
