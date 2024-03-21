@@ -34,7 +34,7 @@ export class GithubWebhookController {
       let personName;
       const repoName = rawBody.repository.full_name;
       const { project } = getRepo(repoName);
-      let message = project ? `*${project}*\n` : '';
+      let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl = repoUrl;
       const { event, payload: body } = detectEventAndPayload(rawBody);
