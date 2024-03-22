@@ -50,8 +50,8 @@ export class Game_PlayerHistoriesModel extends Model {
     @Column
     id: number;
 
-    @Column
-    gameId: string;
+    // @Column
+    // gameId: string;
 
     // @Column
     // playerId: string;
@@ -80,12 +80,12 @@ export class Game_PlayerHistoriesModel extends Model {
     @UpdatedAt
     updatedAt: Date;
 
-    // @ForeignKey(() => GameModel)
-    // @Column
-    // gameId: string;
+    @ForeignKey(() => GameModel)
+    @Column
+    gameId: string;
 
-    // @BelongsTo(() => GameModel, 'gameId')
-    // game: GameModel;
+    @BelongsTo(() => GameModel, 'gameId')
+    game: GameModel;
 
     @ForeignKey(() => UserModel)
     @Column
