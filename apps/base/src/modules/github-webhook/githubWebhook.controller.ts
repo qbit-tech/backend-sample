@@ -117,8 +117,10 @@ export class GithubWebhookController {
           }`;
         } else if (action === 'completed') {
           const icon =
-            conclusion === 'failure' || conclusion === 'cancelled'
+            conclusion === 'failure'
               ? '❌'
+              : conclusion === 'cancelled'
+              ? '🟤'
               : '✅';
           message += `${icon} ${
             mode ? '(' + mode + ') ' : ''
