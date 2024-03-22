@@ -116,7 +116,8 @@ export class GithubWebhookController {
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
-          message += `✅ ${
+          const icon = conclusion === 'failure' ? '❌' : '✅';
+          message += `${icon} ${
             mode ? '[' + mode + '] ' : ''
           }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: ${clickableRepo}`;
         } else {
