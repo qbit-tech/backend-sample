@@ -116,7 +116,10 @@ export class GithubWebhookController {
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
-          const icon = conclusion === 'failure' ? '❌' : '✅';
+          const icon =
+            conclusion === 'failure' || conclusion === 'cancelled'
+              ? '❌'
+              : '✅';
           message += `${icon} ${
             mode ? '(' + mode + ') ' : ''
           }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
