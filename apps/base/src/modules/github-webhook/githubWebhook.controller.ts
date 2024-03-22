@@ -99,12 +99,26 @@ export class GithubWebhookController {
         const headBranch = payload.workflow_run.head_branch;
         const headSha = payload.workflow_run.head_sha;
         const commitUrl = `https://github.com/${repoName}/commit/${headSha}`;
+
+        const mode =
+          headBranch === 'main' || headBranch === 'master'
+            ? 'Production'
+            : headBranch === 'stable'
+            ? 'Staging'
+            : headBranch === 'dev' || headBranch === 'development'
+            ? 'Development'
+            : '';
+
         if (action === 'in_progress') {
-          message += `⏱️ Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch}\nRepo: [${repoName}](${repoUrl})\n\n[${displayTitle}](${commitUrl}) ${
+          message += `⏱️ ${
+            mode ? '[' + mode + '] ' : ''
+          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: [${repoName}](${repoUrl})\n\n[${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
-          message += `✅ Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch}\nRepo: [${repoName}](${repoUrl})`;
+          message += `✅ ${
+            mode ? '[' + mode + '] ' : ''
+          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: [${repoName}](${repoUrl})`;
         } else {
           message = '';
         }
