@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { GameService } from './game.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -12,9 +12,24 @@ import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
 export class GamePlayerHistoryController {
   constructor(private readonly gameService: GameService) {}
 
+  // @ApiOperation({ summary: 'Get all game player history' })
+  // @Get()
+  // // @UseGuards(AuthPermissionGuardV2(['GAME.LIST', 'GAME.VIEW']))
+  // async getGamePlayerHistory(
+  //   @Query() query: Game_PlayersHistoriesFindAllRequest,
+  // ): Promise<Game_PlayersHistoriesFindAllResponse> {
+  //   return await this.findAllPlayerHistory(query);
+  // }
+
+  // async findAllPlayerHistory(
+  //   params: Game_PlayersHistoriesFindAllRequest,
+  // ): Promise<Game_PlayersHistoriesFindAllResponse> {
+  //   return await this.gameService.getAllPlayers(params);
+  // }
+
   @ApiOperation({ summary: 'Get all game player history' })
   @Get()
-  @UseGuards(AuthPermissionGuardV2(['GAME.LIST', 'GAME.VIEW']))
+  // @UseGuards(AuthPermissionGuardV2(['GAME.LIST', 'GAME.VIEW']))
   async getGamePlayerHistory(
     @Query() query: Game_PlayersHistoriesFindAllRequest,
   ): Promise<Game_PlayersHistoriesFindAllResponse> {
@@ -24,6 +39,21 @@ export class GamePlayerHistoryController {
   async findAllPlayerHistory(
     params: Game_PlayersHistoriesFindAllRequest,
   ): Promise<Game_PlayersHistoriesFindAllResponse> {
-    return await this.gameService.getAllPlayers(params);
+    return await this.gameService.getAllPlayerHistory(params);
   }
+
+  
+  @ApiOperation({ summary: 'Get game player history by id' })
+  @Get(':id')
+  // @UseGuards(AuthPermissionGuardV2(['GAME.DETAIL', 'GAME.VIEW']))
+  async getGamePlayerHistoryById(
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.findOnePlayerHistory(id);
+  }
+
+  async findOnePlayerHistory(params: any): Promise<any> {
+    return await this.gameService.getAllPlayerHistoryByPlayerId(params);
+  }
+  
 }
