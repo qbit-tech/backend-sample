@@ -56,9 +56,9 @@ export class GithubWebhookController {
           .join('');
 
         if (payload.head_commit?.message || commits.length > 0) {
-          message += `${personName} *push* the code to ${clickableRepo}\n\n${
-            payload.head_commit?.message || ''
-          }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
+          message += `${personName} *push* the code to ${clickableRepo}\n\n*Commits*:\n${
+            commitsMessages || '_empty_'
+          }`;
         }
       } else if (event === 'pull_request') {
         REPLY_TO_MESSAGE_ID = 3;
@@ -102,16 +102,16 @@ export class GithubWebhookController {
 
         const mode =
           headBranch === 'main' || headBranch === 'master'
-            ? 'Production'
+            ? 'PROD'
             : headBranch === 'stable'
-            ? 'Staging'
+            ? 'STAGING'
             : headBranch === 'dev' || headBranch === 'development'
-            ? 'Development'
+            ? 'DEV'
             : '';
 
         if (action === 'in_progress') {
           message += `⏱️ ${
-            mode ? '[' + mode + '] ' : ''
+            mode ? '(' + mode + ') ' : ''
           }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
