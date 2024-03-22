@@ -38,8 +38,10 @@ export class GithubWebhookController {
       const { project, repo } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
-      let detailUrl = repoUrl;
+      let detailUrl;
       const { event, payload: body } = detectEventAndPayload(rawBody);
+
+      const clickableRepo = `[${repoName}](${repoUrl})`;
 
       this.logger.log('github event: ' + event);
 
@@ -54,7 +56,7 @@ export class GithubWebhookController {
           .join('');
 
         if (payload.head_commit?.message || commits.length > 0) {
-          message += `${personName} *push* the code to ${repoName}\n\n${
+          message += `${personName} *push* the code to ${clickableRepo}\n\n${
             payload.head_commit?.message || ''
           }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
         }
@@ -69,16 +71,14 @@ export class GithubWebhookController {
         const prURL = payload.pull_request.html_url;
         const description = payload.pull_request.body;
 
-        detailUrl = prURL;
-
         if (action === 'opened') {
           message += `⏱️ New pull request [#${prNumber}](${prURL}) has been created by *${personName}*.\n\nTitle: ${title}\nDescription: ${
             description || '_empty! please provide description in the next PR_'
-          }\nRepo: [${repoName}](${repoUrl})`;
+          }\nRepo: ${clickableRepo}`;
 
           detailUrl = '';
         } else if (action === 'closed') {
-          message += `✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*.\nRepo: [${repoName}](${repoUrl})`;
+          message += `✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*.\nRepo: ${clickableRepo}`;
 
           detailUrl = '';
         } else {
@@ -112,13 +112,13 @@ export class GithubWebhookController {
         if (action === 'in_progress') {
           message += `⏱️ ${
             mode ? '[' + mode + '] ' : ''
-          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: [${repoName}](${repoUrl})\n\n[${displayTitle}](${commitUrl}) ${
+          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
           message += `✅ ${
             mode ? '[' + mode + '] ' : ''
-          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: [${repoName}](${repoUrl})`;
+          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: ${clickableRepo}`;
         } else {
           message = '';
         }
