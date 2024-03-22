@@ -158,7 +158,13 @@ export type WorkflowRun = {
   check_suite_node_id: string;
   url: string;
   html_url: string;
-  pull_requests: any[];
+  pull_requests: {
+    base: any;
+    head: any;
+    id: number;
+    number: number;
+    url: string;
+  }[];
   created_at: Date;
   updated_at: Date;
   actor: Sender;

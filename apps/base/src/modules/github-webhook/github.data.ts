@@ -92,8 +92,8 @@ export function getRepo(repository: string) {
 
   return (
     REPOS.find((item) => item.org === org && item.repo === repo) || {
-      org: undefined,
-      repo: undefined,
+      org,
+      repo,
       repoName: undefined,
       project: undefined,
     }

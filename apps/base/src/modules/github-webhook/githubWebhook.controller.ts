@@ -35,7 +35,7 @@ export class GithubWebhookController {
 
       let personName;
       const repoName = rawBody.repository.full_name;
-      const { project } = getRepo(repoName);
+      const { project, repo } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl = repoUrl;
@@ -72,11 +72,15 @@ export class GithubWebhookController {
         detailUrl = prURL;
 
         if (action === 'opened') {
-          message += `📦 ⏱️ New pull request [#${prNumber}](${prURL}) has been created by *${personName}*.\n\nTitle: ${title}\nDescription: ${
+          message += `⏱️ New pull request [#${prNumber}](${prURL}) has been created by *${personName}*.\n\nTitle: ${title}\nDescription: ${
             description || '_empty! please provide description in the next PR_'
-          }\nRepository: ${repoName}`;
+          }\nRepo: [${repoName}](${repoUrl})`;
+
+          detailUrl = '';
         } else if (action === 'closed') {
-          message += `📦 ✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*`;
+          message += `✅ Pull Request [#${prNumber}](${prURL}) has been closed by *${personName}*.\nRepo: [${repoName}](${repoUrl})`;
+
+          detailUrl = '';
         } else {
           message = '';
         }
@@ -84,23 +88,36 @@ export class GithubWebhookController {
         REPLY_TO_MESSAGE_ID = 2;
         const payload = body as GithubWorkflowRunPayload;
         personName = payload.sender.login;
-
         const action = payload.action;
+        const conclusion = payload.workflow_run.conclusion;
+        const wrID = payload.workflow_run.id;
+        const wrURL = payload.workflow_run.html_url;
+        const displayTitle = payload.workflow_run.display_title;
+        const pullRequests = payload.workflow_run.pull_requests
+          .map((pr) => `+ PR #${pr.number}`)
+          .join('\n');
+        const headBranch = payload.workflow_run.head_branch;
+        const headSha = payload.workflow_run.head_sha;
+        const commitUrl = `https://github.com/${repoName}/commit/${headSha}`;
         if (action === 'in_progress') {
-          message += `🚀 🚀 Deployment started by ${personName}.\n\nRepository: ${repoName}`;
+          message += `⏱️ Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch}\nRepo: [${repoName}](${repoUrl})\n\n[${displayTitle}](${commitUrl}) ${
+            pullRequests ? '\nPull Request:\n' + pullRequests : ''
+          }`;
         } else if (action === 'completed') {
-          message += `🚀 ✅ Deployment has been completed.\n\nRepository: ${repoName}`;
+          message += `✅ Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch}\nRepo: [${repoName}](${repoUrl})`;
         } else {
           message = '';
         }
 
-        detailUrl = payload.workflow_run.html_url;
+        detailUrl = '';
       } else {
         message = '';
       }
 
       if (message) {
-        message += `\n\n👉 [CLICK TO SEE DETAIL](${detailUrl})`;
+        if (detailUrl) {
+          message += `\n\n👉 [CLICK TO SEE DETAIL](${detailUrl})`;
+        }
 
         await this.appTelegramService.sendNotif(
           TELEGRAM_TO,
