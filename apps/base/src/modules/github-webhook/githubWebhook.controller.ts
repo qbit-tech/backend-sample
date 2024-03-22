@@ -112,14 +112,14 @@ export class GithubWebhookController {
         if (action === 'in_progress') {
           message += `⏱️ ${
             mode ? '(' + mode + ') ' : ''
-          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
+          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
           const icon = conclusion === 'failure' ? '❌' : '✅';
           message += `${icon} ${
             mode ? '(' + mode + ') ' : ''
-          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: ${clickableRepo}`;
+          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
         } else {
           message = '';
         }
