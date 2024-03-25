@@ -8,7 +8,7 @@ import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
 import { detectEventAndPayload } from './githubHelper';
 import { getRepo } from './github.data';
-import { Octokit } from '@octokit/core';
+import { Octokit } from '@octokit/rest';
 
 @ApiTags('Github Webhook')
 @Controller('github-webhook')
@@ -172,17 +172,22 @@ export class GithubWebhookController {
         auth: process.env.GITHUB_TOKEN,
       });
 
-      const res = await octokit.request(
-        'GET /repos/{owner}/{repo}/contents/{path}',
-        {
-          owner,
-          repo,
-          path: path || 'package.json',
-          headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-        },
-      );
+      // const res = await octokit.request(
+      //   'GET /repos/{owner}/{repo}/contents/{path}',
+      //   {
+      //     owner,
+      //     repo,
+      //     path: path || 'package.json',
+      //     headers: {
+      //       'X-GitHub-Api-Version': '2022-11-28',
+      //     },
+      //   },
+      // );
+      const res = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path,
+      });
 
       const content = atob((res.data as any).content);
 
