@@ -49,7 +49,7 @@ export const REPOS = [
     project: '🍲 SPOONFUL 🍲',
     org: 'qbit-tech',
     repo: 'spoonful-fe',
-    repoName: 'Spoonful FE',
+    repoName: 'Spoonful FE (WEB, CMS)',
   },
   {
     project: '🍲 SPOONFUL 🍲',
