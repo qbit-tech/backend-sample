@@ -109,6 +109,12 @@ export const REPOS = [
     repoName: 'BORMAR Mobile App',
   },
   {
+    project: '🏃 LPS MONAS HM 🏃',
+    org: 'qbit-tech',
+    repo: 'lps-monas-hm',
+    repoName: 'LPS MONAS HM',
+  },
+  {
     project: '🎮 GAME SCRATCH 🎮',
     org: 'qbit-tech',
     repo: 'game-scratch-cms',
