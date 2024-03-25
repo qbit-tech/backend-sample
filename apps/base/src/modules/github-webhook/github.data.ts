@@ -1,4 +1,5 @@
 export const REPOS = [
+  // TASK MANAGEMENT
   {
     project: '📋 TASK MANAGEMENT 📋',
     org: 'qbit-tech',
@@ -23,6 +24,7 @@ export const REPOS = [
     repo: 'task-management-fe',
     repoName: 'Task Management (Mobile App)',
   },
+  // MEDEASY
   {
     project: '🏩 MEDEASY 🏩',
     org: 'qbit-tech',
@@ -45,6 +47,7 @@ export const REPOS = [
       // prod: 'https://api.medeasy.ph',
     },
   },
+  // SPOONFUL
   {
     project: '🍲 SPOONFUL 🍲',
     org: 'qbit-tech',
@@ -57,6 +60,7 @@ export const REPOS = [
     repo: 'spoonful-be',
     repoName: 'Spoonful BE',
   },
+  // REMAX
   {
     project: '🏠 REMAX 🏠',
     org: 'qbit-tech',
@@ -80,6 +84,20 @@ export const REPOS = [
       // prod: 'https://api-v2.remax.co.id',
     },
   },
+  // RAMUS
+  {
+    project: '🚢 RAMUS 🚢',
+    org: 'qbit-tech',
+    repo: 'ramus-fe',
+    repoName: 'Ramus FE (CMS)',
+  },
+  {
+    project: '🚢 RAMUS 🚢',
+    org: 'qbit-tech',
+    repo: 'ramus-be',
+    repoName: 'Ramus BE',
+  },
+  // ASTRALAND
   {
     project: '🏠 ASTRALAND 🏠',
     org: 'qbit-tech',
@@ -102,6 +120,7 @@ export const REPOS = [
       // prod: 'https://api.astralandindonesia.co.id',
     },
   },
+  // BORMAR
   {
     project: '🏃 BORMAR 🏃',
     org: 'qbit-tech',
@@ -114,6 +133,7 @@ export const REPOS = [
     repo: 'lps-monas-hm',
     repoName: 'LPS MONAS HM',
   },
+  // GAME SCRATCH
   {
     project: '🎮 GAME SCRATCH 🎮',
     org: 'qbit-tech',
@@ -134,12 +154,14 @@ export const REPOS = [
       staging: 'https://scratch-dev.qbit.co.id',
     },
   },
+  // OXONE
   {
     project: 'OXONE MOBILE OPA',
     org: 'qbit-tech',
     repo: 'oxone-mobile-opa',
     repoName: 'Oxone Mobile OPA',
   },
+  // QBIT SAMPLE
   {
     project: 'BACKEND SAMPLE',
     org: 'qbit-tech',
@@ -159,6 +181,44 @@ export const REPOS = [
       dev: 'https://base-cms-development.qbit.co.id',
       staging: 'https://base-cms-development.qbit.co.id',
     },
+  },
+  // TRACKNTRACE
+  {
+    project: 'TRACKNTRACE',
+    org: 'qbit-tech',
+    repo: 'trackntrace-frontend',
+    repoName: 'TrackNTrace FE (CMS)',
+  },
+  {
+    project: 'TRACKNTRACE',
+    org: 'qbit-tech',
+    repo: 'trackntrace-backend',
+    repoName: 'TrackNTrace BE',
+  },
+  {
+    project: 'TRACKNTRACE',
+    org: 'qbit-tech',
+    repo: 'trackntrace-mobile',
+    repoName: 'TrackNTrace Mobile',
+  },
+  // LIBS
+  {
+    project: 'LIBS AUTH V3',
+    org: 'qbit-tech',
+    repo: 'libs-authv3',
+    repoName: 'LIBS Auth V3',
+  },
+  {
+    project: 'LIBS SESSION',
+    org: 'qbit-tech',
+    repo: 'libs-session',
+    repoName: 'LIBS Session',
+  },
+  {
+    project: 'QLIBS REACT COMPONENTS',
+    org: 'qbit-tech',
+    repo: 'qlibs-react-components',
+    repoName: 'QLIBS React Components',
   },
 ];
 
