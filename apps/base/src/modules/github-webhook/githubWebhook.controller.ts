@@ -35,7 +35,7 @@ export class GithubWebhookController {
 
       let personName;
       const repoName = rawBody.repository.full_name;
-      const { project, repo } = getRepo(repoName);
+      const { project, repo, previewUrl } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl;
@@ -125,6 +125,12 @@ export class GithubWebhookController {
           message += `${icon} ${
             mode ? '(' + mode + ') ' : ''
           }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
+
+          if (previewUrl && previewUrl[mode.toLowerCase()]) {
+            message += `\n[${previewUrl[mode.toLowerCase()]}](${
+              previewUrl[mode.toLowerCase()]
+            })`;
+          }
         } else {
           message = '';
         }
