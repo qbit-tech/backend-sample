@@ -8,6 +8,7 @@ import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
 import { detectEventAndPayload } from './githubHelper';
 import { getRepo } from './github.data';
+import fetch from 'node-fetch';
 import { Octokit } from '@octokit/rest';
 
 @ApiTags('Github Webhook')
@@ -170,6 +171,9 @@ export class GithubWebhookController {
     try {
       const octokit = new Octokit({
         auth: process.env.GITHUB_TOKEN,
+        request: {
+          fetch: fetch,
+        },
       });
 
       // const res = await octokit.request(
