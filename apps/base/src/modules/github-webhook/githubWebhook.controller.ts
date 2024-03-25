@@ -59,6 +59,8 @@ export class GithubWebhookController {
           message += `${personName} *push* the code to ${clickableRepo}\n\n*Commits*:\n${
             commitsMessages || '_empty_'
           }`;
+        } else {
+          message = '';
         }
       } else if (event === 'pull_request') {
         REPLY_TO_MESSAGE_ID = 3;
