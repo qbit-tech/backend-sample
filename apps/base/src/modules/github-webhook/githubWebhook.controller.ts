@@ -8,6 +8,7 @@ import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
 import { detectEventAndPayload } from './githubHelper';
 import { getRepo } from './github.data';
+import { Octokit } from '@octokit/core';
 
 @ApiTags('Github Webhook')
 @Controller('github-webhook')
@@ -35,7 +36,7 @@ export class GithubWebhookController {
 
       let personName;
       const repoName = rawBody.repository.full_name;
-      const { project, repo, previewUrl } = getRepo(repoName);
+      const { project, org, repo, previewUrl } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl;
@@ -118,15 +119,20 @@ export class GithubWebhookController {
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
+          let version;
+          if (conclusion === 'success') {
+            version = await this.getVersion(org, repo);
+          }
+
           const icon =
             conclusion === 'failure'
               ? '❌'
               : conclusion === 'cancelled'
               ? '🟤'
               : '✅';
-          message += `${icon} ${
-            mode ? '(' + mode + ') ' : ''
-          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
+          message += `${icon} ${mode ? '(' + mode + ') ' : ''}Deployment ${
+            version ? '*v' + version + '*' : ''
+          }[#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
 
           if (previewUrl && previewUrl[mode.toLowerCase()]) {
             message += `\n[${previewUrl[mode.toLowerCase()]}](${
@@ -157,6 +163,44 @@ export class GithubWebhookController {
       return { isSuccess: true };
     } catch (error) {
       throw new HttpException(error, getErrorStatusCode(error));
+    }
+  }
+
+  async getVersion(owner: string, repo: string, path?: string) {
+    try {
+      const octokit = new Octokit({
+        auth: process.env.GITHUB_TOKEN,
+      });
+
+      const res = await octokit.request(
+        'GET /repos/{owner}/{repo}/contents/{path}',
+        {
+          owner,
+          repo,
+          path: path || 'package.json',
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+        },
+      );
+
+      const content = atob((res.data as any).content);
+
+      this.logger.log('content: ' + content);
+      this.logger.log('typeof content: ' + typeof content);
+
+      let parsed: any = {};
+      try {
+        parsed = JSON.parse(content);
+      } catch (err) {
+        parsed = {};
+      }
+
+      return parsed.version;
+    } catch (err) {
+      this.logger.error('ERROR getVersion');
+      this.logger.error(err);
+      return null;
     }
   }
 }
