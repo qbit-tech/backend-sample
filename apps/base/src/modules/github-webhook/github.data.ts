@@ -46,6 +46,18 @@ export const REPOS = [
     },
   },
   {
+    project: '🍲 SPOONFUL 🍲',
+    org: 'qbit-tech',
+    repo: 'spoonful-fe',
+    repoName: 'Spoonful FE',
+  },
+  {
+    project: '🍲 SPOONFUL 🍲',
+    org: 'qbit-tech',
+    repo: 'spoonful-be',
+    repoName: 'Spoonful BE',
+  },
+  {
     project: '🏠 REMAX 🏠',
     org: 'qbit-tech',
     repo: 'remax-fe',
@@ -115,6 +127,12 @@ export const REPOS = [
       dev: 'https://scratch-dev.qbit.co.id',
       staging: 'https://scratch-dev.qbit.co.id',
     },
+  },
+  {
+    project: 'OXONE MOBILE OPA',
+    org: 'qbit-tech',
+    repo: 'oxone-mobile-opa',
+    repoName: 'Oxone Mobile OPA',
   },
   {
     project: 'BACKEND SAMPLE',
