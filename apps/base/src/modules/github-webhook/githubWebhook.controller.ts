@@ -136,7 +136,7 @@ export class GithubWebhookController {
           }[#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
 
           if (previewUrl && previewUrl[mode.toLowerCase()]) {
-            message += `\n[${previewUrl[mode.toLowerCase()]}](${
+            message += `\n\n[🔗 ${previewUrl[mode.toLowerCase()]}](${
               previewUrl[mode.toLowerCase()]
             })`;
           }
