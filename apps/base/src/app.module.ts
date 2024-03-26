@@ -35,13 +35,15 @@ import { FaqModule } from '@qbit-tech/libs-faq';
 import { GithubWebhookModule } from './modules/github-webhook/githubWebhook.module';
 import { TestFileUploadModule } from './modules/testFileUpload/testFileUpload.module';
 import { SponsorModule } from '@qbit-tech/libs-sponsor';
-import { redisOption, sessionOption } from '../config/session';
+import { redisOption, sessionOption, sessionPaymentOption } from '../config/session';
 import { notificationOptions } from '../config/notification';
 import { authenticationOptions } from '../config/authentication';
 import { UPLOADER_OPTIONS, generateMulterOptions } from '../config/uploader';
 import { PromoModule } from '@qbit-tech/libs-promo';
 import {UserAddressModule} from './modules/userAddress/userAddress.module';
 import { MonitorApiModule } from '@qbit-tech/libs-monitor-api';
+// import { PaymentModule } from '@qbit-tech/libs-payments';
+import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 
 export const rootImportedModules = [
   ConfigModule.forRoot({
@@ -105,6 +107,9 @@ export const rootImportedModules = [
     redisOption,
   ),
   MonitorApiModule.forRoot(sessionOption, redisOption),
+  // PaymentModule.forRoot(
+  //   sessionPaymentOption,
+  // ),
 
   // PaymentModule.forRoot({
   //   STAGE: 'development',
@@ -140,6 +145,7 @@ export const rootImportedModules = [
     UserAddressModule,
     TestFileUploadModule,
     GameModule,
+    WhatsappModule,
   ],
   controllers: [AppController],
 })
