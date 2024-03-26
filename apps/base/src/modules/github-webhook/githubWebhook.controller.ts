@@ -217,6 +217,7 @@ export class GithubWebhookController {
       } catch (err) {
         parsed = {};
       }
+      this.logger.log('parsed.version: ' + parsed.version);
 
       return parsed.version;
     } catch (err) {
