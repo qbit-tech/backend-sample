@@ -171,6 +171,9 @@ export class GithubWebhookController {
     this.logger.log('owner: ' + owner);
     this.logger.log('repo: ' + repo);
     this.logger.log('path: ' + path);
+    if (!path) {
+      path = 'package.json';
+    }
     try {
       const octokit = new Octokit({
         auth: process.env.GITHUB_TOKEN,
