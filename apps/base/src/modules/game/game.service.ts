@@ -397,6 +397,13 @@ export class GameService {
           availableRewards,
         });
 
+        await this.gamePlayerHistoriesModelRepository.create({
+          playerId: user.userId,
+          gameId: id,
+          gameplay: 1,
+          currentRound: null,
+        });
+
         console.log('result', result);
         return result.get();
       } else {
@@ -424,19 +431,70 @@ export class GameService {
     }
   }
 
+  // async getListPlayerByGame(
+  //   id: string,
+  //   params: Game_PlayersFindAllRequest,
+  // ): Promise<any> {
+  //   // get all players by game id
+  //   try {
+  //     const where = {
+  //       gameId: id,
+  //     };
+
+  //     const result = await this.gamePlayersModelRepository.findAll({
+  //       where,
+  //       attributes: ['playerId'],
+  //       include: [
+  //         {
+  //           model: UserModel,
+  //           attributes: ['name', 'phone'],
+  //           as: 'player',
+  //         },
+  //       ],
+  //       offset: params.offset,
+  //       limit: params.limit || 10,
+  //     });
+  //     // const count = await this.gamePlayersModelRepository.count({ where });
+  //     // return {
+  //     //   count: count,
+  //     //   next: '',
+  //     //   prev: '',
+  //     //   ...generateResultPagination(count, params),
+  //     //   results: result.map((item) => item.get()),
+  //     //   // results: result.map(item => item.get()),
+  //     // };
+
+
+
+  //   } catch (error) {
+  //     return Promise.reject({
+  //       code: 'error_in_find_all',
+  //       message: error.message,
+  //       payload: null,
+  //     });
+  //   }
+  // }
+
   async getListPlayerByGame(
     id: string,
     params: Game_PlayersFindAllRequest,
-  ): Promise<Game_PlayersFindAllResponse> {
-    // get all players by game id
+  ): Promise<any> {
     try {
-      const where = {
-        gameId: id,
-      };
-
-      const result = await this.gamePlayersModelRepository.findAll({
-        where,
-        attributes: ['playerId'],
+      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
+        where: { gameId: id },
+        attributes: [
+          'id',
+          'playerId',
+          'gameId',
+          'gameplay',
+          'rewardClaimedAt',
+          'rewardClaimed_AllRounds',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt',
+          'currentRound',
+          'roundHistories',
+        ],
         include: [
           {
             model: UserModel,
@@ -447,14 +505,47 @@ export class GameService {
         offset: params.offset,
         limit: params.limit || 10,
       });
-      const count = await this.gamePlayersModelRepository.count({ where });
+
+      const game = await this.gameModelRepository.findOne({
+        where: { id },
+      });
+
+      const groupedHistories = playerHistories.reduce((acc, history) => {
+        if (!acc[history.playerId]) {
+          acc[history.playerId] = [];
+        }
+        acc[history.playerId].push(history);
+        return acc;
+      }, {});
+
+      const mappingPlayer = Object.keys(groupedHistories).map(playerId => {
+        const histories = groupedHistories[playerId];
+        const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
+        const detail = histories.map(history => ({
+          gameplay: history.gameplay,
+          allRound: (history.rewardClaimed_AllRounds || []).map((reward, index) => ({
+            round: index + 1,
+            rewardClaimed: reward,
+          })),
+        }));
+
+        return {
+          playerId,
+          game_name: game ? game.title : null,
+          maxGameplay: game ? game.max_gameplay_per_user : null,
+          maxRound: game ? game.max_round_per_gameplay_per_user : null,
+          currentGameplay: histories.length,
+          totalReward,
+          createdAt: histories[0].createdAt,
+          updatedAt: histories[0].updatedAt,
+          name: histories[0].player ? histories[0].player.name : null,
+          phone: histories[0].player ? histories[0].player.phone : null,
+          detail,
+        };
+      });
+
       return {
-        count: count,
-        next: '',
-        prev: '',
-        ...generateResultPagination(count, params),
-        results: result.map((item) => item.get()),
-        // results: result.map(item => item.get()),
+        results: mappingPlayer,
       };
     } catch (error) {
       return Promise.reject({
@@ -1378,4 +1469,168 @@ export class GameService {
       });
     }
   }
+
+  async getAllPlayerHistory(
+    params: Game_PlayersHistoriesFindAllRequest,
+  ): Promise<any> {
+    try {
+      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
+        attributes: [
+          'id',
+          'playerId',
+          'gameId',
+          'gameplay',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt'
+        ],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
+      });
+
+      const mappingPlayer = playerHistories.reduce((acc, history) => {
+        const existingPlayer = acc.find(
+          (player) => player.playerId === history.playerId
+        );
+
+        if (existingPlayer) {
+          existingPlayer.totalGameplay += history.gameplay;
+          existingPlayer.totalRewardAllGame += history.totalRewardClaimed;
+          existingPlayer.updatedAt = existingPlayer.updatedAt > history.updatedAt ? existingPlayer.updatedAt : history.updatedAt;
+          existingPlayer.gameIds.add(history.gameId);
+        } else {
+          acc.push({
+            playerId: history.playerId,
+            totalGameplay: history.gameplay,
+            totalRewardAllGame: history.totalRewardClaimed,
+            createdAt: history.createdAt,
+            updatedAt: history.updatedAt,
+            name: history.player ? history.player.name : null,
+            phone: history.player ? history.player.phone : null,
+            gameIds: new Set([history.gameId]),
+          });
+        }
+
+        return acc;
+      }, []);
+
+      return {
+        ...generateResultPagination(mappingPlayer.length, params),
+        results: mappingPlayer.map(({ gameIds, ...rest }) => ({
+          ...rest,
+          totalGame: gameIds.size,
+        })),
+      };
+
+    } catch (error) {
+      throw new Error('Error while fetching player history: ' + error.message);
+    }
+  }
+
+  async getAllPlayerHistoryByPlayerId(id: string): Promise<any> {
+    try {
+      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
+        where: { playerId: id },
+        attributes: [
+          'id',
+          'playerId',
+          'gameId',
+          'gameplay',
+          'rewardClaimedAt',
+          'rewardClaimed_AllRounds',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt',
+          'currentRound',
+          'roundHistories',
+        ],
+        include: [
+          {
+            model: UserModel,
+            attributes: ['name', 'phone'],
+            as: 'player',
+          },
+        ],
+      });
+
+      const gamePlayer = await this.gamePlayersModelRepository.findAll({
+        where: { playerId: id },
+      });
+
+      const game = await this.gameModelRepository.findAll({
+        where: { id: gamePlayer.map((item) => item.gameId) },
+      });
+
+      const groupedHistories = playerHistories.reduce((acc, history) => {
+        if (!acc[history.gameId]) {
+          acc[history.gameId] = [];
+        }
+        acc[history.gameId].push(history);
+        return acc;
+      }, {});
+
+      const mappingPlayer = Object.keys(groupedHistories).map(gameId => {
+        const histories = groupedHistories[gameId];
+        const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
+        const gameForPlayer = game.find(game => game.id === gameId);
+  
+        const detail = [];
+        const maxGameplay = gameForPlayer ? gameForPlayer.max_gameplay_per_user : 0;
+  
+        for (let i = 0; i < maxGameplay; i++) {
+          const history = histories[i];
+          const allRound = history ? history.rewardClaimed_AllRounds || [] : [];
+          const maxRound = gameForPlayer ? gameForPlayer.max_round_per_gameplay_per_user : 0;
+  
+          for (let j = allRound.length; j < maxRound; j++) {
+            allRound.push(0);
+          }
+  
+          detail.push({
+            gameplay: i + 1,
+            allRound: allRound.map((reward, index) => ({
+              round: index + 1,
+              rewardClaimed: reward,
+            })),
+          });
+        }
+
+        
+
+        return {
+          gameId,
+          game_name: gameForPlayer ? gameForPlayer.title : null,
+          maxGameplay: gameForPlayer ? gameForPlayer.max_gameplay_per_user : null,
+          maxRound: gameForPlayer ? gameForPlayer.max_round_per_gameplay_per_user : null,
+          currentGameplay: histories.length,
+          totalReward,
+          // totalRewardClaimed: histories.reduce((acc, history) => acc + history.totalRewardClaimed, 0),
+          createdAt: histories[0].createdAt,
+          updatedAt: histories[0].updatedAt,
+          name: histories[0].player ? histories[0].player.name : null,
+          phone: histories[0].player ? histories[0].player.phone : null,
+          detail,
+        };
+      });
+
+      return {
+        
+          results: mappingPlayer,
+        
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_in_find_all',
+        message: [error, error.message],
+        payload: null,
+      });
+    }
+  }
+
+
 }

@@ -111,36 +111,6 @@ export class UserService {
 
       const options: any = {
         where,
-        include: [
-          // {
-          //   model: RoleModel,
-          //   as: 'roles',
-          // },
-          //   {
-          //     model: EventModel,
-          //     as: 'events',
-          //   },
-          //   {
-          //     model: UserRelativeModel,
-          //     as: 'relatives',
-          //   },
-          //   {
-          //     model: EventReviewModel,
-          //     as: 'reviews',
-          //   },
-          //   {
-          //     model: VoucherModel,
-          //     as: 'vouchers',
-          //   },
-          //   {
-          //     model: TicketModel,
-          //     as: 'tickets',
-          //   },
-          //   {
-          //     model: EventFavouriteModel,
-          //     as: 'favourites',
-          //   },
-        ],
         distinct: true,
         col: 'userId',
       };
@@ -154,29 +124,23 @@ export class UserService {
         order: [['createdAt', 'desc']],
       });
 
-      const results = [];
+      const roleIds = [...new Set(users.map((user) => user.roleId))];
+      const resRoles = await this.roleService.findAll({
+        roleIds,
+      });
 
-      for (const user of users.map((row) => row.get())) {
-        if (user.roleId) {
-          const getRole = await this.roleService.findOne(user.roleId);
-
-          if (getRole) {
-            results.push({
-              ...user,
-              role: getRole,
-            });
-          } else {
-            results.push({
-              ...user,
-            });
-          }
-        }
-      }
+      const results = users.map((user) => {
+        const usr = user.get();
+        return {
+          ...usr,
+          role: resRoles.results.find((role) => role.roleId === usr.roleId),
+        };
+      });
 
       return {
         ...generateResultPagination(count, params),
         // results: results.map((row) => row.get()),
-        results: results,
+        results,
       };
     } catch (error) {
       Logger.error(

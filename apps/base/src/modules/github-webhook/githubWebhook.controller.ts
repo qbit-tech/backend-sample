@@ -8,6 +8,8 @@ import { GithubPullRequestPayload } from './githubPullRequest.type';
 import { GithubWorkflowRunPayload } from './githubWorkflowRun.type';
 import { detectEventAndPayload } from './githubHelper';
 import { getRepo } from './github.data';
+import fetch from 'node-fetch';
+import { Octokit } from '@octokit/rest';
 
 @ApiTags('Github Webhook')
 @Controller('github-webhook')
@@ -35,7 +37,7 @@ export class GithubWebhookController {
 
       let personName;
       const repoName = rawBody.repository.full_name;
-      const { project, repo } = getRepo(repoName);
+      const { project, org, repo, previewUrl } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl;
@@ -56,9 +58,11 @@ export class GithubWebhookController {
           .join('');
 
         if (payload.head_commit?.message || commits.length > 0) {
-          message += `${personName} *push* the code to ${clickableRepo}\n\n${
-            payload.head_commit?.message || ''
-          }\n\n*Commits*:\n${commitsMessages || '_empty_'}`;
+          message += `${personName} *push* the code to ${clickableRepo}\n\n*Commits*:\n${
+            commitsMessages || '_empty_'
+          }`;
+        } else {
+          message = '';
         }
       } else if (event === 'pull_request') {
         REPLY_TO_MESSAGE_ID = 3;
@@ -102,23 +106,40 @@ export class GithubWebhookController {
 
         const mode =
           headBranch === 'main' || headBranch === 'master'
-            ? 'Production'
+            ? 'PROD'
             : headBranch === 'stable'
-            ? 'Staging'
+            ? 'STAGING'
             : headBranch === 'dev' || headBranch === 'development'
-            ? 'Development'
+            ? 'DEV'
             : '';
 
         if (action === 'in_progress') {
           message += `⏱️ ${
-            mode ? '[' + mode + '] ' : ''
-          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\n${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
+            mode ? '(' + mode + ') ' : ''
+          }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}\n\n[${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
-          message += `✅ ${
-            mode ? '[' + mode + '] ' : ''
-          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\n${headBranch} <- \nRepo: ${clickableRepo}`;
+          let version;
+          if (conclusion === 'success') {
+            version = await this.getVersion(org, repo);
+          }
+
+          const icon =
+            conclusion === 'failure'
+              ? '❌'
+              : conclusion === 'cancelled'
+              ? '🟤'
+              : '✅';
+          message += `${icon} ${mode ? '(' + mode + ') ' : ''}Deployment ${
+            version ? '*v' + version + '*' : ''
+          }[#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
+
+          if (previewUrl && previewUrl[mode.toLowerCase()]) {
+            message += `\n[${previewUrl[mode.toLowerCase()]}](${
+              previewUrl[mode.toLowerCase()]
+            })`;
+          }
         } else {
           message = '';
         }
@@ -143,6 +164,52 @@ export class GithubWebhookController {
       return { isSuccess: true };
     } catch (error) {
       throw new HttpException(error, getErrorStatusCode(error));
+    }
+  }
+
+  async getVersion(owner: string, repo: string, path?: string) {
+    try {
+      const octokit = new Octokit({
+        auth: process.env.GITHUB_TOKEN,
+        request: {
+          fetch: fetch,
+        },
+      });
+
+      // const res = await octokit.request(
+      //   'GET /repos/{owner}/{repo}/contents/{path}',
+      //   {
+      //     owner,
+      //     repo,
+      //     path: path || 'package.json',
+      //     headers: {
+      //       'X-GitHub-Api-Version': '2022-11-28',
+      //     },
+      //   },
+      // );
+      const res = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path,
+      });
+
+      const content = atob((res.data as any).content);
+
+      this.logger.log('content: ' + content);
+      this.logger.log('typeof content: ' + typeof content);
+
+      let parsed: any = {};
+      try {
+        parsed = JSON.parse(content);
+      } catch (err) {
+        parsed = {};
+      }
+
+      return parsed.version;
+    } catch (err) {
+      this.logger.error('ERROR getVersion');
+      this.logger.error(err);
+      return null;
     }
   }
 }

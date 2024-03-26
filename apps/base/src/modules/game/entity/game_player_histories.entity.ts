@@ -32,6 +32,9 @@ export class BaseGame_PlayerHistoriesProperties {
     totalRewardClaimed: number;
 
     @ApiProperty()
+    transferAt: Date;
+
+    @ApiProperty()
     createdAt: Date;
 
     @ApiProperty()
@@ -50,8 +53,8 @@ export class Game_PlayerHistoriesModel extends Model {
     @Column
     id: number;
 
-    @Column
-    gameId: string;
+    // @Column
+    // gameId: string;
 
     // @Column
     // playerId: string;
@@ -74,18 +77,21 @@ export class Game_PlayerHistoriesModel extends Model {
     @Column(DataType.JSON)
     roundHistories: any;
 
+    @Column
+    transferAt: Date;
+
     @CreatedAt
     createdAt: Date;
 
     @UpdatedAt
     updatedAt: Date;
 
-    // @ForeignKey(() => GameModel)
-    // @Column
-    // gameId: string;
+    @ForeignKey(() => GameModel)
+    @Column
+    gameId: string;
 
-    // @BelongsTo(() => GameModel, 'gameId')
-    // game: GameModel;
+    @BelongsTo(() => GameModel, 'gameId')
+    game: GameModel;
 
     @ForeignKey(() => UserModel)
     @Column

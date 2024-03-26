@@ -44,6 +44,9 @@ export class Game_PlayersModel extends Model {
     // @Column
     // availableRewards: JSON;
 
+    @Column
+    maxGameplay: number;
+
     @Column(DataType.JSON)
     availableRewards: any;
 

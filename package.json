@@ -1,6 +1,6 @@
 {
   "name": "backend-template",
-  "version": "1.3.4",
+  "version": "1.10.0",
   "description": "",
   "author": "",
   "private": true,
@@ -37,6 +37,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/sequelize": "^10.0.0",
     "@nestjs/swagger": "^7.1.1",
+    "@octokit/rest": "^20.0.2",
     "@qbit-tech/feature-utils": "^1.9.4",
     "@qbit-tech/libs-address": "^1.2.7",
     "@qbit-tech/libs-article": "^1.6.5",
