@@ -124,7 +124,12 @@ export class GithubWebhookController {
 
           if (conclusion === 'success' && packageJSON) {
             for (const filePath of packageJSON) {
-              const version = await this.getVersion(org, repo, filePath);
+              const version = await this.getVersion(
+                org,
+                repo,
+                filePath,
+                headBranch,
+              );
               versionMessage += `\n${version} -> ${org}/${repo}`;
             }
           }
@@ -171,7 +176,7 @@ export class GithubWebhookController {
     }
   }
 
-  async getVersion(owner: string, repo: string, path?: string) {
+  async getVersion(owner: string, repo: string, path?: string, ref?: string) {
     this.logger.log('owner: ' + owner);
     this.logger.log('repo: ' + repo);
     this.logger.log('path: ' + path);
@@ -198,6 +203,7 @@ export class GithubWebhookController {
       //   },
       // );
       const res = await octokit.rest.repos.getContent({
+        ref,
         owner,
         repo,
         path,
