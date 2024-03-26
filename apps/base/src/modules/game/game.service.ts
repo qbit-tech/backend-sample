@@ -464,8 +464,6 @@ export class GameService {
   //     //   // results: result.map(item => item.get()),
   //     // };
 
-
-
   //   } catch (error) {
   //     return Promise.reject({
   //       code: 'error_in_find_all',
@@ -480,31 +478,32 @@ export class GameService {
     params: Game_PlayersFindAllRequest,
   ): Promise<any> {
     try {
-      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
-        where: { gameId: id },
-        attributes: [
-          'id',
-          'playerId',
-          'gameId',
-          'gameplay',
-          'rewardClaimedAt',
-          'rewardClaimed_AllRounds',
-          'totalRewardClaimed',
-          'createdAt',
-          'updatedAt',
-          'currentRound',
-          'roundHistories',
-        ],
-        include: [
-          {
-            model: UserModel,
-            attributes: ['name', 'phone'],
-            as: 'player',
-          },
-        ],
-        offset: params.offset,
-        limit: params.limit || 10,
-      });
+      const playerHistories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: { gameId: id },
+          attributes: [
+            'id',
+            'playerId',
+            'gameId',
+            'gameplay',
+            'rewardClaimedAt',
+            'rewardClaimed_AllRounds',
+            'totalRewardClaimed',
+            'createdAt',
+            'updatedAt',
+            'currentRound',
+            'roundHistories',
+          ],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['name', 'phone'],
+              as: 'player',
+            },
+          ],
+          offset: params.offset,
+          limit: params.limit || 10,
+        });
 
       const game = await this.gameModelRepository.findOne({
         where: { id },
@@ -518,15 +517,22 @@ export class GameService {
         return acc;
       }, {});
 
-      const mappingPlayer = Object.keys(groupedHistories).map(playerId => {
+      const mappingPlayer = Object.keys(groupedHistories).map((playerId) => {
         const histories = groupedHistories[playerId];
-        const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
-        const detail = histories.map(history => ({
+        const totalReward = histories.reduce(
+          (acc, history) =>
+            acc +
+            (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0),
+          0,
+        );
+        const detail = histories.map((history) => ({
           gameplay: history.gameplay,
-          allRound: (history.rewardClaimed_AllRounds || []).map((reward, index) => ({
-            round: index + 1,
-            rewardClaimed: reward,
-          })),
+          allRound: (history.rewardClaimed_AllRounds || []).map(
+            (reward, index) => ({
+              round: index + 1,
+              rewardClaimed: reward,
+            }),
+          ),
         }));
 
         return {
@@ -1027,7 +1033,7 @@ export class GameService {
             gameId: game.id,
             playerId: user.userId,
             id: params.playerHistoryId,
-            rewardClaimedAt: null,
+            // rewardClaimedAt: null,
           },
         });
 
@@ -1049,7 +1055,6 @@ export class GameService {
         isSuccess: true,
       };
     } catch (error) {
-      // throw new Error(error.message);
       return Promise.reject({
         code: 'error_in_claim_reward',
         message: error.message,
@@ -1191,7 +1196,6 @@ export class GameService {
 
     currentGameplay: number,
   ): Promise<any> {
-    console.log('currentGameplay', currentGameplay);
     try {
       const game = await this.gameModelRepository.findOne({
         where: { game_code: code },
@@ -1474,34 +1478,38 @@ export class GameService {
     params: Game_PlayersHistoriesFindAllRequest,
   ): Promise<any> {
     try {
-      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
-        attributes: [
-          'id',
-          'playerId',
-          'gameId',
-          'gameplay',
-          'totalRewardClaimed',
-          'createdAt',
-          'updatedAt'
-        ],
-        include: [
-          {
-            model: UserModel,
-            attributes: ['name', 'phone'],
-            as: 'player',
-          },
-        ],
-      });
+      const playerHistories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          attributes: [
+            'id',
+            'playerId',
+            'gameId',
+            'gameplay',
+            'totalRewardClaimed',
+            'createdAt',
+            'updatedAt',
+          ],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['name', 'phone'],
+              as: 'player',
+            },
+          ],
+        });
 
       const mappingPlayer = playerHistories.reduce((acc, history) => {
         const existingPlayer = acc.find(
-          (player) => player.playerId === history.playerId
+          (player) => player.playerId === history.playerId,
         );
 
         if (existingPlayer) {
           existingPlayer.totalGameplay += history.gameplay;
           existingPlayer.totalRewardAllGame += history.totalRewardClaimed;
-          existingPlayer.updatedAt = existingPlayer.updatedAt > history.updatedAt ? existingPlayer.updatedAt : history.updatedAt;
+          existingPlayer.updatedAt =
+            existingPlayer.updatedAt > history.updatedAt
+              ? existingPlayer.updatedAt
+              : history.updatedAt;
           existingPlayer.gameIds.add(history.gameId);
         } else {
           acc.push({
@@ -1526,7 +1534,6 @@ export class GameService {
           totalGame: gameIds.size,
         })),
       };
-
     } catch (error) {
       throw new Error('Error while fetching player history: ' + error.message);
     }
@@ -1534,29 +1541,30 @@ export class GameService {
 
   async getAllPlayerHistoryByPlayerId(id: string): Promise<any> {
     try {
-      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
-        where: { playerId: id },
-        attributes: [
-          'id',
-          'playerId',
-          'gameId',
-          'gameplay',
-          'rewardClaimedAt',
-          'rewardClaimed_AllRounds',
-          'totalRewardClaimed',
-          'createdAt',
-          'updatedAt',
-          'currentRound',
-          'roundHistories',
-        ],
-        include: [
-          {
-            model: UserModel,
-            attributes: ['name', 'phone'],
-            as: 'player',
-          },
-        ],
-      });
+      const playerHistories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: { playerId: id },
+          attributes: [
+            'id',
+            'playerId',
+            'gameId',
+            'gameplay',
+            'rewardClaimedAt',
+            'rewardClaimed_AllRounds',
+            'totalRewardClaimed',
+            'createdAt',
+            'updatedAt',
+            'currentRound',
+            'roundHistories',
+          ],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['name', 'phone'],
+              as: 'player',
+            },
+          ],
+        });
 
       const gamePlayer = await this.gamePlayersModelRepository.findAll({
         where: { playerId: id },
@@ -1574,23 +1582,32 @@ export class GameService {
         return acc;
       }, {});
 
-      const mappingPlayer = Object.keys(groupedHistories).map(gameId => {
+      const mappingPlayer = Object.keys(groupedHistories).map((gameId) => {
         const histories = groupedHistories[gameId];
-        const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
-        const gameForPlayer = game.find(game => game.id === gameId);
-  
+        const totalReward = histories.reduce(
+          (acc, history) =>
+            acc +
+            (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0),
+          0,
+        );
+        const gameForPlayer = game.find((game) => game.id === gameId);
+
         const detail = [];
-        const maxGameplay = gameForPlayer ? gameForPlayer.max_gameplay_per_user : 0;
-  
+        const maxGameplay = gameForPlayer
+          ? gameForPlayer.max_gameplay_per_user
+          : 0;
+
         for (let i = 0; i < maxGameplay; i++) {
           const history = histories[i];
           const allRound = history ? history.rewardClaimed_AllRounds || [] : [];
-          const maxRound = gameForPlayer ? gameForPlayer.max_round_per_gameplay_per_user : 0;
-  
+          const maxRound = gameForPlayer
+            ? gameForPlayer.max_round_per_gameplay_per_user
+            : 0;
+
           for (let j = allRound.length; j < maxRound; j++) {
             allRound.push(0);
           }
-  
+
           detail.push({
             gameplay: i + 1,
             allRound: allRound.map((reward, index) => ({
@@ -1600,13 +1617,15 @@ export class GameService {
           });
         }
 
-        
-
         return {
           gameId,
           game_name: gameForPlayer ? gameForPlayer.title : null,
-          maxGameplay: gameForPlayer ? gameForPlayer.max_gameplay_per_user : null,
-          maxRound: gameForPlayer ? gameForPlayer.max_round_per_gameplay_per_user : null,
+          maxGameplay: gameForPlayer
+            ? gameForPlayer.max_gameplay_per_user
+            : null,
+          maxRound: gameForPlayer
+            ? gameForPlayer.max_round_per_gameplay_per_user
+            : null,
           currentGameplay: histories.length,
           totalReward,
           // totalRewardClaimed: histories.reduce((acc, history) => acc + history.totalRewardClaimed, 0),
@@ -1619,9 +1638,7 @@ export class GameService {
       });
 
       return {
-        
-          results: mappingPlayer,
-        
+        results: mappingPlayer,
       };
     } catch (error) {
       return Promise.reject({
@@ -1631,6 +1648,4 @@ export class GameService {
       });
     }
   }
-
-
 }
