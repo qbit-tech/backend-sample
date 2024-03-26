@@ -114,7 +114,7 @@ export class GithubWebhookController {
             : '';
 
         if (action === 'in_progress') {
-          message += `⏱️ ${
+          message += `🔃 ${
             mode ? '(' + mode + ') ' : ''
           }Deployment [#${wrID}](${wrURL}) started by ${personName}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}\n\nCommit:\n- [${displayTitle}](${commitUrl}) ${
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
