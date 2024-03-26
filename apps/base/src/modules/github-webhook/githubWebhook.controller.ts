@@ -168,6 +168,9 @@ export class GithubWebhookController {
   }
 
   async getVersion(owner: string, repo: string, path?: string) {
+    this.logger.log('owner: ' + owner);
+    this.logger.log('repo: ' + repo);
+    this.logger.log('path: ' + path);
     try {
       const octokit = new Octokit({
         auth: process.env.GITHUB_TOKEN,
@@ -192,6 +195,9 @@ export class GithubWebhookController {
         repo,
         path,
       });
+
+      this.logger.log('res.data');
+      this.logger.log(res.data);
 
       const content = atob((res.data as any).content);
 
