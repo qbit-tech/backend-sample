@@ -1818,10 +1818,10 @@
   dependencies:
     bcrypt "^5.1.0"
 
-"@qbit-tech/libs-authv3@^1.4.6":
-  version "1.4.6"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.6/8f536d388987aab270efbc4bae5e01e6a8b11e2c#8f536d388987aab270efbc4bae5e01e6a8b11e2c"
-  integrity sha512-yKBfuS64TWIzolh18/FxMutypme0AcMB3qLUsI0ca5LWV59jL7mNy9xQVK1Kjy+K/mXdKjldWwn0eOMhDnFrPw==
+"@qbit-tech/libs-authv3@^1.4.7":
+  version "1.4.7"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-authv3/1.4.7/461234f0d2890cd9bf73ae008c4ec66225543e14#461234f0d2890cd9bf73ae008c4ec66225543e14"
+  integrity sha512-E2ltY9h/8CTF3+nd6xNMgUr3TpAdm9mAC8jPEn0ULGchqOVnewu5Za6ltVje99JYrpKDsQj5ccLxJPKetqprmw==
   dependencies:
     bcrypt "^5.1.0"
 
@@ -2014,6 +2014,14 @@
   dependencies:
     "@qbit-tech/libs-utils" "^1.2.5"
 
+"@qbit-tech/libs-role@^1.4.2":
+  version "1.4.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.4.2/369262e3b3717c8e6feb2ac823a0944c6c92b7be#369262e3b3717c8e6feb2ac823a0944c6c92b7be"
+  integrity sha512-uI+eQmQQv9lj9hCErZeiO3QFUriRklC27xtkfUf07srt8Qb5UNQGUYAgibWE0M5QM56VV4Fw8cep6X5aqfu4SQ==
+  dependencies:
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.5"
+
 "@qbit-tech/libs-session@^1.6.2":
   version "1.6.2"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.2/2a42f978cb47fc923f8d26bf92aa46798e716543#2a42f978cb47fc923f8d26bf92aa46798e716543"
@@ -2024,10 +2032,10 @@
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.7.5/81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc#81e12aa72c0e3d6a30c01d3ac945a76e4dbd5cfc"
   integrity sha512-6LMvPg5OZD+4/L5Wt+iXKth7drqJV6EgmsoMXqDGfHnP4mOuOqsK2ULE8obC+GWZ4gk3z+7oN5CxPS/eGvvREg==
 
-"@qbit-tech/libs-session@^1.8.0":
-  version "1.8.0"
-  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.8.0/380a06bdfc44a4e4fb22d831b274baf09970033b#380a06bdfc44a4e4fb22d831b274baf09970033b"
-  integrity sha512-+TlnZF/hAmHJmI2AALSzolF77PUIecAjSNWI9i3SfujmDkHeEVHVVwof4lvN2E09qqDXrUrqKh1CjssdHAaodw==
+"@qbit-tech/libs-session@^1.8.2":
+  version "1.8.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.8.2/21aca4856c9f2ecf104d930cefb82ec4fe39cfd1#21aca4856c9f2ecf104d930cefb82ec4fe39cfd1"
+  integrity sha512-kOp/+oBA9GPerJDecVHroRwgiBUo1xf01YjQWQ7INKfC9rd76UV29HwnVHGHrolkfadVsy0y/qwTDkw5q/nOSg==
 
 "@qbit-tech/libs-sponsor@^1.3.1":
   version "1.3.1"
