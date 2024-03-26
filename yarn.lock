@@ -2109,6 +2109,14 @@
   dependencies:
     "@qbit-tech/libs-utils" "^1.2.5"
 
+"@qbit-tech/libs-role@^1.4.2":
+  version "1.4.2"
+  resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-role/1.4.2/369262e3b3717c8e6feb2ac823a0944c6c92b7be#369262e3b3717c8e6feb2ac823a0944c6c92b7be"
+  integrity sha512-uI+eQmQQv9lj9hCErZeiO3QFUriRklC27xtkfUf07srt8Qb5UNQGUYAgibWE0M5QM56VV4Fw8cep6X5aqfu4SQ==
+  dependencies:
+    "@qbit-tech/libs-session" "^1.7.5"
+    "@qbit-tech/libs-utils" "^1.2.5"
+
 "@qbit-tech/libs-session@^1.6.2":
   version "1.6.2"
   resolved "https://npm.pkg.github.com/download/@qbit-tech/libs-session/1.6.2/2a42f978cb47fc923f8d26bf92aa46798e716543#2a42f978cb47fc923f8d26bf92aa46798e716543"
