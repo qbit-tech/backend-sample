@@ -122,12 +122,10 @@ export class GithubWebhookController {
         } else if (action === 'completed') {
           let versionMessage = '';
 
-          if (packageJSON) {
+          if (conclusion === 'success' && packageJSON) {
             for (const filePath of packageJSON) {
-              if (conclusion === 'success') {
-                const version = await this.getVersion(org, repo, filePath);
-                versionMessage += `\n${version} -> ${org}/${repo}`;
-              }
+              const version = await this.getVersion(org, repo, filePath);
+              versionMessage += `\n${version} -> ${org}/${repo}`;
             }
           }
 
