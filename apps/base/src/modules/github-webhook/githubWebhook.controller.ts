@@ -37,7 +37,7 @@ export class GithubWebhookController {
 
       let personName;
       const repoName = rawBody.repository.full_name;
-      const { project, org, repo, previewUrl } = getRepo(repoName);
+      const { project, org, repo, previewUrl, packageJSON } = getRepo(repoName);
       let message = project ? `*${project || repoName}*\n` : '';
       const repoUrl = rawBody.repository.html_url;
       let detailUrl;
@@ -120,9 +120,15 @@ export class GithubWebhookController {
             pullRequests ? '\nPull Request:\n' + pullRequests : ''
           }`;
         } else if (action === 'completed') {
-          let version;
-          if (conclusion === 'success') {
-            version = await this.getVersion(org, repo);
+          let versionMessage = '';
+
+          if (packageJSON) {
+            for (const filePath of packageJSON) {
+              if (conclusion === 'success') {
+                const version = await this.getVersion(org, repo, filePath);
+                versionMessage += `\n${version} -> ${org}/${repo}`;
+              }
+            }
           }
 
           const icon =
@@ -131,14 +137,14 @@ export class GithubWebhookController {
               : conclusion === 'cancelled'
               ? '🟤'
               : '✅';
-          message += `${icon} ${mode ? '(' + mode + ') ' : ''}Deployment ${
-            version ? '*v' + version + '*' : ''
-          }[#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
+          message += `${icon} ${
+            mode ? '(' + mode + ') ' : ''
+          }Deployment [#${wrID}](${wrURL}) has been ${conclusion}.\n\nBranch: ${headBranch} <- \nRepo: ${clickableRepo}`;
 
           if (previewUrl && previewUrl[mode.toLowerCase()]) {
             message += `\n\n[🔗 ${previewUrl[mode.toLowerCase()]}](${
               previewUrl[mode.toLowerCase()]
-            })`;
+            })${versionMessage ? '\n' + versionMessage : ''}`;
           }
         } else {
           message = '';

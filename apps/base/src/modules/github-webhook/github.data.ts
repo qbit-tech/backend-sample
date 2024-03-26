@@ -35,6 +35,12 @@ export const REPOS = [
       staging: 'https://medeasy-web-staging.qbit.co.id',
       prod: 'https://medeasy.ph',
     },
+    packageJSON: [
+      'cms/package.json',
+      'web/package.json',
+      'mobileapp/package.json',
+      'web-invoice-be/package.json',
+    ],
   },
   {
     project: '🏩 MEDEASY 🏩',
@@ -53,6 +59,7 @@ export const REPOS = [
     org: 'qbit-tech',
     repo: 'spoonful-fe',
     repoName: 'Spoonful FE (WEB, CMS)',
+    packageJSON: ['spoonful-cms/package.json', 'spoonful-web/package.json'],
   },
   {
     project: '🍲 SPOONFUL 🍲',
