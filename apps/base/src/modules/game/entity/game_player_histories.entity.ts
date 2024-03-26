@@ -32,6 +32,9 @@ export class BaseGame_PlayerHistoriesProperties {
     totalRewardClaimed: number;
 
     @ApiProperty()
+    transferAt: Date;
+
+    @ApiProperty()
     createdAt: Date;
 
     @ApiProperty()
@@ -73,6 +76,9 @@ export class Game_PlayerHistoriesModel extends Model {
 
     @Column(DataType.JSON)
     roundHistories: any;
+
+    @Column
+    transferAt: Date;
 
     @CreatedAt
     createdAt: Date;
