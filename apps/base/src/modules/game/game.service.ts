@@ -1558,16 +1558,30 @@ export class GameService {
       const mappingPlayer = Object.keys(groupedHistories).map(gameId => {
         const histories = groupedHistories[gameId];
         const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
-        // const maxGameplay = Math.max(...histories.map(history => history.gameplay));
-        const detail = histories.map(history => ({
-          gameplay: history.gameplay,
-          allRound: (history.rewardClaimed_AllRounds || []).map((reward, index) => ({
-            round: index + 1,
-            rewardClaimed: reward,
-          })),
-        }));
-
         const gameForPlayer = game.find(game => game.id === gameId);
+  
+        const detail = [];
+        const maxGameplay = gameForPlayer ? gameForPlayer.max_gameplay_per_user : 0;
+  
+        for (let i = 0; i < maxGameplay; i++) {
+          const history = histories[i];
+          const allRound = history ? history.rewardClaimed_AllRounds || [] : [];
+          const maxRound = gameForPlayer ? gameForPlayer.max_round_per_gameplay_per_user : 0;
+  
+          for (let j = allRound.length; j < maxRound; j++) {
+            allRound.push(0);
+          }
+  
+          detail.push({
+            gameplay: i + 1,
+            allRound: allRound.map((reward, index) => ({
+              round: index + 1,
+              rewardClaimed: reward,
+            })),
+          });
+        }
+
+        
 
         return {
           gameId,
