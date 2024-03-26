@@ -57,7 +57,7 @@ export class GameService {
     private readonly gamePlayerHistoriesModelRepository: typeof Game_PlayerHistoriesModel,
 
     private readonly sessionService: SessionService,
-  ) { }
+  ) {}
 
   // Game Api (ref : https://www.notion.so/geene/Game-Scratch-Features-5cd6ac95518948d897456e1ccfbd2a05)
 
@@ -599,11 +599,29 @@ export class GameService {
           },
         });
       if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
-        return Promise.reject({
-          code: 'error_in_start_game',
+        // return Promise.reject({
+        //   code: 'error_in_start_game',
+        //   message: 'User has already played.',
+        //   payload: {
+        //     gameCode: game.game_code,
+        //   },
+        // });
+
+        return {
+          access_token: signInResult.access_token,
+          refresh_token: signInResult.refresh_token,
+          userId: user.userId,
+          gamePlayerId: gamePlayerIdSession,
+          isVerified: 'true',
+          isPasswordExpired: 'false',
+          passwordExpiredAt: null,
+          isBlocked: 'false',
+          blockedAt: null,
+          code: 'success',
           message: 'User has already played.',
-          payload: null,
-        });
+          isPlayed: true,
+          payload: {},
+        };
       }
       // Cek apakah pengguna terdaftar dalam pemain game ini
       const isUserInGame = await this.gamePlayersModelRepository.findOne({
@@ -670,7 +688,6 @@ export class GameService {
         if (
           gamePlayerHistory.currentRound < game.max_round_per_gameplay_per_user
         ) {
-
           if (!params.initGame) {
             const gameplayKey = `gameplay_${gamePlayerHistory.gameplay}`;
             const availableRewards = gamePlayer.availableRewards[gameplayKey];
@@ -730,8 +747,9 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game started in the ${gamePlayerHistory.currentRound + 1
-              } round.`,
+            message: `Game started in the ${
+              gamePlayerHistory.currentRound + 1
+            } round.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
@@ -821,8 +839,9 @@ export class GameService {
             isBlocked: 'false',
             blockedAt: null,
             code: 'success',
-            message: `Game has started in the gameplay ${gamePlayerHistory.gameplay + 1
-              }.`,
+            message: `Game has started in the gameplay ${
+              gamePlayerHistory.gameplay + 1
+            }.`,
             payload: {
               gameId: game.id,
               playerId: user.userId,
@@ -1050,8 +1069,8 @@ export class GameService {
 
       const lastGetReward = gamePlayerHistory.get().rewardClaimed_AllRounds
         ? gamePlayerHistory.get().rewardClaimed_AllRounds[
-        gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
-        ]
+            gamePlayerHistory.get().rewardClaimed_AllRounds?.length - 1
+          ]
         : null;
 
       return {
