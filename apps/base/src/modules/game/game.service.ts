@@ -397,6 +397,13 @@ export class GameService {
           availableRewards,
         });
 
+        await this.gamePlayerHistoriesModelRepository.create({
+          playerId: user.userId,
+          gameId: id,
+          gameplay: 1,
+          currentRound: null,
+        });
+
         console.log('result', result);
         return result.get();
       } else {
@@ -424,19 +431,70 @@ export class GameService {
     }
   }
 
+  // async getListPlayerByGame(
+  //   id: string,
+  //   params: Game_PlayersFindAllRequest,
+  // ): Promise<any> {
+  //   // get all players by game id
+  //   try {
+  //     const where = {
+  //       gameId: id,
+  //     };
+
+  //     const result = await this.gamePlayersModelRepository.findAll({
+  //       where,
+  //       attributes: ['playerId'],
+  //       include: [
+  //         {
+  //           model: UserModel,
+  //           attributes: ['name', 'phone'],
+  //           as: 'player',
+  //         },
+  //       ],
+  //       offset: params.offset,
+  //       limit: params.limit || 10,
+  //     });
+  //     // const count = await this.gamePlayersModelRepository.count({ where });
+  //     // return {
+  //     //   count: count,
+  //     //   next: '',
+  //     //   prev: '',
+  //     //   ...generateResultPagination(count, params),
+  //     //   results: result.map((item) => item.get()),
+  //     //   // results: result.map(item => item.get()),
+  //     // };
+
+
+
+  //   } catch (error) {
+  //     return Promise.reject({
+  //       code: 'error_in_find_all',
+  //       message: error.message,
+  //       payload: null,
+  //     });
+  //   }
+  // }
+
   async getListPlayerByGame(
     id: string,
     params: Game_PlayersFindAllRequest,
-  ): Promise<Game_PlayersFindAllResponse> {
-    // get all players by game id
+  ): Promise<any> {
     try {
-      const where = {
-        gameId: id,
-      };
-
-      const result = await this.gamePlayersModelRepository.findAll({
-        where,
-        attributes: ['playerId'],
+      const playerHistories = await this.gamePlayerHistoriesModelRepository.findAll({
+        where: { gameId: id },
+        attributes: [
+          'id',
+          'playerId',
+          'gameId',
+          'gameplay',
+          'rewardClaimedAt',
+          'rewardClaimed_AllRounds',
+          'totalRewardClaimed',
+          'createdAt',
+          'updatedAt',
+          'currentRound',
+          'roundHistories',
+        ],
         include: [
           {
             model: UserModel,
@@ -447,14 +505,47 @@ export class GameService {
         offset: params.offset,
         limit: params.limit || 10,
       });
-      const count = await this.gamePlayersModelRepository.count({ where });
+
+      const game = await this.gameModelRepository.findOne({
+        where: { id },
+      });
+
+      const groupedHistories = playerHistories.reduce((acc, history) => {
+        if (!acc[history.playerId]) {
+          acc[history.playerId] = [];
+        }
+        acc[history.playerId].push(history);
+        return acc;
+      }, {});
+
+      const mappingPlayer = Object.keys(groupedHistories).map(playerId => {
+        const histories = groupedHistories[playerId];
+        const totalReward = histories.reduce((acc, history) => acc + (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0), 0);
+        const detail = histories.map(history => ({
+          gameplay: history.gameplay,
+          allRound: (history.rewardClaimed_AllRounds || []).map((reward, index) => ({
+            round: index + 1,
+            rewardClaimed: reward,
+          })),
+        }));
+
+        return {
+          playerId,
+          game_name: game ? game.title : null,
+          maxGameplay: game ? game.max_gameplay_per_user : null,
+          maxRound: game ? game.max_round_per_gameplay_per_user : null,
+          currentGameplay: histories.length,
+          totalReward,
+          createdAt: histories[0].createdAt,
+          updatedAt: histories[0].updatedAt,
+          name: histories[0].player ? histories[0].player.name : null,
+          phone: histories[0].player ? histories[0].player.phone : null,
+          detail,
+        };
+      });
+
       return {
-        count: count,
-        next: '',
-        prev: '',
-        ...generateResultPagination(count, params),
-        results: result.map((item) => item.get()),
-        // results: result.map(item => item.get()),
+        results: mappingPlayer,
       };
     } catch (error) {
       return Promise.reject({
@@ -1368,6 +1459,7 @@ export class GameService {
         attributes: [
           'id',
           'playerId',
+          'gameId',
           'gameplay',
           'totalRewardClaimed',
           'createdAt',
@@ -1391,6 +1483,7 @@ export class GameService {
           existingPlayer.totalGameplay += history.gameplay;
           existingPlayer.totalRewardAllGame += history.totalRewardClaimed;
           existingPlayer.updatedAt = existingPlayer.updatedAt > history.updatedAt ? existingPlayer.updatedAt : history.updatedAt;
+          existingPlayer.gameIds.add(history.gameId);
         } else {
           acc.push({
             playerId: history.playerId,
@@ -1400,6 +1493,7 @@ export class GameService {
             updatedAt: history.updatedAt,
             name: history.player ? history.player.name : null,
             phone: history.player ? history.player.phone : null,
+            gameIds: new Set([history.gameId]),
           });
         }
 
@@ -1408,7 +1502,10 @@ export class GameService {
 
       return {
         ...generateResultPagination(mappingPlayer.length, params),
-        results: mappingPlayer,
+        results: mappingPlayer.map(({ gameIds, ...rest }) => ({
+          ...rest,
+          totalGame: gameIds.size,
+        })),
       };
 
     } catch (error) {
