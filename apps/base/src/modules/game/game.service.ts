@@ -371,7 +371,9 @@ export class GameService {
         where: { id: id },
       });
 
-      const maxGameplay = game.max_gameplay_per_user;
+      const maxGameplay = params.maxGameplay
+        ? params.maxGameplay
+        : game.max_gameplay_per_user;
       const availableRewards = {};
 
       for (let i = 1; i <= maxGameplay; i++) {
@@ -394,6 +396,7 @@ export class GameService {
         const result = await this.gamePlayersModelRepository.create({
           gameId: id,
           playerId: user.userId,
+          maxGameplay,
           availableRewards,
         });
 
@@ -401,7 +404,7 @@ export class GameService {
           playerId: user.userId,
           gameId: id,
           gameplay: 1,
-          currentRound: null,
+          currentRound: 1,
         });
 
         console.log('result', result);
@@ -517,38 +520,51 @@ export class GameService {
         return acc;
       }, {});
 
-      const mappingPlayer = Object.keys(groupedHistories).map((playerId) => {
-        const histories = groupedHistories[playerId];
-        const totalReward = histories.reduce(
-          (acc, history) =>
-            acc +
-            (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0),
-          0,
-        );
-        const detail = histories.map((history) => ({
-          gameplay: history.gameplay,
-          allRound: (history.rewardClaimed_AllRounds || []).map(
-            (reward, index) => ({
-              round: index + 1,
-              rewardClaimed: reward,
-            }),
-          ),
-        }));
+      const mappingPlayer = await Promise.all(
+        Object.keys(groupedHistories).map(async (playerId) => {
+          const histories = groupedHistories[playerId];
+          const totalReward = histories.reduce(
+            (acc, history) =>
+              acc +
+              (history.rewardClaimed_AllRounds || []).reduce(
+                (a, b) => a + b,
+                0,
+              ),
+            0,
+          );
+          const detail = histories.map((history) => ({
+            gameplay: history.gameplay,
+            allRound: (history.rewardClaimed_AllRounds || []).map(
+              (reward, index) => ({
+                round: index + 1,
+                rewardClaimed: reward,
+              }),
+            ),
+          }));
 
-        return {
-          playerId,
-          game_name: game ? game.title : null,
-          maxGameplay: game ? game.max_gameplay_per_user : null,
-          maxRound: game ? game.max_round_per_gameplay_per_user : null,
-          currentGameplay: histories.length,
-          totalReward,
-          createdAt: histories[0].createdAt,
-          updatedAt: histories[0].updatedAt,
-          name: histories[0].player ? histories[0].player.name : null,
-          phone: histories[0].player ? histories[0].player.phone : null,
-          detail,
-        };
-      });
+          const gamePlayer = await this.gamePlayersModelRepository.findOne({
+            where: {
+              gameId: id,
+              playerId,
+            },
+            attributes: ['maxGameplay'],
+          });
+
+          return {
+            playerId,
+            game_name: game ? game.title : null,
+            maxGameplay: gamePlayer ? gamePlayer.maxGameplay : null,
+            maxRound: game ? game.max_round_per_gameplay_per_user : null,
+            currentGameplay: histories.length,
+            totalReward,
+            createdAt: histories[0].createdAt,
+            updatedAt: histories[0].updatedAt,
+            name: histories[0].player ? histories[0].player.name : null,
+            phone: histories[0].player ? histories[0].player.phone : null,
+            detail,
+          };
+        }),
+      );
 
       return {
         results: mappingPlayer,
@@ -582,6 +598,16 @@ export class GameService {
         ],
       });
 
+      const gamePlayerHistories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: {
+            gameId: id,
+            playerId: playerId,
+          },
+        });
+
+      const historyIds = gamePlayerHistories.map((v) => v.id);
+
       if (gamePlayer === null) {
         throw new HttpException(
           {
@@ -592,8 +618,17 @@ export class GameService {
           HttpStatus.NOT_FOUND,
         );
       }
-
       await gamePlayer.destroy();
+      await this.gamePlayerHistoriesModelRepository.destroy({
+        where: {
+          id: historyIds,
+        },
+      });
+      await this.User.destroy({
+        where: {
+          userId: playerId,
+        },
+      });
 
       return {
         isSuccess: true,
@@ -606,6 +641,71 @@ export class GameService {
     } catch (error) {
       return Promise.reject({
         code: 'error_in_delete_player',
+        message: error.message,
+        payload: null,
+      });
+    }
+  }
+
+  async updatePlayerFromGame(
+    id: string,
+    playerId: string,
+    body: Game_PlayersCreateRequest,
+  ) {
+    // update player by game id and player id
+    try {
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: id,
+          playerId: playerId,
+        },
+      });
+      const game = await this.gameModelRepository.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (gamePlayer === null) {
+        throw new HttpException(
+          {
+            code: 'ERROR WHEN DELETE PLAYER',
+            message: 'Game player not found',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      let maxGameplay;
+      if (body.maxGameplay === gamePlayer?.maxGameplay) {
+        maxGameplay = gamePlayer?.maxGameplay;
+      } else {
+        maxGameplay = body.maxGameplay;
+      }
+
+      const availableRewards = {};
+
+      for (let i = 1; i <= maxGameplay; i++) {
+        const rewards = this.generateGameRewards(
+          game.max_round_per_gameplay_per_user,
+          game.min_reward_per_gameplay_per_user,
+          game.max_reward_per_gameplay_per_user,
+        );
+        availableRewards[`gameplay_${i}`] = rewards;
+      }
+
+      await gamePlayer.update({
+        maxGameplay,
+        availableRewards,
+      });
+
+      return {
+        isSuccess: true,
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_in_update_player',
         message: error.message,
         payload: null,
       });
@@ -690,12 +790,9 @@ export class GameService {
           where: {
             gameId: game.id,
             playerId: user.userId,
-            rewardClaimedAt: {
-              [Op.not]: null,
-            },
           },
         });
-      if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
+      if (isUserAlreadyClaimReward.length === gamePlayer.maxGameplay) {
         // return Promise.reject({
         //   code: 'error_in_start_game',
         //   message: 'User has already played.',
@@ -763,7 +860,7 @@ export class GameService {
             playerId: user.userId,
             gameplay: 1,
             currentRound: 1,
-            maxGameplayPerUser: game.max_gameplay_per_user,
+            maxGameplayPerUser: gamePlayer.maxGameplay,
             maxRoundPerUser: game.max_round_per_gameplay_per_user,
           },
         };
@@ -854,7 +951,7 @@ export class GameService {
               currentRound: gamePlayerHistory.currentRound + 1,
               realRound: gamePlayerHistory.currentRound,
               realGameplay: gamePlayerHistory.gameplay,
-              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxGameplayPerUser: gamePlayer.maxGameplay,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };
@@ -913,7 +1010,7 @@ export class GameService {
               );
             }
 
-            if (gamePlayerHistory.gameplay !== game.max_gameplay_per_user) {
+            if (gamePlayerHistory.gameplay !== gamePlayer.maxGameplay) {
               await this.gamePlayerHistoriesModelRepository.create({
                 playerId: user.userId,
                 gameId: game.id,
@@ -946,7 +1043,7 @@ export class GameService {
               currentRound: 1,
               realRound: gamePlayerHistory.currentRound,
               realGameplay: gamePlayerHistory.gameplay,
-              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxGameplayPerUser: gamePlayer.maxGameplay,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };

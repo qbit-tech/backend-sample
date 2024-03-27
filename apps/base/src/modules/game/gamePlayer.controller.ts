@@ -8,14 +8,16 @@ import {
   Param,
   Req,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { GameService } from './game.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Game_PlayersCreateRequest,
   Game_PlayersCreateResponse,
 } from './contract/game_players.contract';
 import { AuthPermissionGuardV2 } from '@qbit-tech/libs-session';
+import { GameCreateRequest } from './contract/game.contract';
 
 @ApiTags('Game Player')
 @Controller('games/:id/players')
@@ -48,8 +50,9 @@ export class GamePlayerController {
   }
 
   @ApiOperation({ summary: 'Delete Players By Game Id and Player Id' })
+  @ApiBearerAuth()
   @Delete(':playerId')
-  @UseGuards(AuthPermissionGuardV2(['GAME_PLAYER.DELETE']))
+  @UseGuards(AuthPermissionGuardV2())
   async deleteGamePlayers(
     @Param('id') id: string,
     @Param('playerId') playerId: string,
@@ -59,5 +62,25 @@ export class GamePlayerController {
 
   async deletePlayer(id: string, playerId: string): Promise<any> {
     return await this.gameService.deletePlayerFromGame(id, playerId);
+  }
+
+  @ApiOperation({ summary: 'Update Players By Game Id and Player Id' })
+  @ApiBearerAuth()
+  @Patch(':playerId')
+  @UseGuards(AuthPermissionGuardV2())
+  async updateGamePlayers(
+    @Param('id') id: string,
+    @Param('playerId') playerId: string,
+    @Body() body: Game_PlayersCreateRequest,
+  ): Promise<any> {
+    return await this.updatePlayer(id, playerId, body);
+  }
+
+  async updatePlayer(
+    id: string,
+    playerId: string,
+    body: Game_PlayersCreateRequest,
+  ): Promise<any> {
+    return await this.gameService.updatePlayerFromGame(id, playerId, body);
   }
 }

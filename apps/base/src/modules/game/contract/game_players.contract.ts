@@ -23,6 +23,7 @@ export interface Game_PlayersListItem {
   gameId: string;
   playerId: string;
   availableRewards: string;
+  maxGameplay: number;
 }
 
 export class Game_PlayersFindAllRequest {
@@ -80,6 +81,10 @@ export class Game_PlayersCreateRequest {
   @IsNotEmpty()
   @ApiProperty()
   readonly phone: string;
+
+  @IsNotEmpty()
+  @ApiProperty()
+  readonly maxGameplay: number;
 
   readonly initGame: boolean;
 }
