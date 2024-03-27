@@ -1544,19 +1544,6 @@ export class GameService {
       const playerHistories =
         await this.gamePlayerHistoriesModelRepository.findAll({
           where: { playerId: id },
-          attributes: [
-            'id',
-            'playerId',
-            'gameId',
-            'gameplay',
-            'rewardClaimedAt',
-            'rewardClaimed_AllRounds',
-            'totalRewardClaimed',
-            'createdAt',
-            'updatedAt',
-            'currentRound',
-            'roundHistories',
-          ],
           include: [
             {
               model: UserModel,
@@ -1597,6 +1584,11 @@ export class GameService {
           ? gameForPlayer.max_gameplay_per_user
           : 0;
 
+        let transfered = 0;
+        let waitingForTransfer = 0;
+        let notClaimedYet = 0;
+        let notPlayedYet = 0;
+
         for (let i = 0; i < maxGameplay; i++) {
           const history = histories[i];
           const allRound = history ? history.rewardClaimed_AllRounds || [] : [];
@@ -1608,8 +1600,26 @@ export class GameService {
             allRound.push(0);
           }
 
+          let status = '';
+          if (history) {
+            if (history.transferAt) {
+              status = 'Transfered';
+              transfered++;
+            } else if (history.rewardClaimedAt) {
+              status = 'Waiting for transfer';
+              waitingForTransfer++;
+            } else {
+              status = 'Not claimed yet';
+              notClaimedYet++;
+            }
+          } else {
+            status = 'Not played yet';
+            notPlayedYet++;
+          }
+
           detail.push({
             gameplay: i + 1,
+            status,
             allRound: allRound.map((reward, index) => ({
               round: index + 1,
               rewardClaimed: reward,
@@ -1628,11 +1638,14 @@ export class GameService {
             : null,
           currentGameplay: histories.length,
           totalReward,
-          // totalRewardClaimed: histories.reduce((acc, history) => acc + history.totalRewardClaimed, 0),
           createdAt: histories[0].createdAt,
           updatedAt: histories[0].updatedAt,
           name: histories[0].player ? histories[0].player.name : null,
           phone: histories[0].player ? histories[0].player.phone : null,
+          transfered,
+          waitingForTransfer,
+          notClaimedYet,
+          notPlayedYet,
           detail,
         };
       });
