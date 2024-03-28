@@ -1544,19 +1544,6 @@ export class GameService {
       const playerHistories =
         await this.gamePlayerHistoriesModelRepository.findAll({
           where: { playerId: id },
-          attributes: [
-            'id',
-            'playerId',
-            'gameId',
-            'gameplay',
-            'rewardClaimedAt',
-            'rewardClaimed_AllRounds',
-            'totalRewardClaimed',
-            'createdAt',
-            'updatedAt',
-            'currentRound',
-            'roundHistories',
-          ],
           include: [
             {
               model: UserModel,
@@ -1597,6 +1584,11 @@ export class GameService {
           ? gameForPlayer.max_gameplay_per_user
           : 0;
 
+        let transfered = 0;
+        let waitingForTransfer = 0;
+        let notClaimedYet = 0;
+        let notPlayedYet = 0;
+
         for (let i = 0; i < maxGameplay; i++) {
           const history = histories[i];
           const allRound = history ? history.rewardClaimed_AllRounds || [] : [];
@@ -1608,8 +1600,27 @@ export class GameService {
             allRound.push(0);
           }
 
+          let status = '';
+          if (history) {
+            if (history.transferAt) {
+              status = 'Transfered';
+              transfered++;
+            } else if (history.rewardClaimedAt) {
+              status = 'Waiting for transfer';
+              waitingForTransfer++;
+            } else {
+              status = 'Not claimed yet';
+              notClaimedYet++;
+            }
+          } else {
+            status = 'Not played yet';
+            notPlayedYet++;
+          }
+
           detail.push({
+            id: history ? history.id : null,
             gameplay: i + 1,
+            status,
             allRound: allRound.map((reward, index) => ({
               round: index + 1,
               rewardClaimed: reward,
@@ -1628,11 +1639,14 @@ export class GameService {
             : null,
           currentGameplay: histories.length,
           totalReward,
-          // totalRewardClaimed: histories.reduce((acc, history) => acc + history.totalRewardClaimed, 0),
           createdAt: histories[0].createdAt,
           updatedAt: histories[0].updatedAt,
           name: histories[0].player ? histories[0].player.name : null,
           phone: histories[0].player ? histories[0].player.phone : null,
+          transfered,
+          waitingForTransfer,
+          notClaimedYet,
+          notPlayedYet,
           detail,
         };
       });
@@ -1644,6 +1658,78 @@ export class GameService {
       return Promise.reject({
         code: 'error_in_find_all',
         message: [error, error.message],
+        payload: null,
+      });
+    }
+  }
+
+  async markAsTransfered(id: string): Promise<any> {
+    try {
+      const history = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: { id },
+      });
+
+      if (!history) {
+        return Promise.reject({
+          code: 'error_in_mark_as_transfered',
+          message: 'History not found',
+          payload: null,
+        });
+      }
+
+      await history.update({
+        transferAt: new Date(),
+      });
+
+      return {
+        code: 'success',
+        message: 'History updated',
+        payload: history.get(),
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_in_mark_as_transfered',
+        message: error.message,
+        payload: null,
+      });
+    }
+  }
+
+  async markAllAsTransfered(playerId: string, gameId: string): Promise<any> {
+    try {
+      const histories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: { playerId, gameId },
+        });
+
+      if (!histories) {
+        return Promise.reject({
+          code: 'error_in_mark_all_as_transfered',
+          message: 'Histories not found',
+          payload: null,
+        });
+      }
+
+      // const historiesToUpdate = histories.filter(history => !history.transferAt);
+      const historiesToUpdate = histories.filter(history => !history.transferAt && history.rewardClaimedAt);
+
+      await Promise.all(
+        historiesToUpdate.map((history) =>
+          history.update({
+            transferAt: new Date(),
+          }),
+        ),
+      );
+
+      return {
+        code: 'success',
+        message: 'Histories updated',
+        payload: histories.map((history) => history.get()),
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_in_mark_all_as_transfered',
+        message: error.message,
         payload: null,
       });
     }
