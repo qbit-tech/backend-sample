@@ -371,7 +371,9 @@ export class GameService {
         where: { id: id },
       });
 
-      const maxGameplay = game.max_gameplay_per_user;
+      const maxGameplay = params.maxGameplay
+        ? params.maxGameplay
+        : game.max_gameplay_per_user;
       const availableRewards = {};
 
       for (let i = 1; i <= maxGameplay; i++) {
@@ -394,6 +396,7 @@ export class GameService {
         const result = await this.gamePlayersModelRepository.create({
           gameId: id,
           playerId: user.userId,
+          maxGameplay,
           availableRewards,
         });
 
@@ -401,7 +404,7 @@ export class GameService {
           playerId: user.userId,
           gameId: id,
           gameplay: 1,
-          currentRound: null,
+          currentRound: 1,
         });
 
         console.log('result', result);
@@ -517,38 +520,51 @@ export class GameService {
         return acc;
       }, {});
 
-      const mappingPlayer = Object.keys(groupedHistories).map((playerId) => {
-        const histories = groupedHistories[playerId];
-        const totalReward = histories.reduce(
-          (acc, history) =>
-            acc +
-            (history.rewardClaimed_AllRounds || []).reduce((a, b) => a + b, 0),
-          0,
-        );
-        const detail = histories.map((history) => ({
-          gameplay: history.gameplay,
-          allRound: (history.rewardClaimed_AllRounds || []).map(
-            (reward, index) => ({
-              round: index + 1,
-              rewardClaimed: reward,
-            }),
-          ),
-        }));
+      const mappingPlayer = await Promise.all(
+        Object.keys(groupedHistories).map(async (playerId) => {
+          const histories = groupedHistories[playerId];
+          const totalReward = histories.reduce(
+            (acc, history) =>
+              acc +
+              (history.rewardClaimed_AllRounds || []).reduce(
+                (a, b) => a + b,
+                0,
+              ),
+            0,
+          );
+          const detail = histories.map((history) => ({
+            gameplay: history.gameplay,
+            allRound: (history.rewardClaimed_AllRounds || []).map(
+              (reward, index) => ({
+                round: index + 1,
+                rewardClaimed: reward,
+              }),
+            ),
+          }));
 
-        return {
-          playerId,
-          game_name: game ? game.title : null,
-          maxGameplay: game ? game.max_gameplay_per_user : null,
-          maxRound: game ? game.max_round_per_gameplay_per_user : null,
-          currentGameplay: histories.length,
-          totalReward,
-          createdAt: histories[0].createdAt,
-          updatedAt: histories[0].updatedAt,
-          name: histories[0].player ? histories[0].player.name : null,
-          phone: histories[0].player ? histories[0].player.phone : null,
-          detail,
-        };
-      });
+          const gamePlayer = await this.gamePlayersModelRepository.findOne({
+            where: {
+              gameId: id,
+              playerId,
+            },
+            attributes: ['maxGameplay'],
+          });
+
+          return {
+            playerId,
+            game_name: game ? game.title : null,
+            maxGameplay: gamePlayer ? gamePlayer.maxGameplay : null,
+            maxRound: game ? game.max_round_per_gameplay_per_user : null,
+            currentGameplay: histories.length,
+            totalReward,
+            createdAt: histories[0].createdAt,
+            updatedAt: histories[0].updatedAt,
+            name: histories[0].player ? histories[0].player.name : null,
+            phone: histories[0].player ? histories[0].player.phone : null,
+            detail,
+          };
+        }),
+      );
 
       return {
         results: mappingPlayer,
@@ -582,6 +598,16 @@ export class GameService {
         ],
       });
 
+      const gamePlayerHistories =
+        await this.gamePlayerHistoriesModelRepository.findAll({
+          where: {
+            gameId: id,
+            playerId: playerId,
+          },
+        });
+
+      const historyIds = gamePlayerHistories.map((v) => v.id);
+
       if (gamePlayer === null) {
         throw new HttpException(
           {
@@ -592,8 +618,17 @@ export class GameService {
           HttpStatus.NOT_FOUND,
         );
       }
-
       await gamePlayer.destroy();
+      await this.gamePlayerHistoriesModelRepository.destroy({
+        where: {
+          id: historyIds,
+        },
+      });
+      await this.User.destroy({
+        where: {
+          userId: playerId,
+        },
+      });
 
       return {
         isSuccess: true,
@@ -606,6 +641,71 @@ export class GameService {
     } catch (error) {
       return Promise.reject({
         code: 'error_in_delete_player',
+        message: error.message,
+        payload: null,
+      });
+    }
+  }
+
+  async updatePlayerFromGame(
+    id: string,
+    playerId: string,
+    body: Game_PlayersCreateRequest,
+  ) {
+    // update player by game id and player id
+    try {
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: id,
+          playerId: playerId,
+        },
+      });
+      const game = await this.gameModelRepository.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (gamePlayer === null) {
+        throw new HttpException(
+          {
+            code: 'ERROR WHEN DELETE PLAYER',
+            message: 'Game player not found',
+            payload: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      let maxGameplay;
+      if (body.maxGameplay === gamePlayer?.maxGameplay) {
+        maxGameplay = gamePlayer?.maxGameplay;
+      } else {
+        maxGameplay = body.maxGameplay;
+      }
+
+      const availableRewards = {};
+
+      for (let i = 1; i <= maxGameplay; i++) {
+        const rewards = this.generateGameRewards(
+          game.max_round_per_gameplay_per_user,
+          game.min_reward_per_gameplay_per_user,
+          game.max_reward_per_gameplay_per_user,
+        );
+        availableRewards[`gameplay_${i}`] = rewards;
+      }
+
+      await gamePlayer.update({
+        maxGameplay,
+        availableRewards,
+      });
+
+      return {
+        isSuccess: true,
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_in_update_player',
         message: error.message,
         payload: null,
       });
@@ -684,42 +784,40 @@ export class GameService {
 
       const gamePlayerIdSession = gamePlayer.get().id;
 
-      // Cek apakah pengguna sudah pernah main dan claim reward
-      const isUserAlreadyClaimReward =
-        await this.gamePlayerHistoriesModelRepository.findAll({
-          where: {
-            gameId: game.id,
-            playerId: user.userId,
-            rewardClaimedAt: {
-              [Op.not]: null,
-            },
-          },
-        });
-      if (isUserAlreadyClaimReward.length === game.max_gameplay_per_user) {
-        // return Promise.reject({
-        //   code: 'error_in_start_game',
-        //   message: 'User has already played.',
-        //   payload: {
-        //     gameCode: game.game_code,
-        //   },
-        // });
+      // // Cek apakah pengguna sudah pernah main dan claim reward
+      // const isUserAlreadyClaimReward =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //     },
+      //   });
+      // if (isUserAlreadyClaimReward.length === gamePlayer.maxGameplay) {
+      //   // return Promise.reject({
+      //   //   code: 'error_in_start_game',
+      //   //   message: 'User has already played.',
+      //   //   payload: {
+      //   //     gameCode: game.game_code,
+      //   //   },
+      //   // });
 
-        return {
-          access_token: signInResult.access_token,
-          refresh_token: signInResult.refresh_token,
-          userId: user.userId,
-          gamePlayerId: gamePlayerIdSession,
-          isVerified: 'true',
-          isPasswordExpired: 'false',
-          passwordExpiredAt: null,
-          isBlocked: 'false',
-          blockedAt: null,
-          code: 'success',
-          message: 'User has already played.',
-          isPlayed: true,
-          payload: {},
-        };
-      }
+      //   return {
+      //     access_token: signInResult.access_token,
+      //     refresh_token: signInResult.refresh_token,
+      //     userId: user.userId,
+      //     gamePlayerId: gamePlayerIdSession,
+      //     isVerified: 'true',
+      //     isPasswordExpired: 'false',
+      //     passwordExpiredAt: null,
+      //     isBlocked: 'false',
+      //     blockedAt: null,
+      //     code: 'success',
+      //     message: 'User has already played.',
+      //     isPlayed: true,
+      //     payload: {},
+      //   };
+      // }
+
       // Cek apakah pengguna terdaftar dalam pemain game ini
       const isUserInGame = await this.gamePlayersModelRepository.findOne({
         where: {
@@ -763,7 +861,7 @@ export class GameService {
             playerId: user.userId,
             gameplay: 1,
             currentRound: 1,
-            maxGameplayPerUser: game.max_gameplay_per_user,
+            maxGameplayPerUser: gamePlayer.maxGameplay,
             maxRoundPerUser: game.max_round_per_gameplay_per_user,
           },
         };
@@ -854,7 +952,7 @@ export class GameService {
               currentRound: gamePlayerHistory.currentRound + 1,
               realRound: gamePlayerHistory.currentRound,
               realGameplay: gamePlayerHistory.gameplay,
-              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxGameplayPerUser: gamePlayer.maxGameplay,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };
@@ -913,7 +1011,7 @@ export class GameService {
               );
             }
 
-            if (gamePlayerHistory.gameplay !== game.max_gameplay_per_user) {
+            if (gamePlayerHistory.gameplay !== gamePlayer.maxGameplay) {
               await this.gamePlayerHistoriesModelRepository.create({
                 playerId: user.userId,
                 gameId: game.id,
@@ -946,7 +1044,7 @@ export class GameService {
               currentRound: 1,
               realRound: gamePlayerHistory.currentRound,
               realGameplay: gamePlayerHistory.gameplay,
-              maxGameplayPerUser: game.max_gameplay_per_user,
+              maxGameplayPerUser: gamePlayer.maxGameplay,
               maxRoundPerUser: game.max_round_per_gameplay_per_user,
             },
           };
@@ -1087,6 +1185,89 @@ export class GameService {
     } catch (error) {
       return Promise.reject({
         code: 'error_in_game_code_check',
+        message: error.message,
+        payload: null,
+      });
+    }
+  }
+
+  async checkUserAlreadyPlayed(params: {
+    code: string;
+    phone: string;
+  }): Promise<{
+    isPlayed: boolean;
+  }> {
+    const { code, phone } = params;
+    try {
+      // Cek apakah game dengan gameCode tersedia
+      const game = await this.gameModelRepository.findOne({
+        where: { game_code: code, status: 'active' },
+      });
+      if (!game) {
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'Game not found',
+          payload: null,
+        });
+      }
+
+      // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
+      const user = await this.User.findOne({
+        where: { phone: cleanPhoneNumber(phone) },
+      });
+
+      // Cari pengguna berdasarkan nomor telepon
+      if (!user) {
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'User not registered.',
+          payload: null,
+        });
+      }
+
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+        },
+      });
+
+      // Cek apakah pengguna sudah pernah main dan claim reward
+      // const isUserAlreadyClaimReward =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //       currentRound: game?.max_round_per_gameplay_per_user,
+      //     },
+      //   });
+
+      const find = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+          gameplay: gamePlayer?.maxGameplay,
+        },
+      });
+
+      let isPlayed;
+      if (
+        find &&
+        find.rewardClaimed_AllRounds &&
+        find.rewardClaimed_AllRounds.length ===
+          game?.max_round_per_gameplay_per_user
+      ) {
+        isPlayed = true;
+      } else {
+        isPlayed = false;
+      }
+
+      return {
+        isPlayed,
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_check_user_played',
         message: error.message,
         payload: null,
       });
