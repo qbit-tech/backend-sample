@@ -784,39 +784,40 @@ export class GameService {
 
       const gamePlayerIdSession = gamePlayer.get().id;
 
-      // Cek apakah pengguna sudah pernah main dan claim reward
-      const isUserAlreadyClaimReward =
-        await this.gamePlayerHistoriesModelRepository.findAll({
-          where: {
-            gameId: game.id,
-            playerId: user.userId,
-          },
-        });
-      if (isUserAlreadyClaimReward.length === gamePlayer.maxGameplay) {
-        // return Promise.reject({
-        //   code: 'error_in_start_game',
-        //   message: 'User has already played.',
-        //   payload: {
-        //     gameCode: game.game_code,
-        //   },
-        // });
+      // // Cek apakah pengguna sudah pernah main dan claim reward
+      // const isUserAlreadyClaimReward =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //     },
+      //   });
+      // if (isUserAlreadyClaimReward.length === gamePlayer.maxGameplay) {
+      //   // return Promise.reject({
+      //   //   code: 'error_in_start_game',
+      //   //   message: 'User has already played.',
+      //   //   payload: {
+      //   //     gameCode: game.game_code,
+      //   //   },
+      //   // });
 
-        return {
-          access_token: signInResult.access_token,
-          refresh_token: signInResult.refresh_token,
-          userId: user.userId,
-          gamePlayerId: gamePlayerIdSession,
-          isVerified: 'true',
-          isPasswordExpired: 'false',
-          passwordExpiredAt: null,
-          isBlocked: 'false',
-          blockedAt: null,
-          code: 'success',
-          message: 'User has already played.',
-          isPlayed: true,
-          payload: {},
-        };
-      }
+      //   return {
+      //     access_token: signInResult.access_token,
+      //     refresh_token: signInResult.refresh_token,
+      //     userId: user.userId,
+      //     gamePlayerId: gamePlayerIdSession,
+      //     isVerified: 'true',
+      //     isPasswordExpired: 'false',
+      //     passwordExpiredAt: null,
+      //     isBlocked: 'false',
+      //     blockedAt: null,
+      //     code: 'success',
+      //     message: 'User has already played.',
+      //     isPlayed: true,
+      //     payload: {},
+      //   };
+      // }
+
       // Cek apakah pengguna terdaftar dalam pemain game ini
       const isUserInGame = await this.gamePlayersModelRepository.findOne({
         where: {
@@ -1184,6 +1185,89 @@ export class GameService {
     } catch (error) {
       return Promise.reject({
         code: 'error_in_game_code_check',
+        message: error.message,
+        payload: null,
+      });
+    }
+  }
+
+  async checkUserAlreadyPlayed(params: {
+    code: string;
+    phone: string;
+  }): Promise<{
+    isPlayed: boolean;
+  }> {
+    const { code, phone } = params;
+    try {
+      // Cek apakah game dengan gameCode tersedia
+      const game = await this.gameModelRepository.findOne({
+        where: { game_code: code, status: 'active' },
+      });
+      if (!game) {
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'Game not found',
+          payload: null,
+        });
+      }
+
+      // Cek apakah phone tersebut sudah terdata di database dan userId nya ada di daftar players game ini?
+      const user = await this.User.findOne({
+        where: { phone: cleanPhoneNumber(phone) },
+      });
+
+      // Cari pengguna berdasarkan nomor telepon
+      if (!user) {
+        return Promise.reject({
+          code: 'error_in_start_game',
+          message: 'User not registered.',
+          payload: null,
+        });
+      }
+
+      const gamePlayer = await this.gamePlayersModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+        },
+      });
+
+      // Cek apakah pengguna sudah pernah main dan claim reward
+      // const isUserAlreadyClaimReward =
+      //   await this.gamePlayerHistoriesModelRepository.findAll({
+      //     where: {
+      //       gameId: game.id,
+      //       playerId: user.userId,
+      //       currentRound: game?.max_round_per_gameplay_per_user,
+      //     },
+      //   });
+
+      const find = await this.gamePlayerHistoriesModelRepository.findOne({
+        where: {
+          gameId: game.id,
+          playerId: user.userId,
+          gameplay: gamePlayer?.maxGameplay,
+        },
+      });
+
+      let isPlayed;
+      if (
+        find &&
+        find.rewardClaimed_AllRounds &&
+        find.rewardClaimed_AllRounds.length ===
+          game?.max_round_per_gameplay_per_user
+      ) {
+        isPlayed = true;
+      } else {
+        isPlayed = false;
+      }
+
+      return {
+        isPlayed,
+      };
+    } catch (error) {
+      return Promise.reject({
+        code: 'error_check_user_played',
         message: error.message,
         payload: null,
       });

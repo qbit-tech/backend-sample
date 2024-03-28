@@ -1,20 +1,10 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Param,
-  Req,
-  Get,
-  Query,
-  HttpException,
-} from '@nestjs/common';
+import { Controller, Post, Body, Param, Req, Get, Query } from '@nestjs/common';
 import { GameService } from './game.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Game_ClaimRewardRequest,
   Game_PlayersCreateRequest,
   Game_PlayersCreateResponse,
-  Game_PlayersStartRoundRequest,
 } from './contract/game_players.contract';
 import { convertStringToBoolean } from '@qbit-tech/libs-utils';
 
@@ -121,5 +111,20 @@ export class PlayGameController {
       playerId,
       +query.gameplay,
     );
+  }
+
+  @ApiOperation({ summary: 'Check User Already Played' })
+  @Post(':code/check-user-already-played')
+  async checkUserAlreadyPlayed(
+    @Param('code') code: string,
+    @Body()
+    body: {
+      phone: string;
+    },
+  ): Promise<any> {
+    return await this.gameService.checkUserAlreadyPlayed({
+      code,
+      phone: body.phone,
+    });
   }
 }
