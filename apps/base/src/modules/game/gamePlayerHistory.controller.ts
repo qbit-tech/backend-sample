@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { GameService } from './game.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -54,6 +54,36 @@ export class GamePlayerHistoryController {
 
   async findOnePlayerHistory(params: any): Promise<any> {
     return await this.gameService.getAllPlayerHistoryByPlayerId(params);
+  }
+
+
+
+  @ApiOperation({ summary: 'Mark As Transfered by player id' })
+  @Post(':id/mark-as-transfered')
+  // @UseGuards(AuthPermissionGuardV2(['GAME.DETAIL', 'GAME.VIEW']))
+  async markAsTransferedByPlayerId(
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.markAsTransfered(id);
+  }
+
+  async markAsTransfered(params: any): Promise<any> {
+    return await this.gameService.markAsTransfered(params);
+  }
+
+
+  @ApiOperation({ summary: 'Mark All As Transfered by player id and game id' })
+  @Post(':playerId/mark-all-as-transfered/:gameId')
+  // @UseGuards(AuthPermissionGuardV2(['GAME.DETAIL', 'GAME.VIEW']))
+  async markAllAsTransferedByPlayerId(
+    @Param('playerId') playerId: string,
+    @Param('gameId') gameId: string,
+  ): Promise<any> {
+    return await this.gameService.markAllAsTransfered(playerId, gameId);
+  }
+
+  async markAllAsTransfered(params: any): Promise<any> {
+    return await this.gameService.markAllAsTransfered(params.playerId, params.gameId);
   }
   
 }
